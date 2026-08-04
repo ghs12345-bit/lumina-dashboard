@@ -3,198 +3,265 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lumina Metals Dashboard</title>
+<title>Lumina Metals 股价与大宗商品综合看板</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f5f6f7; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #f5f7fa; color: #333; }
+.header { background: linear-gradient(135deg, #1a237e 0%, #283593 100%); color: #fff; padding: 24px 32px; }
+.header h1 { font-size: 24px; font-weight: 600; }
+.header .subtitle { font-size: 13px; opacity: 0.8; margin-top: 6px; }
 .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-.header { background: #fff; border-radius: 12px; padding: 24px 32px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-.header h1 { font-size: 24px; font-weight: 600; color: #1f2329; margin-bottom: 8px; }
-.header .subtitle { font-size: 14px; color: #8f959e; }
-.header .meta { margin-top: 12px; display: flex; gap: 24px; flex-wrap: wrap; }
-.header .meta-item { font-size: 13px; color: #646a73; }
-.header .meta-item span { font-weight: 500; color: #1f2329; }
-.chart-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-#chart { width: 100%; height: 600px; }
-.footer { text-align: center; padding: 20px; font-size: 12px; color: #8f959e; }
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+.stat-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid; }
+.stat-card.copper { border-left-color: #e65100; }
+.stat-card.silver { border-left-color: #78909c; }
+.stat-card.tsx { border-left-color: #1565c0; }
+.stat-card.wse { border-left-color: #2e7d32; }
+.stat-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-value { font-size: 24px; font-weight: 700; margin: 8px 0 4px; }
+.stat-date { font-size: 12px; color: #aaa; }
+.chart-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px; }
+.chart-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #444; }
+.chart { width: 100%; height: 480px; }
+.footer { text-align: center; padding: 20px; font-size: 12px; color: #999; }
+@media (max-width: 900px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .chart { height: 360px; }
+}
+@media (max-width: 600px) {
+  .stats-row { grid-template-columns: 1fr; }
+  .chart { height: 320px; }
+}
 </style>
 </head>
 <body>
+<div class="header">
+  <h1>Lumina Metals 股价与大宗商品综合看板</h1>
+  <div class="subtitle">TSX / WSE 股价 vs LME 铜价 vs LBMA 银价 三轴走势对比</div>
+</div>
 <div class="container">
-  <div class="header">
-    <h1>Lumina Metals 综合数据看板</h1>
-    <div class="subtitle">TSX:LMCU / WSE:LMU 股价与 LME 铜价、LBMA 银价走势对比</div>
-    <div class="meta">
-      <div class="meta-item">TSX 最新: <span>2026-07-31 (CAD N/A)</span></div>
-      <div class="meta-item">WSE 最新: <span>2026-08-03 (PLN 24.48)</span></div>
-      <div class="meta-item">铜价最新: <span>2026-07-31 (USD N/A/t)</span></div>
-      <div class="meta-item">银价最新: <span>2026-07-31 (USD N/A/oz)</span></div>
-      <div class="meta-item">更新时间: <span>2026-08-04 10:50:34</span></div>
+  <div class="stats-row">
+    <div class="stat-card copper">
+      <div class="stat-label">LME 铜现货最新价</div>
+      <div class="stat-value" id="copper-price">--</div>
+      <div class="stat-date" id="copper-date">--</div>
+    </div>
+    <div class="stat-card silver">
+      <div class="stat-label">LBMA 银现货最新价</div>
+      <div class="stat-value" id="silver-price">--</div>
+      <div class="stat-date" id="silver-date">--</div>
+    </div>
+    <div class="stat-card tsx">
+      <div class="stat-label">TSX 最新收盘价 (LUM.CA)</div>
+      <div class="stat-value" id="tsx-price">--</div>
+      <div class="stat-date" id="tsx-date">--</div>
+    </div>
+    <div class="stat-card wse">
+      <div class="stat-label">WSE 最新收盘价 (LUM)</div>
+      <div class="stat-value" id="wse-price">--</div>
+      <div class="stat-date" id="wse-date">--</div>
     </div>
   </div>
+
   <div class="chart-card">
-    <div id="chart"></div>
+    <div class="chart-title">TSX (LUM.CA) 股价 vs 银价 vs 铜价 三轴走势对比</div>
+    <div class="chart" id="chart-tsx"></div>
   </div>
-  <div class="footer">数据来源: stockanalysis.com / LME / LBMA | 由智能伙伴自动生成</div>
+
+  <div class="chart-card">
+    <div class="chart-title">WSE (LUM) 股价 vs 银价 vs 铜价 三轴走势对比</div>
+    <div class="chart" id="chart-wse"></div>
+  </div>
+
+  <div class="footer">
+    数据更新于 <span id="update-time"></span> | 铜价数据来源：S&P Global / LME | 银价数据来源：LBMA | 股价数据来源：stockanalysis.com
+  </div>
 </div>
+
 <script>
-const dates = ["2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-23", "2026-05-24", "2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30", "2026-05-31", "2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05", "2026-06-06", "2026-06-07", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-11", "2026-06-12", "2026-06-13", "2026-06-14", "2026-06-15", "2026-06-16", "2026-06-17", "2026-06-18", "2026-06-19", "2026-06-20", "2026-06-21", "2026-06-22", "2026-06-23", "2026-06-24", "2026-06-25", "2026-06-26", "2026-06-27", "2026-06-28", "2026-06-29", "2026-06-30", "2026-07-01", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05", "2026-07-06", "2026-07-07", "2026-07-08", "2026-07-09", "2026-07-10", "2026-07-11", "2026-07-12", "2026-07-13", "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17", "2026-07-18", "2026-07-19", "2026-07-20", "2026-07-21", "2026-07-22", "2026-07-23", "2026-07-24", "2026-07-25", "2026-07-26", "2026-07-27", "2026-07-28", "2026-07-29", "2026-07-30", "2026-07-31", "2026-08-01", "2026-08-02", "2026-08-03"];
-const tsxData = [11.95, 12.15, 12.08, 11.84, null, null, 12.07, 12.11, 11.95, 12.06, 11.95, null, null, 11.69, 11.66, 11.85, 12.69, 10.98, null, null, 10.9, 10.3, 10.05, 10.39, 11.09, null, null, 11.6, 11.7, 11.92, 11.4, 11.29, null, null, 10.93, 10.49, 10.07, 10.28, 10.4, null, null, 10.3, 10.23, null, 10.57, 10.68, null, null, 10.31, 9.6, 9.21, 9.55, 9.51, null, null, 9.26, 9.52, 9.15, 8.6, 8.77, null, null, 8.93, 9.2, 9.28, 8.86, 8.99, null, null, 9.13, 8.87, 8.75, 8.93, 8.77, null, null, null];
-const wseData = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 35.5, 35.41, 32.0, 31.8, null, null, 29.9, 29.99, 28.0, 28.8, 28.2, null, null, 27.18, 27.5, 28.3, 27.15, 28.17, null, null, 27.82, 26.95, 24.7, 25.69, 25.81, null, null, 25.18, 25.48, 25.08, 23.54, 23.28, null, null, 23.8, 24.9, 25.4, 24.5, 25.4, null, null, 24.06, 25.1, 24.95, 23.5, 23.15, null, null, 24.48];
-const copperData = [13333.9, 13595.63, 13455.86, 13614.84, null, null, null, 13565.69, 13465.16, 13656.19, 13503.11, null, null, 13808.12, 14036.66, 13802.37, 13920.49, 13490.32, null, null, 13592.08, 13573.34, 13466.23, 13448.01, 13645.33, null, null, 13669.66, 13699.9, 13763.45, 13624.19, null, null, null, 13580.37, 13302.84, 13029.71, 13227.58, 13335.92, null, null, 13252.81, 13348.9, 13249.24, 13287.6, null, null, null, 13348.43, 13298.49, 13097.18, 13439.8, 13418.55, null, null, 13487.86, 13595.75, 13534.07, 13554.35, 13500.88, null, null, 13621.19, 13898.49, 13812.7, 13599.1, 13653.8, null, null, 13770.61, 13715.2, 13605.04, 13843.49, 13835.7, null, null, null];
-const silverData = [76.04, 75.65, 74.76, 75.84, null, null, null, 76.25, 74.35, 73.02, 75.79, null, null, 75.66, 76.26, 74.35, 73.48, 72.66, null, null, 67.13, 68.6, 64.46, 63.8, 67.03, null, null, 70.69, 70.38, 69.81, 67.75, null, null, null, 66.35, 62.19, 60.6, 57.37, 58.38, null, null, 57.71, 58.8, 58.25, 59.64, null, null, null, 62.07, 60.64, 58.42, 58.83, 59.35, null, null, 58.39, 57.88, 57.95, 56.5, 55.29, null, null, 56.81, 58.89, 59.34, 58.66, 58.33, null, null, 59.04, 57.17, 57.4, 58.06, 57.73, null, null, null];
+const DASHBOARD_DATA = {"tsx":[{"Date_str":"2026-05-19","Close":11.95,"Silver":76.04,"Copper":13333.9},{"Date_str":"2026-05-20","Close":12.15,"Silver":75.65,"Copper":13595.63},{"Date_str":"2026-05-21","Close":12.08,"Silver":74.76,"Copper":13455.86},{"Date_str":"2026-05-22","Close":11.84,"Silver":75.84,"Copper":13614.84},{"Date_str":"2026-05-23","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-05-24","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-05-25","Close":12.07,"Silver":null,"Copper":null},{"Date_str":"2026-05-26","Close":12.11,"Silver":76.25,"Copper":13565.69},{"Date_str":"2026-05-27","Close":11.95,"Silver":74.35,"Copper":13465.16},{"Date_str":"2026-05-28","Close":12.06,"Silver":73.02,"Copper":13656.19},{"Date_str":"2026-05-29","Close":11.95,"Silver":75.79,"Copper":13503.11},{"Date_str":"2026-05-30","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-05-31","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-01","Close":11.69,"Silver":75.66,"Copper":13808.12},{"Date_str":"2026-06-02","Close":11.66,"Silver":76.26,"Copper":14036.66},{"Date_str":"2026-06-03","Close":11.85,"Silver":74.35,"Copper":13802.37},{"Date_str":"2026-06-04","Close":12.69,"Silver":73.48,"Copper":13920.49},{"Date_str":"2026-06-05","Close":10.98,"Silver":72.66,"Copper":13490.32},{"Date_str":"2026-06-06","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-07","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-08","Close":10.9,"Silver":67.13,"Copper":13592.08},{"Date_str":"2026-06-09","Close":10.3,"Silver":68.6,"Copper":13573.34},{"Date_str":"2026-06-10","Close":10.05,"Silver":64.46,"Copper":13466.23},{"Date_str":"2026-06-11","Close":10.39,"Silver":63.8,"Copper":13448.01},{"Date_str":"2026-06-12","Close":11.09,"Silver":67.03,"Copper":13645.33},{"Date_str":"2026-06-13","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-14","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-15","Close":11.6,"Silver":70.69,"Copper":13669.66},{"Date_str":"2026-06-16","Close":11.7,"Silver":70.38,"Copper":13699.9},{"Date_str":"2026-06-17","Close":11.92,"Silver":69.81,"Copper":13763.45},{"Date_str":"2026-06-18","Close":11.4,"Silver":67.75,"Copper":13624.19},{"Date_str":"2026-06-19","Close":11.29,"Silver":null,"Copper":null},{"Date_str":"2026-06-20","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-21","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-22","Close":10.93,"Silver":66.35,"Copper":13580.37},{"Date_str":"2026-06-23","Close":10.49,"Silver":62.19,"Copper":13302.84},{"Date_str":"2026-06-24","Close":10.07,"Silver":60.6,"Copper":13029.71},{"Date_str":"2026-06-25","Close":10.28,"Silver":57.37,"Copper":13227.58},{"Date_str":"2026-06-26","Close":10.4,"Silver":58.38,"Copper":13335.92},{"Date_str":"2026-06-27","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-28","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-29","Close":10.3,"Silver":57.71,"Copper":13252.81},{"Date_str":"2026-06-30","Close":10.23,"Silver":58.8,"Copper":13348.9},{"Date_str":"2026-07-01","Close":null,"Silver":58.25,"Copper":13249.24},{"Date_str":"2026-07-02","Close":10.57,"Silver":59.64,"Copper":13287.6},{"Date_str":"2026-07-03","Close":10.68,"Silver":null,"Copper":null},{"Date_str":"2026-07-04","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-05","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-06","Close":10.31,"Silver":62.07,"Copper":13348.43},{"Date_str":"2026-07-07","Close":9.6,"Silver":60.64,"Copper":13298.49},{"Date_str":"2026-07-08","Close":9.21,"Silver":58.42,"Copper":13097.18},{"Date_str":"2026-07-09","Close":9.55,"Silver":58.83,"Copper":13439.8},{"Date_str":"2026-07-10","Close":9.51,"Silver":59.35,"Copper":13418.55},{"Date_str":"2026-07-11","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-12","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-13","Close":9.26,"Silver":58.39,"Copper":13487.86},{"Date_str":"2026-07-14","Close":9.52,"Silver":57.88,"Copper":13595.75},{"Date_str":"2026-07-15","Close":9.15,"Silver":57.95,"Copper":13534.07},{"Date_str":"2026-07-16","Close":8.6,"Silver":56.5,"Copper":13554.35},{"Date_str":"2026-07-17","Close":8.77,"Silver":55.29,"Copper":13500.88},{"Date_str":"2026-07-18","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-19","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-20","Close":8.93,"Silver":56.81,"Copper":13621.19},{"Date_str":"2026-07-21","Close":9.2,"Silver":58.89,"Copper":13898.49},{"Date_str":"2026-07-22","Close":9.28,"Silver":59.34,"Copper":13812.7},{"Date_str":"2026-07-23","Close":8.86,"Silver":58.66,"Copper":13599.1},{"Date_str":"2026-07-24","Close":8.99,"Silver":58.33,"Copper":13653.8},{"Date_str":"2026-07-25","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-26","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-27","Close":9.13,"Silver":59.04,"Copper":13770.61},{"Date_str":"2026-07-28","Close":8.87,"Silver":57.17,"Copper":13715.2},{"Date_str":"2026-07-29","Close":8.75,"Silver":57.4,"Copper":13605.04},{"Date_str":"2026-07-30","Close":8.93,"Silver":58.06,"Copper":13843.49},{"Date_str":"2026-07-31","Close":8.77,"Silver":57.73,"Copper":13835.7}],"wse":[{"Date_str":"2026-06-16","Close":35.5,"Silver":70.38,"Copper":13699.9},{"Date_str":"2026-06-17","Close":35.41,"Silver":69.81,"Copper":13763.45},{"Date_str":"2026-06-18","Close":32.0,"Silver":67.75,"Copper":13624.19},{"Date_str":"2026-06-19","Close":31.8,"Silver":null,"Copper":null},{"Date_str":"2026-06-20","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-21","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-22","Close":29.9,"Silver":66.35,"Copper":13580.37},{"Date_str":"2026-06-23","Close":29.99,"Silver":62.19,"Copper":13302.84},{"Date_str":"2026-06-24","Close":28.0,"Silver":60.6,"Copper":13029.71},{"Date_str":"2026-06-25","Close":28.8,"Silver":57.37,"Copper":13227.58},{"Date_str":"2026-06-26","Close":28.2,"Silver":58.38,"Copper":13335.92},{"Date_str":"2026-06-27","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-28","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-29","Close":27.18,"Silver":57.71,"Copper":13252.81},{"Date_str":"2026-06-30","Close":27.5,"Silver":58.8,"Copper":13348.9},{"Date_str":"2026-07-01","Close":28.3,"Silver":58.25,"Copper":13249.24},{"Date_str":"2026-07-02","Close":27.15,"Silver":59.64,"Copper":13287.6},{"Date_str":"2026-07-03","Close":28.17,"Silver":null,"Copper":null},{"Date_str":"2026-07-04","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-05","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-06","Close":27.82,"Silver":62.07,"Copper":13348.43},{"Date_str":"2026-07-07","Close":26.95,"Silver":60.64,"Copper":13298.49},{"Date_str":"2026-07-08","Close":24.7,"Silver":58.42,"Copper":13097.18},{"Date_str":"2026-07-09","Close":25.69,"Silver":58.83,"Copper":13439.8},{"Date_str":"2026-07-10","Close":25.81,"Silver":59.35,"Copper":13418.55},{"Date_str":"2026-07-11","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-12","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-13","Close":25.18,"Silver":58.39,"Copper":13487.86},{"Date_str":"2026-07-14","Close":25.48,"Silver":57.88,"Copper":13595.75},{"Date_str":"2026-07-15","Close":25.08,"Silver":57.95,"Copper":13534.07},{"Date_str":"2026-07-16","Close":23.54,"Silver":56.5,"Copper":13554.35},{"Date_str":"2026-07-17","Close":23.28,"Silver":55.29,"Copper":13500.88},{"Date_str":"2026-07-18","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-19","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-20","Close":23.8,"Silver":56.81,"Copper":13621.19},{"Date_str":"2026-07-21","Close":24.9,"Silver":58.89,"Copper":13898.49},{"Date_str":"2026-07-22","Close":25.4,"Silver":59.34,"Copper":13812.7},{"Date_str":"2026-07-23","Close":24.5,"Silver":58.66,"Copper":13599.1},{"Date_str":"2026-07-24","Close":25.4,"Silver":58.33,"Copper":13653.8},{"Date_str":"2026-07-25","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-26","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-27","Close":24.06,"Silver":59.04,"Copper":13770.61},{"Date_str":"2026-07-28","Close":25.1,"Silver":57.17,"Copper":13715.2},{"Date_str":"2026-07-29","Close":24.95,"Silver":57.4,"Copper":13605.04},{"Date_str":"2026-07-30","Close":23.5,"Silver":58.06,"Copper":13843.49},{"Date_str":"2026-07-31","Close":23.15,"Silver":57.73,"Copper":13835.7},{"Date_str":"2026-08-01","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-02","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-03","Close":24.48,"Silver":null,"Copper":null}],"stats":{"tsx_latest_date":"2026-07-31","tsx_latest_close":8.77,"wse_latest_date":"2026-08-03","wse_latest_close":24.48,"copper_latest_date":"2026-07-31","copper_latest_price":13835.7,"silver_latest_date":"2026-07-31","silver_latest_price":57.73,"tsx_first_date":"2026-05-19","wse_first_date":"2026-06-16","tsx_range":{"start":"2026-05-19","end":"2026-07-31"},"wse_range":{"start":"2026-06-16","end":"2026-08-03"}},"axis_ranges":{"tsx":{"min":7.74,"max":13.959000000000001},"tsx_silver":{"min":49.761,"max":83.88600000000001},"tsx_copper":{"min":11726.739,"max":15440.326000000001},"wse":{"min":20.835,"max":39.050000000000004},"wse_silver":{"min":49.761,"max":77.418},"wse_copper":{"min":11726.739,"max":15288.339000000002}}};
 
-const chart = echarts.init(document.getElementById('chart'));
+function fmtInt(val) {
+  if (val === null || val === undefined || isNaN(val)) return '—';
+  return Math.round(val).toLocaleString('en-US');
+}
 
-const option = {
-  tooltip: {
-    trigger: 'axis',
-    backgroundColor: 'rgba(255,255,255,0.95)',
-    borderColor: '#e5e6eb',
-    borderWidth: 1,
-    textStyle: { color: '#1f2329', fontSize: 13 },
-    formatter: function(params) {
-      let html = '<div style="font-weight:600;margin-bottom:6px;">' + params[0].axisValue + '</div>';
-      params.forEach(p => {
-        if (p.value !== null && p.value !== undefined) {
-          const color = p.color;
-          const val = p.value.toLocaleString('en-US', {maximumFractionDigits: 2});
-          html += '<div style="display:flex;align-items:center;gap:6px;margin:3px 0;">' +
-            '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + color + ';"></span>' +
-            '<span style="flex:1;">' + p.seriesName + '</span>' +
-            '<span style="font-weight:500;">' + val + '</span>' +
-            '</div>';
-        }
-      });
-      return html;
-    }
-  },
-  legend: {
-    data: ['TSX:LMCU', 'WSE:LMU', 'LBMA 银价', 'LME 铜价'],
-    top: 10,
-    textStyle: { fontSize: 13, color: '#646a73' }
-  },
-  grid: {
-    left: '6%',
-    right: '10%',
-    bottom: '12%',
-    top: '15%',
-    containLabel: true
-  },
-  xAxis: {
-    type: 'category',
-    data: dates,
-    axisLabel: {
-      formatter: function(value, idx) {
-        if (idx % 6 === 0) return value;
-        return '';
-      },
-      color: '#8f959e',
-      fontSize: 11
-    },
-    axisLine: { lineStyle: { color: '#e5e6eb' } },
-    axisTick: { show: false }
-  },
-  yAxis: [
-    {
-      type: 'value',
-      name: '股价',
-      position: 'left',
-      min: 7.74,
-      max: 13.96,
-      axisLabel: {
-        formatter: value => Math.round(value).toLocaleString('en-US'),
-        color: '#8f959e',
-        fontSize: 11
-      },
-      nameTextStyle: { color: '#646a73', fontSize: 12 },
-      splitLine: { lineStyle: { color: '#f2f3f5' } },
-      axisLine: { show: true, lineStyle: { color: '#e5e6eb' } }
-    },
-    {
-      type: 'value',
-      name: '银价 (USD/oz)',
-      position: 'right',
-      offset: 0,
-      min: 49.76,
-      max: 83.89,
-      axisLabel: {
-        formatter: value => Math.round(value).toLocaleString('en-US'),
-        color: '#8f959e',
-        fontSize: 11
-      },
-      nameTextStyle: { color: '#646a73', fontSize: 12 },
-      splitLine: { show: false },
-      axisLine: { show: true, lineStyle: { color: '#e5e6eb' } }
-    },
-    {
-      type: 'value',
-      name: '铜价 (USD/t)',
-      position: 'right',
-      offset: 60,
-      min: 11726.74,
-      max: 15440.33,
-      axisLabel: {
-        formatter: value => Math.round(value).toLocaleString('en-US'),
-        color: '#8f959e',
-        fontSize: 11
-      },
-      nameTextStyle: { color: '#646a73', fontSize: 12 },
-      splitLine: { show: false },
-      axisLine: { show: true, lineStyle: { color: '#e5e6eb' } }
-    }
-  ],
-  series: [
-    {
-      name: 'TSX:LMCU',
-      type: 'line',
-      data: tsxData,
-      smooth: false,
-      connectNulls: true,
-      lineStyle: { width: 2.5, type: 'solid', color: '#1565c0' },
-      itemStyle: { color: '#1565c0' },
-      symbol: 'none',
-      yAxisIndex: 0
-    },
-    {
-      name: 'WSE:LMU',
-      type: 'line',
-      data: wseData,
-      smooth: false,
-      connectNulls: true,
-      lineStyle: { width: 2.5, type: 'solid', color: '#2e7d32' },
-      itemStyle: { color: '#2e7d32' },
-      symbol: 'none',
-      yAxisIndex: 0
-    },
-    {
-      name: 'LBMA 银价',
-      type: 'line',
-      data: silverData,
-      smooth: false,
-      connectNulls: true,
-      lineStyle: { width: 2, type: 'dashed', color: '#78909c' },
-      itemStyle: { color: '#78909c' },
-      symbol: 'none',
-      yAxisIndex: 1
-    },
-    {
-      name: 'LME 铜价',
-      type: 'line',
-      data: copperData,
-      smooth: false,
-      connectNulls: true,
-      lineStyle: { width: 2, type: 'dashed', color: '#e65100' },
-      itemStyle: { color: '#e65100' },
-      symbol: 'none',
-      yAxisIndex: 2
-    }
-  ]
-};
+function fmt2(val) {
+  if (val === null || val === undefined || isNaN(val)) return '—';
+  return val.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
 
-chart.setOption(option);
-window.addEventListener('resize', () => chart.resize());
+function buildTooltip(dateStr, seriesList) {
+  let html = '<div style="font-weight:600;margin-bottom:6px;font-size:14px;">' + dateStr + '</div>';
+  seriesList.forEach(function(s) {
+    html += '<div style="display:flex;align-items:center;margin:3px 0;">';
+    html += '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + s.color + ';margin-right:8px;"></span>';
+    html += '<span style="flex:1;">' + s.name + '</span>';
+    html += '<span style="font-weight:600;margin-left:12px;">' + s.value + '</span>';
+    html += '</div>';
+  });
+  return html;
+}
+
+function initDashboard() {
+  const data = DASHBOARD_DATA;
+  const stats = data.stats;
+  const axis = data.axis_ranges;
+
+  document.getElementById('copper-price').textContent = '$' + fmt2(stats.copper_latest_price);
+  document.getElementById('copper-date').textContent = '更新于 ' + stats.copper_latest_date;
+  document.getElementById('silver-price').textContent = '$' + fmt2(stats.silver_latest_price);
+  document.getElementById('silver-date').textContent = '更新于 ' + stats.silver_latest_date;
+  document.getElementById('tsx-price').textContent = '$' + fmt2(stats.tsx_latest_close);
+  document.getElementById('tsx-date').textContent = '更新于 ' + stats.tsx_latest_date;
+  document.getElementById('wse-price').textContent = '$' + fmt2(stats.wse_latest_close);
+  document.getElementById('wse-date').textContent = '更新于 ' + stats.wse_latest_date;
+  document.getElementById('update-time').textContent = new Date().toLocaleString('zh-CN');
+
+  const tsxDates = data.tsx.map(r => r.Date_str);
+  const tsxClose = data.tsx.map(r => r.Close);
+  const tsxSilver = data.tsx.map(r => r.Silver);
+  const tsxCopper = data.tsx.map(r => r.Copper);
+
+  const wseDates = data.wse.map(r => r.Date_str);
+  const wseClose = data.wse.map(r => r.Close);
+  const wseSilver = data.wse.map(r => r.Silver);
+  const wseCopper = data.wse.map(r => r.Copper);
+
+  // TSX 三轴图
+  const chartTsx = echarts.init(document.getElementById('chart-tsx'));
+  chartTsx.setOption({
+    tooltip: {
+      trigger: 'axis',
+      formatter: function(params) {
+        const dateStr = params[0].axisValue;
+        const list = params.map(p => ({
+          name: p.seriesName,
+          value: '$' + fmt2(p.value),
+          color: p.color
+        }));
+        return buildTooltip(dateStr, list);
+      }
+    },
+    legend: { data: ['TSX 收盘价', 'LBMA 银价', 'LME 铜价'], top: 8 },
+    grid: { left: '8%', right: '12%', top: '15%', bottom: '10%' },
+    xAxis: { type: 'category', data: tsxDates, axisLabel: { rotate: 45, fontSize: 10, interval: 6 } },
+    yAxis: [
+      {
+        type: 'value', name: 'TSX 股价 ($)', position: 'left',
+        min: axis.tsx.min, max: axis.tsx.max,
+        axisLine: { lineStyle: { color: '#1565c0' } },
+        axisLabel: { color: '#1565c0', formatter: function(v) { return fmtInt(v); } },
+        splitLine: { show: true, lineStyle: { type: 'dashed', color: '#eee' } }
+      },
+      {
+        type: 'value', name: '银价 ($)', position: 'right', offset: 0,
+        min: axis.tsx_silver.min, max: axis.tsx_silver.max,
+        axisLine: { lineStyle: { color: '#78909c' } },
+        axisLabel: { color: '#78909c', formatter: function(v) { return fmtInt(v); } },
+        splitLine: { show: false }
+      },
+      {
+        type: 'value', name: '铜价 ($)', position: 'right', offset: 60,
+        min: axis.tsx_copper.min, max: axis.tsx_copper.max,
+        axisLine: { lineStyle: { color: '#e65100' } },
+        axisLabel: { color: '#e65100', formatter: function(v) { return fmtInt(v); } },
+        splitLine: { show: false }
+      }
+    ],
+    series: [
+      {
+        name: 'TSX 收盘价', type: 'line', data: tsxClose,
+        yAxisIndex: 0, smooth: false, symbol: 'none', connectNulls: true,
+        lineStyle: { width: 2.5, color: '#1565c0', type: 'solid' },
+        itemStyle: { color: '#1565c0' }
+      },
+      {
+        name: 'LBMA 银价', type: 'line', data: tsxSilver,
+        yAxisIndex: 1, smooth: false, symbol: 'none', connectNulls: true,
+        lineStyle: { width: 2, color: '#78909c', type: 'dashed' },
+        itemStyle: { color: '#78909c' }
+      },
+      {
+        name: 'LME 铜价', type: 'line', data: tsxCopper,
+        yAxisIndex: 2, smooth: false, symbol: 'none', connectNulls: true,
+        lineStyle: { width: 2, color: '#e65100', type: 'dashed' },
+        itemStyle: { color: '#e65100' }
+      }
+    ]
+  });
+
+  // WSE 三轴图
+  const chartWse = echarts.init(document.getElementById('chart-wse'));
+  chartWse.setOption({
+    tooltip: {
+      trigger: 'axis',
+      formatter: function(params) {
+        const dateStr = params[0].axisValue;
+        const list = params.map(p => ({
+          name: p.seriesName,
+          value: '$' + fmt2(p.value),
+          color: p.color
+        }));
+        return buildTooltip(dateStr, list);
+      }
+    },
+    legend: { data: ['WSE 收盘价', 'LBMA 银价', 'LME 铜价'], top: 8 },
+    grid: { left: '8%', right: '12%', top: '15%', bottom: '10%' },
+    xAxis: { type: 'category', data: wseDates, axisLabel: { rotate: 45, fontSize: 10, interval: 6 } },
+    yAxis: [
+      {
+        type: 'value', name: 'WSE 股价 ($)', position: 'left',
+        min: axis.wse.min, max: axis.wse.max,
+        axisLine: { lineStyle: { color: '#2e7d32' } },
+        axisLabel: { color: '#2e7d32', formatter: function(v) { return fmtInt(v); } },
+        splitLine: { show: true, lineStyle: { type: 'dashed', color: '#eee' } }
+      },
+      {
+        type: 'value', name: '银价 ($)', position: 'right', offset: 0,
+        min: axis.wse_silver.min, max: axis.wse_silver.max,
+        axisLine: { lineStyle: { color: '#78909c' } },
+        axisLabel: { color: '#78909c', formatter: function(v) { return fmtInt(v); } },
+        splitLine: { show: false }
+      },
+      {
+        type: 'value', name: '铜价 ($)', position: 'right', offset: 60,
+        min: axis.wse_copper.min, max: axis.wse_copper.max,
+        axisLine: { lineStyle: { color: '#e65100' } },
+        axisLabel: { color: '#e65100', formatter: function(v) { return fmtInt(v); } },
+        splitLine: { show: false }
+      }
+    ],
+    series: [
+      {
+        name: 'WSE 收盘价', type: 'line', data: wseClose,
+        yAxisIndex: 0, smooth: false, symbol: 'none', connectNulls: true,
+        lineStyle: { width: 2.5, color: '#2e7d32', type: 'solid' },
+        itemStyle: { color: '#2e7d32' }
+      },
+      {
+        name: 'LBMA 银价', type: 'line', data: wseSilver,
+        yAxisIndex: 1, smooth: false, symbol: 'none', connectNulls: true,
+        lineStyle: { width: 2, color: '#78909c', type: 'dashed' },
+        itemStyle: { color: '#78909c' }
+      },
+      {
+        name: 'LME 铜价', type: 'line', data: wseCopper,
+        yAxisIndex: 2, smooth: false, symbol: 'none', connectNulls: true,
+        lineStyle: { width: 2, color: '#e65100', type: 'dashed' },
+        itemStyle: { color: '#e65100' }
+      }
+    ]
+  });
+
+  window.addEventListener('resize', function() {
+    chartTsx.resize();
+    chartWse.resize();
+  });
+}
+
+initDashboard();
 </script>
 </body>
 </html>
