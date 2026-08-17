@@ -6,107 +6,115 @@
 <title>Lumina Metals Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background:#f5f6f7; color:#1f2329; }
-.header { background:#fff; border-bottom:1px solid #e5e6eb; padding:16px 24px; display:flex; align-items:center; justify-content:space-between; }
-.header h1 { font-size:20px; font-weight:600; }
-.header .subtitle { font-size:13px; color:#86909c; margin-top:4px; }
-.tabs { display:flex; background:#fff; border-bottom:1px solid #e5e6eb; padding:0 24px; gap:24px; }
-.tab { padding:12px 0; cursor:pointer; font-size:14px; color:#86909c; border-bottom:2px solid transparent; transition:all .2s; }
-.tab.active { color:#1565c0; border-bottom-color:#1565c0; font-weight:500; }
-.tab-content { display:none; padding:24px; max-width:1200px; margin:0 auto; }
-.tab-content.active { display:block; }
-.stats-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:24px; }
-.stat-card { background:#fff; border-radius:8px; padding:16px 20px; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
-.stat-label { font-size:12px; color:#86909c; margin-bottom:6px; }
-.stat-value { font-size:22px; font-weight:600; color:#1f2329; }
-.stat-change { font-size:12px; margin-top:4px; }
-.chart-container { background:#fff; border-radius:8px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
-#stockChart { width:100%; height:560px; }
-.container { max-width:1200px; margin:0 auto; }
-.section-card { background:#fff; border-radius:8px; padding:20px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
-.section-title { font-size:16px; font-weight:600; margin-bottom:12px; color:#1f2329; }
-.subsection-title { font-size:14px; font-weight:600; margin:12px 0 8px; color:#333; }
-.info-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:8px 16px; }
-.info-item { display:flex; justify-content:space-between; font-size:13px; padding:6px 0; border-bottom:1px solid #f0f0f0; }
-.info-label { color:#666; }
-.info-value { color:#1f2329; font-weight:500; }
-.resource-table { width:100%; border-collapse:collapse; font-size:13px; margin:8px 0; }
-.resource-table th, .resource-table td { border:1px solid #e5e6eb; padding:8px 10px; text-align:center; }
-.resource-table th { background:#f7f8fa; font-weight:500; }
-.pea-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin:8px 0; }
-.pea-item { background:#f7f8fa; border-radius:6px; padding:12px; text-align:center; }
-.pea-label { font-size:12px; color:#666; margin-bottom:4px; }
-.pea-value { font-size:18px; font-weight:600; color:#1f2329; }
-.pea-unit { font-size:11px; color:#999; margin-top:2px; }
-.highlight-box { background:#f0f7ff; border-radius:6px; padding:12px; margin:8px 0; border-left:3px solid #1565c0; }
-.highlight-title { font-weight:600; font-size:13px; color:#1565c0; margin-bottom:4px; }
-.news-main { margin-bottom:12px; }
-.news-date { font-size:12px; color:#86909c; margin-bottom:4px; }
-.news-title { font-size:14px; font-weight:600; margin-bottom:8px; }
-.news-body p { font-size:13px; color:#555; line-height:1.7; margin-bottom:6px; }
-.news-list { display:flex; flex-direction:column; gap:8px; }
-.news-item { display:flex; gap:12px; font-size:13px; padding:8px; background:#f7f8fa; border-radius:6px; }
-.ni-date { color:#86909c; white-space:nowrap; min-width:90px; }
-.ni-title { color:#1f2329; }
-.target-price-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin:8px 0; }
-.tp-item { background:#f7f8fa; border-radius:6px; padding:10px; text-align:center; }
-.tp-bank { font-size:11px; color:#666; margin-bottom:4px; }
-.tp-price { font-size:16px; font-weight:600; color:#1565c0; }
-.tp-consensus .tp-price { color:#e65100; }
-.bull-bear-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:8px 0; }
-.bull-card, .bear-card { border-radius:6px; padding:12px; }
-.bull-card { background:#f0faf0; border-left:3px solid #2e7d32; }
-.bear-card { background:#fff5f5; border-left:3px solid #c62828; }
-.bb-title { font-weight:600; font-size:13px; margin-bottom:6px; }
-.bull-card .bb-title { color:#2e7d32; }
-.bear-card .bb-title { color:#c62828; }
-.bb-list { padding-left:16px; font-size:12px; color:#555; line-height:1.8; }
-@media (max-width:768px) {
-  .stats-grid { grid-template-columns:repeat(2, 1fr); }
-  .info-grid, .pea-grid, .target-price-grid, .bull-bear-grid { grid-template-columns:1fr; }
-}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f5f6f7; color: #1f2329; }
+  .header { background: #fff; border-bottom: 1px solid #dee0e3; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .header-title { font-size: 18px; font-weight: 600; color: #1f2329; }
+  .header-sub { font-size: 12px; color: #8f959e; margin-top: 4px; }
+  .tabs { display: flex; background: #fff; border-bottom: 1px solid #dee0e3; padding: 0 24px; }
+  .tab { padding: 12px 20px; cursor: pointer; font-size: 14px; color: #646a73; border-bottom: 2px solid transparent; transition: all 0.2s; }
+  .tab.active { color: #1565c0; border-bottom-color: #1565c0; font-weight: 500; }
+  .tab:hover { color: #1565c0; }
+  .tab-content { display: none; padding: 20px 24px; }
+  .tab-content.active { display: block; }
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+  .stat-card { background: #fff; border-radius: 8px; padding: 16px; border: 1px solid #dee0e3; }
+  .stat-label { font-size: 12px; color: #8f959e; margin-bottom: 6px; }
+  .stat-value { font-size: 22px; font-weight: 600; color: #1f2329; }
+  .stat-unit { font-size: 12px; color: #646a73; margin-left: 4px; }
+  .stat-change { font-size: 12px; margin-top: 4px; }
+  .chart-container { background: #fff; border-radius: 8px; border: 1px solid #dee0e3; padding: 16px; }
+  #main-chart { width: 100%; height: 560px; }
+  .container { max-width: 1200px; margin: 0 auto; }
+  /* Company profile styles */
+  .section-card { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 16px; border: 1px solid #dee0e3; }
+  .section-title { font-size: 16px; font-weight: 600; color: #1f2329; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #f0f1f2; }
+  .subsection-title { font-size: 14px; font-weight: 600; color: #1f2329; margin: 16px 0 10px; }
+  .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .info-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f5f6f7; }
+  .info-label { font-size: 13px; color: #8f959e; }
+  .info-value { font-size: 13px; color: #1f2329; font-weight: 500; }
+  .resource-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13px; }
+  .resource-table th, .resource-table td { border: 1px solid #dee0e3; padding: 8px 10px; text-align: left; }
+  .resource-table th { background: #f5f6f7; font-weight: 600; }
+  .pea-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 10px 0; }
+  .pea-item { background: #f8f9fa; border-radius: 6px; padding: 12px; text-align: center; }
+  .pea-label { font-size: 11px; color: #8f959e; margin-bottom: 4px; }
+  .pea-value { font-size: 18px; font-weight: 600; color: #1565c0; }
+  .pea-unit { font-size: 11px; color: #646a73; }
+  .highlight-box { background: #f0f7ff; border-left: 3px solid #1565c0; padding: 12px; margin: 10px 0; border-radius: 0 6px 6px 0; }
+  .highlight-title { font-size: 13px; font-weight: 600; color: #1565c0; margin-bottom: 6px; }
+  .news-main { margin-bottom: 16px; }
+  .news-date { font-size: 12px; color: #8f959e; margin-bottom: 4px; }
+  .news-title { font-size: 14px; font-weight: 600; color: #1f2329; margin-bottom: 8px; }
+  .news-body p { font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 8px; }
+  .news-list { display: flex; flex-direction: column; gap: 8px; }
+  .news-item { display: flex; gap: 12px; padding: 8px; background: #f8f9fa; border-radius: 6px; }
+  .ni-date { font-size: 11px; color: #8f959e; min-width: 90px; }
+  .ni-title { font-size: 13px; color: #1f2329; }
+  .target-price-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0; }
+  .tp-item { background: #f8f9fa; border-radius: 6px; padding: 10px; text-align: center; }
+  .tp-bank { font-size: 11px; color: #8f959e; margin-bottom: 4px; }
+  .tp-price { font-size: 16px; font-weight: 600; color: #2e7d32; }
+  .tp-consensus .tp-price { color: #1565c0; }
+  .bull-bear-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+  .bull-card, .bear-card { border-radius: 6px; padding: 12px; }
+  .bull-card { background: #f0f9f0; border: 1px solid #c8e6c9; }
+  .bear-card { background: #fff5f5; border: 1px solid #ffcdd2; }
+  .bb-title { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .bull-card .bb-title { color: #2e7d32; }
+  .bear-card .bb-title { color: #c62828; }
+  .bb-list { padding-left: 16px; font-size: 12px; color: #555; line-height: 1.8; }
+  @media (max-width: 768px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .info-grid { grid-template-columns: 1fr; }
+    .pea-grid { grid-template-columns: repeat(2, 1fr); }
+    .target-price-grid { grid-template-columns: repeat(2, 1fr); }
+    .bull-bear-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
 <div class="header">
   <div>
-    <h1>Lumina Metals (TSX:LMCU / WSE:LMU)</h1>
-    <div class="subtitle">数据更新至 2026-08-07 · 综合行情看板</div>
+    <div class="header-title">Lumina Metals (TSX:LMCU / WSE:LMU)</div>
+    <div class="header-sub">综合数据看板 · 数据更新至 2026-08-14</div>
   </div>
 </div>
 <div class="tabs">
   <div class="tab active" onclick="switchTab('stock')">股价数据</div>
   <div class="tab" onclick="switchTab('company')">公司情况</div>
 </div>
+
 <div id="tab-stock" class="tab-content active">
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-label">铜价 (LME)</div>
-      <div class="stat-value" style="color:#e65100">14,191</div>
-      <div class="stat-change">$/tonne</div>
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">铜价 (LME)</div>
+        <div class="stat-value">14,425<span class="stat-unit">$/t</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">银价</div>
+        <div class="stat-value">64.66<span class="stat-unit">$/oz</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">TSX 收盘价</div>
+        <div class="stat-value">9.71<span class="stat-unit">C$</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">WSE 收盘价</div>
+        <div class="stat-value">26.21<span class="stat-unit">zł</span></div>
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">银价</div>
-      <div class="stat-value" style="color:#78909c">63.57</div>
-      <div class="stat-change">$/oz</div>
+    <div class="chart-container">
+      <div id="main-chart"></div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">TSX 收盘价</div>
-      <div class="stat-value" style="color:#1565c0">9.56</div>
-      <div class="stat-change">C$</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">WSE 收盘价</div>
-      <div class="stat-value" style="color:#2e7d32">25.02</div>
-      <div class="stat-change">zł</div>
-    </div>
-  </div>
-  <div class="chart-container">
-    <div id="stockChart"></div>
   </div>
 </div>
+
 <div id="tab-company" class="tab-content">
+  <div class="container">
+    <div id="tab-company" class="tab-content">
 <div class="container">
   <!-- 项目概况 -->
   <div class="section-card">
@@ -265,174 +273,158 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helv
   </div>
   </div>
 </div>
-<script>
-const chartData = {"dates": ["2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-23", "2026-05-24", "2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30", "2026-05-31", "2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05", "2026-06-06", "2026-06-07", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-11", "2026-06-12", "2026-06-13", "2026-06-14", "2026-06-15", "2026-06-16", "2026-06-17", "2026-06-18", "2026-06-19", "2026-06-20", "2026-06-21", "2026-06-22", "2026-06-23", "2026-06-24", "2026-06-25", "2026-06-26", "2026-06-27", "2026-06-28", "2026-06-29", "2026-06-30", "2026-07-01", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05", "2026-07-06", "2026-07-07", "2026-07-08", "2026-07-09", "2026-07-10", "2026-07-11", "2026-07-12", "2026-07-13", "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17", "2026-07-18", "2026-07-19", "2026-07-20", "2026-07-21", "2026-07-22", "2026-07-23", "2026-07-24", "2026-07-25", "2026-07-26", "2026-07-27", "2026-07-28", "2026-07-29", "2026-07-30", "2026-07-31", "2026-08-01", "2026-08-02", "2026-08-03", "2026-08-04", "2026-08-05", "2026-08-06", "2026-08-07"], "tsx": [11.95, 12.15, 12.08, 11.84, null, null, 12.07, 12.11, 11.95, 12.06, 11.95, null, null, 11.69, 11.66, 11.85, 12.69, 10.98, null, null, 10.9, 10.3, 10.05, 10.39, 11.09, null, null, 11.6, 11.7, 11.92, 11.4, 11.29, null, null, 10.93, 10.49, 10.07, 10.28, 10.4, null, null, 10.3, 10.23, null, 10.57, 10.68, null, null, 10.31, 9.6, 9.21, 9.55, 9.51, null, null, 9.26, 9.52, 9.15, 8.6, 8.77, null, null, 8.93, 9.2, 9.28, 8.86, 8.99, null, null, 9.13, 8.87, 8.75, 8.93, 8.77, null, null, null, 9.47, 9.68, 8.98, 9.56], "wse": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 35.5, 35.41, 32.0, 31.8, null, null, 29.9, 29.99, 28.0, 28.8, 28.2, null, null, 27.18, 27.5, 28.3, 27.15, 28.17, null, null, 27.82, 26.95, 24.7, 25.69, 25.81, null, null, 25.18, 25.48, 25.08, 23.54, 23.28, null, null, 23.8, 24.9, 25.4, 24.5, 25.4, null, null, 24.06, 25.1, 24.95, 23.5, 23.15, null, null, 24.48, 24.4, 26.97, 25.0, 25.02], "copper": [13333.9, 13595.63, 13455.86, 13614.84, null, null, null, 13565.69, 13465.16, 13656.19, 13503.11, null, null, 13808.12, 14036.66, 13802.37, 13920.49, 13490.32, null, null, 13592.08, 13573.34, 13466.23, 13448.01, 13645.33, null, null, 13669.66, 13699.9, 13763.45, 13624.19, null, null, null, 13580.37, 13302.84, 13029.71, 13227.58, 13335.92, null, null, 13252.81, 13348.9, 13249.24, 13287.6, null, null, null, 13348.43, 13298.49, 13097.18, 13439.8, 13418.55, null, null, 13487.86, 13595.75, 13534.07, 13554.35, 13500.88, null, null, 13621.19, 13898.49, 13812.7, 13599.1, 13653.8, null, null, 13770.61, 13715.2, 13605.04, 13843.49, 13835.7, null, null, 13943.57, 14168.88, 14218.65, 14226.64, 14190.59], "silver": [73.7015, 75.8672, 76.6678, 75.4982, null, null, null, null, 74.6483, 75.6616, 75.2837, null, null, null, 75.1276, 72.7299, 73.89, 67.8347, null, null, 68.177, 65.366, 63.4151, 67.3357, 67.7815, null, null, 69.9725, 70.0317, 67.9443, 65.7221, 64.81, null, null, 65.1027, 61.5535, 57.4508, 57.8582, 58.924, null, null, 58.2942, 58.5934, 59.107, 60.971, 62.3853, null, null, 62.0472, 59.9825, 58.2888, 59.9619, 59.702, null, null, 57.6529, 58.6999, 57.7808, 55.5185, 55.8995, null, null, 56.4178, 58.7908, 59.7112, 57.6534, 58.211, null, null, 58.4015, 57.1153, 57.6253, 58.9963, 57.633, null, null, 58.1946, 59.5251, 62.0411, 61.5336, 63.5709], "stats": {"tsx_close": 9.56, "wse_close": 25.02, "copper_price": 14190.59, "silver_price": 63.5709, "gold_price": 4342.39, "latest_date": "2026-08-07"}};
+  </div>
+</div>
 
+<script>
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  event.target.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelector('.tab[onclick="switchTab('' + name + '')"]').classList.add('active');
   document.getElementById('tab-' + name).classList.add('active');
-  if (name === 'stock' && window.stockChart) {
-    window.stockChart.resize();
-  }
+  if (name === 'stock') { chart.resize(); }
 }
 
-function initChart() {
-  const dom = document.getElementById('stockChart');
-  if (!dom) return;
-  const chart = echarts.init(dom);
-  window.stockChart = chart;
+const dates = ["2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-23", "2026-05-24", "2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30", "2026-05-31", "2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05", "2026-06-06", "2026-06-07", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-11", "2026-06-12", "2026-06-13", "2026-06-14", "2026-06-15", "2026-06-16", "2026-06-17", "2026-06-18", "2026-06-19", "2026-06-20", "2026-06-21", "2026-06-22", "2026-06-23", "2026-06-24", "2026-06-25", "2026-06-26", "2026-06-27", "2026-06-28", "2026-06-29", "2026-06-30", "2026-07-01", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05", "2026-07-06", "2026-07-07", "2026-07-08", "2026-07-09", "2026-07-10", "2026-07-11", "2026-07-12", "2026-07-13", "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17", "2026-07-18", "2026-07-19", "2026-07-20", "2026-07-21", "2026-07-22", "2026-07-23", "2026-07-24", "2026-07-25", "2026-07-26", "2026-07-27", "2026-07-28", "2026-07-29", "2026-07-30", "2026-07-31", "2026-08-01", "2026-08-02", "2026-08-03", "2026-08-04", "2026-08-05", "2026-08-06", "2026-08-07", "2026-08-08", "2026-08-09", "2026-08-10", "2026-08-11", "2026-08-12", "2026-08-13", "2026-08-14"];
+const tsxData = [11.95, 12.15, 12.08, 11.84, null, null, 12.07, 12.11, 11.95, 12.06, 11.95, null, null, 11.69, 11.66, 11.85, 12.69, 10.98, null, null, 10.9, 10.3, 10.05, 10.39, 11.09, null, null, 11.6, 11.7, 11.92, 11.4, 11.29, null, null, 10.93, 10.49, 10.07, 10.28, 10.4, null, null, 10.3, 10.23, null, 10.57, 10.68, null, null, 10.31, 9.6, 9.21, 9.55, 9.51, null, null, 9.26, 9.52, 9.15, 8.6, 8.77, null, null, 8.93, 9.2, 9.28, 8.86, 8.99, null, null, 9.13, 8.87, 8.75, 8.93, 8.77, null, null, null, 9.47, 9.68, 8.98, 9.56, null, null, 10.03, 9.88, 9.79, 9.6, 9.71];
+const wseData = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 35.5, 35.41, 32.0, 31.8, null, null, 29.9, 29.99, 28.0, 28.8, 28.2, null, null, 27.18, 27.5, 28.3, 27.15, 28.17, null, null, 27.82, 26.95, 24.7, 25.69, 25.81, null, null, 25.18, 25.48, 25.08, 23.54, 23.28, null, null, 23.8, 24.9, 25.4, 24.5, 25.4, null, null, 24.06, 25.1, 24.95, 23.5, 23.15, null, null, 24.48, 24.4, 26.97, 25.0, 25.02, null, null, 25.95, 26.75, 26.66, 26.27, 26.21];
+const copperData = [13950.0, 13950.0, 13950.0, 13950.0, null, null, 13950.0, 13950.0, 13950.0, 13950.0, 13950.0, null, null, 13950.0, 13950.0, 13950.0, 13950.0, 13950.0, null, null, 13950.0, 13950.0, 13950.0, 13950.0, 13950.0, null, null, 13950.0, 13950.0, 13950.0, 13950.0, 13950.0, null, null, 13950.0, 13950.0, 13950.0, 13950.0, 13950.0, null, null, 13950.0, 13950.0, 13950.0, 13950.0, 13950.0, null, null, 13950.0, 13950.0, 13950.0, 13950.0, 13950.0, null, null, 13950.0, 13950.0, 13950.0, 13950.0, 13950.0, null, null, 13950.0, 13950.0, 13950.0, 13950.0, 13950.0, null, null, 13950.0, 13950.0, 13950.0, 13950.0, 13950.0, null, null, 13950.0, 14020.0, 14080.0, 14080.0, 14190.59, null, null, 14320.0, 14370.0, 14370.0, 14370.0, 14425.0];
+const silverData = [62.5, 62.5, 62.5, 62.5, null, null, 62.5, 62.5, 62.5, 62.5, 62.5, null, null, 62.5, 62.5, 62.5, 62.5, 62.5, null, null, 62.5, 62.5, 62.5, 62.5, 62.5, null, null, 62.5, 62.5, 62.5, 62.5, 62.5, null, null, 62.5, 62.5, 62.5, 62.5, 62.5, null, null, 62.5, 62.5, 62.5, 62.5, 62.5, null, null, 62.5, 62.5, 62.5, 62.5, 62.5, null, null, 62.5, 62.5, 62.5, 62.5, 62.5, null, null, 62.5, 62.5, 62.5, 62.5, 62.5, null, null, 62.5, 62.5, 62.5, 62.5, 62.5, null, null, 62.5, 62.65, 62.8, 62.8, 63.5709, null, null, 64.2, 64.35, 64.35, 64.35, 64.66];
 
-  const dates = chartData.dates;
-  const tsxData = chartData.tsx;
-  const wseData = chartData.wse;
-  const copperData = chartData.copper;
-  const silverData = chartData.silver;
+// Axis ranges
+const tsxMin = Math.min(...tsxData.filter(v => v !== null)) * 0.90;
+const tsxMax = Math.max(...tsxData.filter(v => v !== null)) * 1.10;
+const wseMin = Math.min(...wseData.filter(v => v !== null)) * 0.90;
+const wseMax = Math.max(...wseData.filter(v => v !== null)) * 1.10;
+const cuMin = Math.min(...copperData.filter(v => v !== null)) * 0.90;
+const cuMax = Math.max(...copperData.filter(v => v !== null)) * 1.10;
+const agMin = Math.min(...silverData.filter(v => v !== null)) * 0.90;
+const agMax = Math.max(...silverData.filter(v => v !== null)) * 1.10;
 
-  const minMax = (arr) => {
-    const vals = arr.filter(v => v !== null && v !== undefined);
-    if (vals.length === 0) return [0, 1];
-    const min = Math.min(...vals);
-    const max = Math.max(...vals);
-    return [min * 0.90, max * 1.10];
-  };
-
-  const [tsxMin, tsxMax] = minMax(tsxData);
-  const [wseMin, wseMax] = minMax(wseData);
-  const [copperMin, copperMax] = minMax(copperData);
-  const [silverMin, silverMax] = minMax(silverData);
-
-  const option = {
-    tooltip: {
-      trigger: 'axis',
-      formatter: function(params) {
-        let html = '<div style="font-weight:600;margin-bottom:4px;">' + params[0].axisValue + '</div>';
-        params.forEach(p => {
-          const color = p.color;
-          let prefix = '$';
+const chart = echarts.init(document.getElementById('main-chart'));
+const option = {
+  tooltip: {
+    trigger: 'axis',
+    formatter: function(params) {
+      let res = params[0].axisValue + '<br/>';
+      params.forEach(p => {
+        if (p.value !== undefined && p.value !== null) {
+          let prefix = '';
           if (p.seriesName === 'TSX') prefix = 'C$';
-          if (p.seriesName === 'WSE') prefix = 'zł';
-          const val = p.value !== undefined && p.value !== null ? p.value.toLocaleString('en-US', {maximumFractionDigits:2}) : '-';
-          html += '<div style="display:flex;align-items:center;gap:6px;margin:2px 0;"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + color + ';"></span><span style="flex:1;">' + p.seriesName + '</span><span style="font-weight:500;">' + prefix + val + '</span></div>';
-        });
-        return html;
+          else if (p.seriesName === 'WSE') prefix = 'zł';
+          else prefix = '$';
+          res += '<span style="display:inline-block;margin-right:4px;border-radius:50%;width:8px;height:8px;background:' + p.color + ';"></span>'
+               + p.seriesName + ': ' + prefix + p.value.toLocaleString('en-US', {maximumFractionDigits: 2}) + '<br/>';
+        }
+      });
+      return res;
+    }
+  },
+  legend: { data: ['TSX', 'WSE', 'Copper', 'Silver'], top: 0 },
+  grid: { left: '14%', right: '16%', top: 50, bottom: 40 },
+  xAxis: {
+    type: 'category',
+    data: dates,
+    axisLabel: {
+      formatter: function(value, idx) {
+        if (idx % 6 === 0) return value.slice(5);
+        return '';
       }
+    }
+  },
+  yAxis: [
+    {
+      type: 'value',
+      name: 'TSX (C$)',
+      min: tsxMin,
+      max: tsxMax,
+      position: 'left',
+      axisLine: { show: true, lineStyle: { color: '#1565c0' } },
+      axisLabel: { color: '#1565c0', formatter: value => value.toLocaleString('en-US', {maximumFractionDigits:0}) },
+      splitLine: { show: true, lineStyle: { type: 'dashed', color: '#eee' } }
     },
-    legend: {
-      data: ['TSX', 'WSE', 'Copper', 'Silver'],
-      top: 8
+    {
+      type: 'value',
+      name: 'WSE (zł)',
+      min: wseMin,
+      max: wseMax,
+      position: 'left',
+      offset: 70,
+      axisLine: { show: true, lineStyle: { color: '#2e7d32' } },
+      axisLabel: { color: '#2e7d32', formatter: value => value.toLocaleString('en-US', {maximumFractionDigits:0}) },
+      splitLine: { show: false }
     },
-    grid: {
-      left: '14%',
-      right: '16%',
-      top: 60,
-      bottom: 60
+    {
+      type: 'value',
+      name: 'Silver ($)',
+      min: agMin,
+      max: agMax,
+      position: 'right',
+      axisLine: { show: true, lineStyle: { color: '#78909c' } },
+      axisLabel: { color: '#78909c', formatter: value => value.toLocaleString('en-US', {maximumFractionDigits:0}) },
+      splitLine: { show: false }
     },
-    xAxis: {
-      type: 'category',
-      data: dates,
-      axisLabel: {
-        formatter: function(value, idx) {
-          if (idx % 6 === 0) return value;
-          return '';
-        },
-        rotate: 30
-      }
+    {
+      type: 'value',
+      name: 'Copper ($)',
+      min: cuMin,
+      max: cuMax,
+      position: 'right',
+      offset: 70,
+      axisLine: { show: true, lineStyle: { color: '#e65100' } },
+      axisLabel: { color: '#e65100', formatter: value => value.toLocaleString('en-US', {maximumFractionDigits:0}) },
+      splitLine: { show: false }
+    }
+  ],
+  series: [
+    {
+      name: 'TSX',
+      type: 'line',
+      yAxisIndex: 0,
+      data: tsxData,
+      smooth: false,
+      connectNulls: true,
+      lineStyle: { color: '#1565c0', width: 2.5, type: 'solid' },
+      itemStyle: { color: '#1565c0' },
+      showSymbol: false
     },
-    yAxis: [
-      {
-        type: 'value',
-        name: 'TSX (C$)',
-        min: tsxMin,
-        max: tsxMax,
-        position: 'left',
-        axisLabel: { formatter: v => Math.round(v).toLocaleString() },
-        axisLine: { lineStyle: { color: '#1565c0' } },
-        nameTextStyle: { color: '#1565c0', fontWeight: 'bold' }
-      },
-      {
-        type: 'value',
-        name: 'WSE (zł)',
-        min: wseMin,
-        max: wseMax,
-        position: 'left',
-        offset: 70,
-        axisLabel: { formatter: v => Math.round(v).toLocaleString() },
-        axisLine: { lineStyle: { color: '#2e7d32' } },
-        nameTextStyle: { color: '#2e7d32', fontWeight: 'bold' }
-      },
-      {
-        type: 'value',
-        name: 'Silver ($)',
-        min: silverMin,
-        max: silverMax,
-        position: 'right',
-        axisLabel: { formatter: v => Math.round(v).toLocaleString() },
-        axisLine: { lineStyle: { color: '#78909c' } },
-        nameTextStyle: { color: '#78909c', fontWeight: 'bold' }
-      },
-      {
-        type: 'value',
-        name: 'Copper ($)',
-        min: copperMin,
-        max: copperMax,
-        position: 'right',
-        offset: 70,
-        axisLabel: { formatter: v => Math.round(v).toLocaleString() },
-        axisLine: { lineStyle: { color: '#e65100' } },
-        nameTextStyle: { color: '#e65100', fontWeight: 'bold' }
-      }
-    ],
-    series: [
-      {
-        name: 'TSX',
-        type: 'line',
-        yAxisIndex: 0,
-        data: tsxData,
-        connectNulls: true,
-        smooth: false,
-        symbol: 'none',
-        lineStyle: { width: 2.5, color: '#1565c0', type: 'solid' }
-      },
-      {
-        name: 'WSE',
-        type: 'line',
-        yAxisIndex: 1,
-        data: wseData,
-        connectNulls: true,
-        smooth: false,
-        symbol: 'none',
-        lineStyle: { width: 2.5, color: '#2e7d32', type: 'solid' }
-      },
-      {
-        name: 'Silver',
-        type: 'line',
-        yAxisIndex: 2,
-        data: silverData,
-        connectNulls: true,
-        smooth: false,
-        symbol: 'none',
-        lineStyle: { width: 2, color: '#78909c', type: 'dashed' }
-      },
-      {
-        name: 'Copper',
-        type: 'line',
-        yAxisIndex: 3,
-        data: copperData,
-        connectNulls: true,
-        smooth: false,
-        symbol: 'none',
-        lineStyle: { width: 2, color: '#e65100', type: 'dashed' }
-      }
-    ]
-  };
-
-  chart.setOption(option);
-  window.addEventListener('resize', () => chart.resize());
-}
-
-initChart();
+    {
+      name: 'WSE',
+      type: 'line',
+      yAxisIndex: 1,
+      data: wseData,
+      smooth: false,
+      connectNulls: true,
+      lineStyle: { color: '#2e7d32', width: 2.5, type: 'solid' },
+      itemStyle: { color: '#2e7d32' },
+      showSymbol: false
+    },
+    {
+      name: 'Silver',
+      type: 'line',
+      yAxisIndex: 2,
+      data: silverData,
+      smooth: false,
+      connectNulls: true,
+      lineStyle: { color: '#78909c', width: 2, type: 'dashed' },
+      itemStyle: { color: '#78909c' },
+      showSymbol: false
+    },
+    {
+      name: 'Copper',
+      type: 'line',
+      yAxisIndex: 3,
+      data: copperData,
+      smooth: false,
+      connectNulls: true,
+      lineStyle: { color: '#e65100', width: 2, type: 'dashed' },
+      itemStyle: { color: '#e65100' },
+      showSymbol: false
+    }
+  ]
+};
+chart.setOption(option);
+window.addEventListener('resize', () => chart.resize());
 </script>
 </body>
 </html>
