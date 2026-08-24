@@ -1,648 +1,648 @@
 {
-  "records": [
-    {
-      "Date_str": "2026-05-19",
-      "TSX": 11.95,
-      "WSE": null,
-      "Silver": 73.7015,
-      "Copper": 13594.805397630502
-    },
-    {
-      "Date_str": "2026-05-20",
-      "TSX": 12.15,
-      "WSE": null,
-      "Silver": 75.8672,
-      "Copper": 13871.485536672524
-    },
-    {
-      "Date_str": "2026-05-21",
-      "TSX": 12.08,
-      "WSE": null,
-      "Silver": 76.6678,
-      "Copper": 13798.732990151515
-    },
-    {
-      "Date_str": "2026-05-22",
-      "TSX": 11.84,
-      "WSE": null,
-      "Silver": 75.4982,
-      "Copper": 13994.944403496054
-    },
-    {
-      "Date_str": "2026-05-23",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-05-24",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-05-25",
-      "TSX": 12.07,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-05-26",
-      "TSX": 12.11,
-      "WSE": null,
-      "Silver": null,
-      "Copper": 14022.502186269165
-    },
-    {
-      "Date_str": "2026-05-27",
-      "TSX": 11.95,
-      "WSE": null,
-      "Silver": 74.6483,
-      "Copper": 13873.690159294372
-    },
-    {
-      "Date_str": "2026-05-28",
-      "TSX": 12.06,
-      "WSE": null,
-      "Silver": 75.6616,
-      "Copper": 14101.86860065572
-    },
-    {
-      "Date_str": "2026-05-29",
-      "TSX": 11.95,
-      "WSE": null,
-      "Silver": 75.2837,
-      "Copper": 14019.195252336393
-    },
-    {
-      "Date_str": "2026-05-30",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-05-31",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-06-01",
-      "TSX": 11.69,
-      "WSE": null,
-      "Silver": null,
-      "Copper": 14440.27817310951
-    },
-    {
-      "Date_str": "2026-06-02",
-      "TSX": 11.66,
-      "WSE": null,
-      "Silver": 75.1276,
-      "Copper": 14626.56878465573
-    },
-    {
-      "Date_str": "2026-06-03",
-      "TSX": 11.85,
-      "WSE": null,
-      "Silver": 72.7299,
-      "Copper": 14276.033787781775
-    },
-    {
-      "Date_str": "2026-06-04",
-      "TSX": 12.69,
-      "WSE": null,
-      "Silver": 73.89,
-      "Copper": 14385.16260756329
-    },
-    {
-      "Date_str": "2026-06-05",
-      "TSX": 10.98,
-      "WSE": null,
-      "Silver": 67.8347,
-      "Copper": 13784.402943109499
-    },
-    {
-      "Date_str": "2026-06-06",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-06-07",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-06-08",
-      "TSX": 10.9,
-      "WSE": null,
-      "Silver": 68.177,
-      "Copper": 13982.818979075888
-    },
-    {
-      "Date_str": "2026-06-09",
-      "TSX": 10.3,
-      "WSE": null,
-      "Silver": 65.366,
-      "Copper": 13939.828837949837
-    },
-    {
-      "Date_str": "2026-06-10",
-      "TSX": 10.05,
-      "WSE": null,
-      "Silver": 63.4151,
-      "Copper": 13784.402943109499
-    },
-    {
-      "Date_str": "2026-06-11",
-      "TSX": 10.39,
-      "WSE": null,
-      "Silver": 67.3357,
-      "Copper": 13834.006952101096
-    },
-    {
-      "Date_str": "2026-06-12",
-      "TSX": 11.09,
-      "WSE": null,
-      "Silver": 67.7815,
-      "Copper": 14169.109590622109
-    },
-    {
-      "Date_str": "2026-06-13",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-06-14",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-06-15",
-      "TSX": 11.6,
-      "WSE": null,
-      "Silver": 69.9725,
-      "Copper": 14321.228551529675
-    },
-    {
-      "Date_str": "2026-06-16",
-      "TSX": 11.7,
-      "WSE": 35.5,
-      "Silver": 70.0317,
-      "Copper": 14298.080014000263
-    },
-    {
-      "Date_str": "2026-06-17",
-      "TSX": 11.92,
-      "WSE": 35.41,
-      "Silver": 67.9443,
-      "Copper": 14132.733317361604
-    },
-    {
-      "Date_str": "2026-06-18",
-      "TSX": 11.4,
-      "WSE": 32.0,
-      "Silver": 65.7221,
-      "Copper": 14077.617751815385
-    },
-    {
-      "Date_str": "2026-06-19",
-      "TSX": 11.29,
-      "WSE": 31.8,
-      "Silver": 64.81,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-06-20",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-06-21",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-06-22",
-      "TSX": 10.93,
-      "WSE": 29.9,
-      "Silver": 65.1027,
-      "Copper": 14033.525299378409
-    },
-    {
-      "Date_str": "2026-06-23",
-      "TSX": 10.49,
-      "WSE": 29.99,
-      "Silver": 61.5535,
-      "Copper": 13541.894454706131
-    },
-    {
-      "Date_str": "2026-06-24",
-      "TSX": 10.07,
-      "WSE": 28.0,
-      "Silver": 57.4508,
-      "Copper": 13084.435260672508
-    },
-    {
-      "Date_str": "2026-06-25",
-      "TSX": 10.28,
-      "WSE": 28.8,
-      "Silver": 57.8582,
-      "Copper": 13311.511390722933
-    },
-    {
-      "Date_str": "2026-06-26",
-      "TSX": 10.4,
-      "WSE": 28.2,
-      "Silver": 58.924,
-      "Copper": 13507.722804067474
-    },
-    {
-      "Date_str": "2026-06-27",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-06-28",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-06-29",
-      "TSX": 10.3,
-      "WSE": 27.18,
-      "Silver": 58.2942,
-      "Copper": 13464.732662941424
-    },
-    {
-      "Date_str": "2026-06-30",
-      "TSX": 10.23,
-      "WSE": 27.5,
-      "Silver": 58.5934,
-      "Copper": 13658.739453664117
-    },
-    {
-      "Date_str": "2026-07-01",
-      "TSX": null,
-      "WSE": 28.3,
-      "Silver": 59.107,
-      "Copper": 13488.98351178176
-    },
-    {
-      "Date_str": "2026-07-02",
-      "TSX": 10.57,
-      "WSE": 27.15,
-      "Silver": 60.971,
-      "Copper": 13443.78874803386
-    },
-    {
-      "Date_str": "2026-07-03",
-      "TSX": 10.68,
-      "WSE": 28.17,
-      "Silver": 62.3853,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-07-04",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-07-05",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-07-06",
-      "TSX": 10.31,
-      "WSE": 27.82,
-      "Silver": 62.0472,
-      "Copper": 13641.102472689327
-    },
-    {
-      "Date_str": "2026-07-07",
-      "TSX": 9.6,
-      "WSE": 26.95,
-      "Silver": 59.9825,
-      "Copper": 13565.042992235542
-    },
-    {
-      "Date_str": "2026-07-08",
-      "TSX": 9.21,
-      "WSE": 24.7,
-      "Silver": 58.2888,
-      "Copper": 13397.491672975037
-    },
-    {
-      "Date_str": "2026-07-09",
-      "TSX": 9.55,
-      "WSE": 25.69,
-      "Silver": 59.9619,
-      "Copper": 13698.422660857394
-    },
-    {
-      "Date_str": "2026-07-10",
-      "TSX": 9.51,
-      "WSE": 25.81,
-      "Silver": 59.702,
-      "Copper": 13740.310490672522
-    },
-    {
-      "Date_str": "2026-07-11",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-07-12",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-07-13",
-      "TSX": 9.26,
-      "WSE": 25.18,
-      "Silver": 57.6529,
-      "Copper": 13739.208179361598
-    },
-    {
-      "Date_str": "2026-07-14",
-      "TSX": 9.52,
-      "WSE": 25.48,
-      "Silver": 58.6999,
-      "Copper": 13924.396479596895
-    },
-    {
-      "Date_str": "2026-07-15",
-      "TSX": 9.15,
-      "WSE": 25.08,
-      "Silver": 57.7808,
-      "Copper": 13942.033460571685
-    },
-    {
-      "Date_str": "2026-07-16",
-      "TSX": 8.6,
-      "WSE": 23.54,
-      "Silver": 55.5185,
-      "Copper": 13821.881527680926
-    },
-    {
-      "Date_str": "2026-07-17",
-      "TSX": 8.77,
-      "WSE": 23.28,
-      "Silver": 55.8995,
-      "Copper": 13732.59431149605
-    },
-    {
-      "Date_str": "2026-07-18",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-07-19",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-07-20",
-      "TSX": 8.93,
-      "WSE": 23.8,
-      "Silver": 56.4178,
-      "Copper": 13907.861809933029
-    },
-    {
-      "Date_str": "2026-07-21",
-      "TSX": 9.2,
-      "WSE": 24.9,
-      "Silver": 58.7908,
-      "Copper": 14306.898504487657
-    },
-    {
-      "Date_str": "2026-07-22",
-      "TSX": 9.28,
-      "WSE": 25.4,
-      "Silver": 59.7112,
-      "Copper": 14196.667373395218
-    },
-    {
-      "Date_str": "2026-07-23",
-      "TSX": 8.86,
-      "WSE": 24.5,
-      "Silver": 57.6534,
-      "Copper": 13845.03006521034
-    },
-    {
-      "Date_str": "2026-07-24",
-      "TSX": 8.99,
-      "WSE": 25.4,
-      "Silver": 58.211,
-      "Copper": 13919.987234353197
-    },
-    {
-      "Date_str": "2026-07-25",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-07-26",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-07-27",
-      "TSX": 9.13,
-      "WSE": 24.06,
-      "Silver": 58.4015,
-      "Copper": 13970.693554655718
-    },
-    {
-      "Date_str": "2026-07-28",
-      "TSX": 8.87,
-      "WSE": 25.1,
-      "Silver": 57.1153,
-      "Copper": 13834.006952101096
-    },
-    {
-      "Date_str": "2026-07-29",
-      "TSX": 8.75,
-      "WSE": 24.95,
-      "Silver": 57.6253,
-      "Copper": 14067.696950017065
-    },
-    {
-      "Date_str": "2026-07-30",
-      "TSX": 8.93,
-      "WSE": 23.5,
-      "Silver": 58.9963,
-      "Copper": 14164.700345378411
-    },
-    {
-      "Date_str": "2026-07-31",
-      "TSX": 8.77,
-      "WSE": 23.15,
-      "Silver": 57.633,
-      "Copper": 14245.169071075892
-    },
-    {
-      "Date_str": "2026-08-01",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-08-02",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-08-03",
-      "TSX": null,
-      "WSE": 24.48,
-      "Silver": 58.1946,
-      "Copper": 14330.04704201707
-    },
-    {
-      "Date_str": "2026-08-04",
-      "TSX": 9.47,
-      "WSE": 24.4,
-      "Silver": 59.5251,
-      "Copper": 14600.113313193544
-    },
-    {
-      "Date_str": "2026-08-05",
-      "TSX": 9.68,
-      "WSE": 26.97,
-      "Silver": 62.0411,
-      "Copper": 14821.677886689347
-    },
-    {
-      "Date_str": "2026-08-06",
-      "TSX": 8.98,
-      "WSE": 25.0,
-      "Silver": null,
-      "Copper": 14832.700999798592
-    },
-    {
-      "Date_str": "2026-08-07",
-      "TSX": 9.56,
-      "WSE": 25.02,
-      "Silver": 62.95,
-      "Copper": 14780.0
-    },
-    {
-      "Date_str": "2026-08-08",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-08-09",
-      "TSX": null,
-      "WSE": null,
-      "Silver": null,
-      "Copper": null
-    },
-    {
-      "Date_str": "2026-08-10",
-      "TSX": 10.03,
-      "WSE": 25.95,
-      "Silver": 64.1,
-      "Copper": 14650.0
-    },
-    {
-      "Date_str": "2026-08-11",
-      "TSX": 9.88,
-      "WSE": 26.75,
-      "Silver": 64.66,
-      "Copper": 14580.0
-    },
-    {
-      "Date_str": "2026-08-12",
-      "TSX": 9.79,
-      "WSE": 26.66,
-      "Silver": 65.45,
-      "Copper": 14520.0
-    },
-    {
-      "Date_str": "2026-08-13",
-      "TSX": 9.6,
-      "WSE": 26.27,
-      "Silver": 64.39,
-      "Copper": 14460.0
-    },
-    {
-      "Date_str": "2026-08-14",
-      "TSX": 9.71,
-      "WSE": 26.21,
-      "Silver": 64.66,
-      "Copper": 14425.0
-    }
-  ],
   "stats": {
     "tsx_latest_date": "2026-08-14",
     "tsx_latest_close": 9.71,
     "wse_latest_date": "2026-08-14",
     "wse_latest_close": 26.21,
     "copper_latest_date": "2026-08-14",
-    "copper_latest_price": 14425.0,
+    "copper_latest_price": 14576.29,
     "silver_latest_date": "2026-08-14",
-    "silver_latest_price": 64.66
+    "silver_latest_price": 64.6966
   },
   "axis_ranges": {
     "tsx": {
       "min": 7.74,
-      "max": 13.959000000000001
+      "max": 13.96
     },
     "wse": {
-      "min": 20.835,
-      "max": 39.050000000000004
-    },
-    "silver": {
-      "min": 49.96665,
-      "max": 84.33458
+      "min": 20.84,
+      "max": 39.05
     },
     "copper": {
-      "min": 11775.991734605257,
-      "max": 16315.971099778451
+      "min": 11726.74,
+      "max": 16033.92
+    },
+    "silver": {
+      "min": 49.97,
+      "max": 84.33
     }
-  }
+  },
+  "records": [
+    {
+      "Date_str": "2026-05-19",
+      "TSX": 11.95,
+      "WSE": null,
+      "Copper": 13333.9,
+      "Silver": 73.7015
+    },
+    {
+      "Date_str": "2026-05-20",
+      "TSX": 12.15,
+      "WSE": null,
+      "Copper": 13595.63,
+      "Silver": 75.8672
+    },
+    {
+      "Date_str": "2026-05-21",
+      "TSX": 12.08,
+      "WSE": null,
+      "Copper": 13455.86,
+      "Silver": 76.6678
+    },
+    {
+      "Date_str": "2026-05-22",
+      "TSX": 11.84,
+      "WSE": null,
+      "Copper": 13614.84,
+      "Silver": 75.4982
+    },
+    {
+      "Date_str": "2026-05-23",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-05-24",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-05-25",
+      "TSX": 12.07,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-05-26",
+      "TSX": 12.11,
+      "WSE": null,
+      "Copper": 13565.69,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-05-27",
+      "TSX": 11.95,
+      "WSE": null,
+      "Copper": 13465.16,
+      "Silver": 74.6483
+    },
+    {
+      "Date_str": "2026-05-28",
+      "TSX": 12.06,
+      "WSE": null,
+      "Copper": 13656.19,
+      "Silver": 75.6616
+    },
+    {
+      "Date_str": "2026-05-29",
+      "TSX": 11.95,
+      "WSE": null,
+      "Copper": 13503.11,
+      "Silver": 75.2837
+    },
+    {
+      "Date_str": "2026-05-30",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-05-31",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-06-01",
+      "TSX": 11.69,
+      "WSE": null,
+      "Copper": 13808.12,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-06-02",
+      "TSX": 11.66,
+      "WSE": null,
+      "Copper": 14036.66,
+      "Silver": 75.1276
+    },
+    {
+      "Date_str": "2026-06-03",
+      "TSX": 11.85,
+      "WSE": null,
+      "Copper": 13802.37,
+      "Silver": 72.7299
+    },
+    {
+      "Date_str": "2026-06-04",
+      "TSX": 12.69,
+      "WSE": null,
+      "Copper": 13920.49,
+      "Silver": 73.89
+    },
+    {
+      "Date_str": "2026-06-05",
+      "TSX": 10.98,
+      "WSE": null,
+      "Copper": 13490.32,
+      "Silver": 67.8347
+    },
+    {
+      "Date_str": "2026-06-06",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-06-07",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-06-08",
+      "TSX": 10.9,
+      "WSE": null,
+      "Copper": 13592.08,
+      "Silver": 68.177
+    },
+    {
+      "Date_str": "2026-06-09",
+      "TSX": 10.3,
+      "WSE": null,
+      "Copper": 13573.34,
+      "Silver": 65.366
+    },
+    {
+      "Date_str": "2026-06-10",
+      "TSX": 10.05,
+      "WSE": null,
+      "Copper": 13466.23,
+      "Silver": 63.4151
+    },
+    {
+      "Date_str": "2026-06-11",
+      "TSX": 10.39,
+      "WSE": null,
+      "Copper": 13448.01,
+      "Silver": 67.3357
+    },
+    {
+      "Date_str": "2026-06-12",
+      "TSX": 11.09,
+      "WSE": null,
+      "Copper": 13645.33,
+      "Silver": 67.7815
+    },
+    {
+      "Date_str": "2026-06-13",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-06-14",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-06-15",
+      "TSX": 11.6,
+      "WSE": null,
+      "Copper": 13669.66,
+      "Silver": 69.9725
+    },
+    {
+      "Date_str": "2026-06-16",
+      "TSX": 11.7,
+      "WSE": 35.5,
+      "Copper": 13699.9,
+      "Silver": 70.0317
+    },
+    {
+      "Date_str": "2026-06-17",
+      "TSX": 11.92,
+      "WSE": 35.41,
+      "Copper": 13763.45,
+      "Silver": 67.9443
+    },
+    {
+      "Date_str": "2026-06-18",
+      "TSX": 11.4,
+      "WSE": 32.0,
+      "Copper": 13624.19,
+      "Silver": 65.7221
+    },
+    {
+      "Date_str": "2026-06-19",
+      "TSX": 11.29,
+      "WSE": 31.8,
+      "Copper": null,
+      "Silver": 64.81
+    },
+    {
+      "Date_str": "2026-06-20",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-06-21",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-06-22",
+      "TSX": 10.93,
+      "WSE": 29.9,
+      "Copper": 13580.37,
+      "Silver": 65.1027
+    },
+    {
+      "Date_str": "2026-06-23",
+      "TSX": 10.49,
+      "WSE": 29.99,
+      "Copper": 13302.84,
+      "Silver": 61.5535
+    },
+    {
+      "Date_str": "2026-06-24",
+      "TSX": 10.07,
+      "WSE": 28.0,
+      "Copper": 13029.71,
+      "Silver": 57.4508
+    },
+    {
+      "Date_str": "2026-06-25",
+      "TSX": 10.28,
+      "WSE": 28.8,
+      "Copper": 13227.58,
+      "Silver": 57.8582
+    },
+    {
+      "Date_str": "2026-06-26",
+      "TSX": 10.4,
+      "WSE": 28.2,
+      "Copper": 13335.92,
+      "Silver": 58.924
+    },
+    {
+      "Date_str": "2026-06-27",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-06-28",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-06-29",
+      "TSX": 10.3,
+      "WSE": 27.18,
+      "Copper": 13252.81,
+      "Silver": 58.2942
+    },
+    {
+      "Date_str": "2026-06-30",
+      "TSX": 10.23,
+      "WSE": 27.5,
+      "Copper": 13348.9,
+      "Silver": 58.5934
+    },
+    {
+      "Date_str": "2026-07-01",
+      "TSX": null,
+      "WSE": 28.3,
+      "Copper": 13249.24,
+      "Silver": 59.107
+    },
+    {
+      "Date_str": "2026-07-02",
+      "TSX": 10.57,
+      "WSE": 27.15,
+      "Copper": 13287.6,
+      "Silver": 60.971
+    },
+    {
+      "Date_str": "2026-07-03",
+      "TSX": 10.68,
+      "WSE": 28.17,
+      "Copper": null,
+      "Silver": 62.3853
+    },
+    {
+      "Date_str": "2026-07-04",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-07-05",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-07-06",
+      "TSX": 10.31,
+      "WSE": 27.82,
+      "Copper": 13348.43,
+      "Silver": 62.0472
+    },
+    {
+      "Date_str": "2026-07-07",
+      "TSX": 9.6,
+      "WSE": 26.95,
+      "Copper": 13298.49,
+      "Silver": 59.9825
+    },
+    {
+      "Date_str": "2026-07-08",
+      "TSX": 9.21,
+      "WSE": 24.7,
+      "Copper": 13097.18,
+      "Silver": 58.2888
+    },
+    {
+      "Date_str": "2026-07-09",
+      "TSX": 9.55,
+      "WSE": 25.69,
+      "Copper": 13439.8,
+      "Silver": 59.9619
+    },
+    {
+      "Date_str": "2026-07-10",
+      "TSX": 9.51,
+      "WSE": 25.81,
+      "Copper": 13418.55,
+      "Silver": 59.702
+    },
+    {
+      "Date_str": "2026-07-11",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-07-12",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-07-13",
+      "TSX": 9.26,
+      "WSE": 25.18,
+      "Copper": 13487.86,
+      "Silver": 57.6529
+    },
+    {
+      "Date_str": "2026-07-14",
+      "TSX": 9.52,
+      "WSE": 25.48,
+      "Copper": 13595.75,
+      "Silver": 58.6999
+    },
+    {
+      "Date_str": "2026-07-15",
+      "TSX": 9.15,
+      "WSE": 25.08,
+      "Copper": 13534.07,
+      "Silver": 57.7808
+    },
+    {
+      "Date_str": "2026-07-16",
+      "TSX": 8.6,
+      "WSE": 23.54,
+      "Copper": 13554.35,
+      "Silver": 55.5185
+    },
+    {
+      "Date_str": "2026-07-17",
+      "TSX": 8.77,
+      "WSE": 23.28,
+      "Copper": 13500.88,
+      "Silver": 55.8995
+    },
+    {
+      "Date_str": "2026-07-18",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-07-19",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-07-20",
+      "TSX": 8.93,
+      "WSE": 23.8,
+      "Copper": 13621.19,
+      "Silver": 56.4178
+    },
+    {
+      "Date_str": "2026-07-21",
+      "TSX": 9.2,
+      "WSE": 24.9,
+      "Copper": 13898.49,
+      "Silver": 58.7908
+    },
+    {
+      "Date_str": "2026-07-22",
+      "TSX": 9.28,
+      "WSE": 25.4,
+      "Copper": 13812.7,
+      "Silver": 59.7112
+    },
+    {
+      "Date_str": "2026-07-23",
+      "TSX": 8.86,
+      "WSE": 24.5,
+      "Copper": 13599.1,
+      "Silver": 57.6534
+    },
+    {
+      "Date_str": "2026-07-24",
+      "TSX": 8.99,
+      "WSE": 25.4,
+      "Copper": 13653.8,
+      "Silver": 58.211
+    },
+    {
+      "Date_str": "2026-07-25",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-07-26",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-07-27",
+      "TSX": 9.13,
+      "WSE": 24.06,
+      "Copper": 13770.61,
+      "Silver": 58.4015
+    },
+    {
+      "Date_str": "2026-07-28",
+      "TSX": 8.87,
+      "WSE": 25.1,
+      "Copper": 13715.2,
+      "Silver": 57.1153
+    },
+    {
+      "Date_str": "2026-07-29",
+      "TSX": 8.75,
+      "WSE": 24.95,
+      "Copper": 13605.04,
+      "Silver": 57.6253
+    },
+    {
+      "Date_str": "2026-07-30",
+      "TSX": 8.93,
+      "WSE": 23.5,
+      "Copper": 13843.49,
+      "Silver": 58.9963
+    },
+    {
+      "Date_str": "2026-07-31",
+      "TSX": 8.77,
+      "WSE": 23.15,
+      "Copper": 13835.7,
+      "Silver": 57.633
+    },
+    {
+      "Date_str": "2026-08-01",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-08-02",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-08-03",
+      "TSX": null,
+      "WSE": 24.48,
+      "Copper": 13943.57,
+      "Silver": 58.1946
+    },
+    {
+      "Date_str": "2026-08-04",
+      "TSX": 9.47,
+      "WSE": 24.4,
+      "Copper": 14168.88,
+      "Silver": 59.5251
+    },
+    {
+      "Date_str": "2026-08-05",
+      "TSX": 9.68,
+      "WSE": 26.97,
+      "Copper": 14218.65,
+      "Silver": 62.0411
+    },
+    {
+      "Date_str": "2026-08-06",
+      "TSX": 8.98,
+      "WSE": 25.0,
+      "Copper": 14226.64,
+      "Silver": 61.5336
+    },
+    {
+      "Date_str": "2026-08-07",
+      "TSX": 9.56,
+      "WSE": 25.02,
+      "Copper": 14190.59,
+      "Silver": 63.5709
+    },
+    {
+      "Date_str": "2026-08-08",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-08-09",
+      "TSX": null,
+      "WSE": null,
+      "Copper": null,
+      "Silver": null
+    },
+    {
+      "Date_str": "2026-08-10",
+      "TSX": 10.03,
+      "WSE": 25.95,
+      "Copper": 14190.59,
+      "Silver": 65.7423
+    },
+    {
+      "Date_str": "2026-08-11",
+      "TSX": 9.88,
+      "WSE": 26.75,
+      "Copper": 14352.36,
+      "Silver": 64.6845
+    },
+    {
+      "Date_str": "2026-08-12",
+      "TSX": 9.79,
+      "WSE": 26.66,
+      "Copper": 14294.25,
+      "Silver": 65.3255
+    },
+    {
+      "Date_str": "2026-08-13",
+      "TSX": 9.6,
+      "WSE": 26.27,
+      "Copper": 14394.14,
+      "Silver": 64.4744
+    },
+    {
+      "Date_str": "2026-08-14",
+      "TSX": 9.71,
+      "WSE": 26.21,
+      "Copper": 14576.29,
+      "Silver": 64.6966
+    }
+  ]
 }
