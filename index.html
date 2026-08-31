@@ -3,378 +3,342 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lumina Metals Dashboard</title>
-<script src="https://sf3-scmcdn-cn.feishucdn.com/obj/feishu-static/miaoda/coding-unpkg-sdk/echarts@5.6.0/dist/echarts.min.js" crossorigin="anonymous"></script>
+<title>Lumina Metals 综合看板</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #f5f7fa; color: #333; }
-.header { background: linear-gradient(135deg, #1a237e 0%, #283593 100%); color: #fff; padding: 24px 32px; }
-.header h1 { font-size: 24px; font-weight: 600; }
-.header .subtitle { font-size: 13px; opacity: 0.8; margin-top: 6px; }
-.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+/* Header */
+.header { background: linear-gradient(135deg, #1a237e 0%, #283593 100%); color: #fff; padding: 20px 32px 0; }
+.header h1 { font-size: 22px; font-weight: 600; }
+.header .subtitle { font-size: 12px; opacity: 0.8; margin-top: 4px; margin-bottom: 16px; }
 
 /* Tabs */
-.tabs { display: flex; gap: 4px; margin-bottom: 20px; background: #fff; border-radius: 12px; padding: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-.tab-btn {
-  flex: 1; padding: 12px 24px; border: none; background: transparent;
-  font-size: 14px; font-weight: 500; color: #666; cursor: pointer;
-  border-radius: 8px; transition: all 0.2s;
-}
-.tab-btn:hover { background: #f0f2f5; }
-.tab-btn.active { background: #1a237e; color: #fff; font-weight: 600; }
+.tabs { display: flex; gap: 0; }
+.tab-btn { padding: 12px 24px; background: transparent; border: none; color: rgba(255,255,255,0.6); font-size: 14px; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
+.tab-btn.active { color: #fff; border-bottom-color: #ffd54f; font-weight: 600; }
+.tab-btn:hover { color: #fff; }
+
+/* Container */
+.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
-/* Stats */
+/* Stat Cards */
 .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
 .stat-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid; }
 .stat-card.copper { border-left-color: #e65100; }
 .stat-card.silver { border-left-color: #78909c; }
 .stat-card.tsx { border-left-color: #1565c0; }
 .stat-card.wse { border-left-color: #2e7d32; }
-.stat-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-label { font-size: 12px; color: #888; letter-spacing: 0.3px; }
 .stat-value { font-size: 22px; font-weight: 700; margin: 8px 0 4px; }
-.stat-date { font-size: 12px; color: #aaa; }
+.stat-date { font-size: 11px; color: #aaa; }
+
+/* Chart Card */
 .chart-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px; }
-.chart-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #444; }
+.chart-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; color: #444; }
 .chart { width: 100%; height: 560px; }
-.footer { text-align: center; padding: 20px; font-size: 12px; color: #999; }
 
-/* Company profile tab */
-.company-profile { background: #fff; border-radius: 12px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px; }
-.cp-section { margin-bottom: 32px; }
-.cp-section:last-child { margin-bottom: 0; }
-.cp-section h2 {
-  font-size: 20px; font-weight: 600; color: #1a237e; margin-bottom: 16px;
-  padding-bottom: 10px; border-bottom: 2px solid #e8eaf6;
-}
-.cp-section h3 { font-size: 16px; font-weight: 600; color: #333; margin: 18px 0 10px; }
-.cp-section p { line-height: 1.7; margin-bottom: 10px; color: #444; }
-.cp-section ul { margin: 10px 0 16px 20px; line-height: 1.8; color: #444; }
-.cp-section li { margin-bottom: 6px; }
-.cp-section strong { color: #1a237e; font-weight: 600; }
-.cp-badge {
-  display: inline-block; background: #e8eaf6; color: #1a237e;
-  padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;
-  margin-right: 8px; margin-bottom: 8px;
-}
-.cp-highlight-box {
-  background: #f8f9ff; border-left: 4px solid #1a237e; padding: 16px 20px;
-  border-radius: 0 8px 8px 0; margin: 14px 0;
-}
-.cp-highlight-box p { margin-bottom: 6px; }
-.cp-metric-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0;
-}
-.cp-metric {
-  background: #f8f9ff; border-radius: 8px; padding: 14px; text-align: center;
-}
-.cp-metric .metric-num { font-size: 20px; font-weight: 700; color: #1a237e; }
-.cp-metric .metric-label { font-size: 12px; color: #666; margin-top: 4px; }
-.news-item {
-  border-left: 3px solid #e65100; padding: 12px 16px; margin: 12px 0;
-  background: #fffaf0; border-radius: 0 8px 8px 0;
-}
-.news-item .news-date { font-size: 12px; color: #e65100; font-weight: 600; margin-bottom: 4px; }
-.news-item .news-title { font-weight: 600; color: #333; margin-bottom: 4px; }
-.news-item .news-desc { font-size: 13px; color: #555; line-height: 1.6; }
-.risk-pros { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
-.risk-box { border-radius: 8px; padding: 16px; }
-.risk-box.bull { background: #e8f5e9; border-left: 4px solid #2e7d32; }
-.risk-box.bear { background: #ffebee; border-left: 4px solid #c62828; }
-.risk-box h4 { margin-bottom: 10px; font-size: 14px; }
-.risk-box.bull h4 { color: #2e7d32; }
-.risk-box.bear h4 { color: #c62828; }
-.risk-box ul { margin-left: 18px; line-height: 1.7; font-size: 13px; }
+/* Company Profile Styles */
+.section-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px; }
+.section-title { font-size: 17px; font-weight: 600; color: #1a237e; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #e8eaf6; }
+.subsection-title { font-size: 14px; font-weight: 600; color: #333; margin: 16px 0 10px; }
 
-/* Company Profile - GitHub-style sections */
-.section-card { background: #fff; border-radius: 12px; padding: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px; }
-.section-title { font-size: 18px; font-weight: 600; color: #1a237e; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid #e8eaf6; }
-.subsection-title { font-size: 14px; font-weight: 600; color: #333; margin: 18px 0 12px; }
-.info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 20px; margin: 8px 0 12px; }
-.info-item { display: flex; justify-content: space-between; padding: 8px 12px; background: #f8f9ff; border-radius: 6px; font-size: 13px; }
-.info-label { color: #888; }
-.info-value { color: #333; font-weight: 500; text-align: right; }
-.resource-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0; }
-.resource-table th, .resource-table td { border: 1px solid #e0e0e0; padding: 8px 12px; text-align: center; }
-.resource-table th { background: #e8eaf6; color: #1a237e; font-weight: 600; }
-.pea-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 12px 0; }
-.pea-item { background: #f8f9ff; border-radius: 8px; padding: 14px; text-align: center; }
-.pea-label { font-size: 12px; color: #888; margin-bottom: 6px; }
-.pea-value { font-size: 20px; font-weight: 700; color: #1a237e; }
-.pea-unit { font-size: 11px; color: #aaa; margin-top: 2px; }
-.highlight-box { background: #fffaf0; border-left: 4px solid #e65100; border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 10px 0; }
-.highlight-title { font-weight: 600; color: #e65100; margin-bottom: 6px; font-size: 14px; }
-.news-main { background: #f8f9ff; border-radius: 8px; padding: 18px; margin: 10px 0; }
-.news-date { font-size: 12px; color: #1a237e; font-weight: 600; margin-bottom: 6px; }
-.news-title { font-size: 15px; font-weight: 600; color: #333; margin-bottom: 10px; line-height: 1.5; }
-.news-body { font-size: 13px; color: #555; line-height: 1.7; }
-.news-body p { margin-bottom: 8px; }
-.news-list { margin: 10px 0; }
-.news-list .news-item { display: flex; gap: 14px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
-.news-list .news-item:last-child { border-bottom: none; }
-.ni-date { color: #888; min-width: 90px; flex-shrink: 0; }
-.ni-title { color: #333; flex: 1; }
-.target-price-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 12px 0; }
-.tp-item { background: #f8f9ff; border-radius: 8px; padding: 14px; text-align: center; }
-.tp-bank { font-size: 12px; color: #888; margin-bottom: 6px; }
+.info-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.info-item { background: #f8f9fa; padding: 10px 12px; border-radius: 8px; }
+.info-label { font-size: 11px; color: #888; display: block; margin-bottom: 3px; }
+.info-value { font-size: 13px; color: #333; font-weight: 500; }
+
+.resource-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.resource-table th { background: #e8eaf6; padding: 10px; text-align: center; font-weight: 600; color: #1a237e; }
+.resource-table td { padding: 10px; text-align: center; border-bottom: 1px solid #eee; }
+.resource-table tr:last-child td { font-weight: 600; background: #f5f5f5; }
+
+.pea-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.pea-item { background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%); padding: 16px; border-radius: 10px; text-align: center; }
+.pea-label { font-size: 11px; color: #5c6bc0; margin-bottom: 6px; }
+.pea-value { font-size: 22px; font-weight: 700; color: #1a237e; }
+.pea-unit { font-size: 11px; color: #7986cb; margin-top: 2px; }
+
+.highlight-box { background: #fff8e1; border-left: 4px solid #ffb300; padding: 12px 16px; border-radius: 0 8px 8px 0; margin-bottom: 10px; }
+.highlight-title { font-size: 14px; font-weight: 600; color: #e65100; margin-bottom: 6px; }
+
+.news-main { background: #f5f7fa; padding: 16px; border-radius: 10px; margin-bottom: 16px; }
+.news-date { font-size: 11px; color: #888; margin-bottom: 6px; }
+.news-title { font-size: 15px; font-weight: 600; color: #1a237e; margin-bottom: 10px; }
+.news-body p { font-size: 13px; color: #444; line-height: 1.7; margin-bottom: 8px; }
+.news-body p:last-child { margin-bottom: 0; }
+
+.news-list { display: flex; flex-direction: column; gap: 8px; }
+.news-item { display: flex; gap: 12px; padding: 10px 12px; background: #fafafa; border-radius: 8px; }
+.ni-date { font-size: 12px; color: #888; min-width: 80px; font-weight: 500; }
+.ni-title { font-size: 13px; color: #444; }
+
+.target-price-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+.tp-item { background: #f0f4ff; padding: 12px; border-radius: 8px; text-align: center; }
+.tp-item.tp-consensus { background: linear-gradient(135deg, #1a237e, #283593); color: #fff; }
+.tp-item.tp-consensus .tp-bank { color: rgba(255,255,255,0.7); }
+.tp-item.tp-consensus .tp-price { color: #ffd54f; }
+.tp-bank { font-size: 11px; color: #666; margin-bottom: 4px; }
 .tp-price { font-size: 18px; font-weight: 700; color: #1a237e; }
-.tp-consensus { background: #e8f5e9; }
-.tp-consensus .tp-price { color: #2e7d32; }
-.bull-bear-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
-.bull-card, .bear-card { border-radius: 8px; padding: 18px; }
-.bull-card { background: #e8f5e9; border-left: 4px solid #2e7d32; }
-.bear-card { background: #ffebee; border-left: 4px solid #c62828; }
+
+.bull-bear-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+.bull-card, .bear-card { padding: 16px; border-radius: 10px; }
+.bull-card { background: #e8f5e9; }
+.bear-card { background: #ffebee; }
 .bb-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
 .bull-card .bb-title { color: #2e7d32; }
 .bear-card .bb-title { color: #c62828; }
-.bb-list { margin-left: 18px; line-height: 1.8; font-size: 13px; color: #444; }
-.bb-list li { margin-bottom: 4px; }
+.bb-list { font-size: 12px; line-height: 1.8; padding-left: 18px; color: #444; }
+.bb-list li { margin-bottom: 2px; }
+
+.footer { text-align: center; padding: 16px; font-size: 11px; color: #999; }
 
 @media (max-width: 1100px) {
   .stats-row { grid-template-columns: repeat(2, 1fr); }
-  .chart { height: 480px; }
-  .cp-metric-grid { grid-template-columns: repeat(2, 1fr); }
+  .info-grid { grid-template-columns: repeat(2, 1fr); }
+  .pea-grid { grid-template-columns: repeat(2, 1fr); }
+  .target-price-grid { grid-template-columns: repeat(2, 1fr); }
+  .bull-bear-grid { grid-template-columns: 1fr; }
+  .chart { height: 450px; }
 }
-@media (max-width: 700px) {
+@media (max-width: 600px) {
   .stats-row { grid-template-columns: 1fr; }
-  .chart { height: 400px; }
-  .cp-metric-grid { grid-template-columns: 1fr; }
-  .risk-pros { grid-template-columns: 1fr; }
+  .info-grid { grid-template-columns: 1fr; }
+  .pea-grid { grid-template-columns: 1fr; }
+  .target-price-grid { grid-template-columns: 1fr; }
+  .chart { height: 380px; }
+  .header h1 { font-size: 18px; }
 }
 </style>
 </head>
 <body>
+
 <div class="header">
-  <h1>Lumina Metals Dashboard</h1>
-  <div class="subtitle">Lumina Metals 投资追踪看板 · 股价与金属价格走势</div>
-</div>
-<div class="container">
+  <h1>Lumina Metals 综合看板</h1>
+  <div class="subtitle">TSX:LMCU / WSE:LMU 股价 · LME铜价 · LBMA银价 · 公司动态</div>
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab(0)">📈 股价数据</button>
-    <button class="tab-btn" onclick="switchTab(1)">🏢 公司情况</button>
+    <button class="tab-btn active" onclick="switchTab('stock')">股价数据</button>
+    <button class="tab-btn" onclick="switchTab('company')">公司情况</button>
   </div>
+</div>
 
-  <!-- Tab 1: Stock Data -->
-  <div class="tab-content active" id="tab-0">
-    <div class="stats-row">
-      <div class="stat-card copper">
-        <div class="stat-label">COMEX 铜现货最新价</div>
-        <div class="stat-value" id="copper-price">--</div>
-        <div class="stat-date" id="copper-date">--</div>
-      </div>
-      <div class="stat-card silver">
-        <div class="stat-label">LBMA 银现货最新价</div>
-        <div class="stat-value" id="silver-price">--</div>
-        <div class="stat-date" id="silver-date">--</div>
-      </div>
-      <div class="stat-card tsx">
-        <div class="stat-label">TSX 最新收盘价 (LMCU)</div>
-        <div class="stat-value" id="tsx-price">--</div>
-        <div class="stat-date" id="tsx-date">--</div>
-      </div>
-      <div class="stat-card wse">
-        <div class="stat-label">WSE 最新收盘价 (LMU)</div>
-        <div class="stat-value" id="wse-price">--</div>
-        <div class="stat-date" id="wse-date">--</div>
-      </div>
+<!-- Tab 1: Stock Data -->
+<div id="tab-stock" class="tab-content active">
+<div class="container">
+  <div class="stats-row">
+    <div class="stat-card copper">
+      <div class="stat-label">LME 铜价 ($/吨)</div>
+      <div class="stat-value" id="copper-price">--</div>
+      <div class="stat-date" id="copper-date">--</div>
     </div>
-
-    <div class="chart-card">
-      <div class="chart-title">TSX (LMCU) + WSE (LMU) 股价走势对比</div>
-      <div class="chart" id="main-chart"></div>
+    <div class="stat-card silver">
+      <div class="stat-label">LBMA 银价 ($/盎司)</div>
+      <div class="stat-value" id="silver-price">--</div>
+      <div class="stat-date" id="silver-date">--</div>
     </div>
-
-    <div class="footer">
-      数据更新于 <span id="update-time"></span> | 铜价数据来源：COMEX | 银价数据来源：LBMA | 股价数据来源：stockanalysis.com
+    <div class="stat-card tsx">
+      <div class="stat-label">TSX 收盘价 (C$)</div>
+      <div class="stat-value" id="tsx-price">--</div>
+      <div class="stat-date" id="tsx-date">--</div>
+    </div>
+    <div class="stat-card wse">
+      <div class="stat-label">WSE 收盘价 (zł)</div>
+      <div class="stat-value" id="wse-price">--</div>
+      <div class="stat-date" id="wse-date">--</div>
     </div>
   </div>
 
-  <!-- Tab 2: Company Profile -->
-  <div class="tab-content" id="tab-1">
-    <div class="section-card">
-      <div class="section-title">项目概况</div>
-      <div class="subsection-title">公司基本信息</div>
-      <div class="info-grid">
-        <div class="info-item"><span class="info-label">公司全称</span><span class="info-value">Lumina Metals Corp.</span></div>
-        <div class="info-item"><span class="info-label">成立时间</span><span class="info-value">2010年（2024年12月更名）</span></div>
-        <div class="info-item"><span class="info-label">总部</span><span class="info-value">加拿大温哥华</span></div>
-        <div class="info-item"><span class="info-label">波兰办公室</span><span class="info-value">华沙 / Nowa Sól / Zielona Góra</span></div>
-        <div class="info-item"><span class="info-label">上市信息</span><span class="info-value">TSX:LMCU（2026年4月）/ WSE:LMU（2026年6月）</span></div>
-        <div class="info-item"><span class="info-label">员工人数</span><span class="info-value">14人</span></div>
-        <div class="info-item"><span class="info-label">IPO发行价</span><span class="info-value">C$12.50/股</span></div>
-        <div class="info-item"><span class="info-label">IPO募资规模</span><span class="info-value">C$4.062亿（超额认购）</span></div>
+  <div class="chart-card">
+    <div class="chart-title">股价 vs 金属价格 四轴走势对比</div>
+    <div class="chart" id="main-chart"></div>
+  </div>
+
+  <div class="footer">
+    数据更新于 <span id="update-time"></span> | 铜价/银价：LME/LBMA（飞书云盘） | 股价：stockanalysis.com
+  </div>
+</div>
+</div>
+
+<!-- Tab 2: Company Profile -->
+<div id="tab-company" class="tab-content">
+<div class="container">
+
+  <!-- 项目概况 -->
+  <div class="section-card">
+    <div class="section-title">项目概况</div>
+
+    <div class="subsection-title">公司基本信息</div>
+    <div class="info-grid">
+      <div class="info-item"><span class="info-label">公司全称</span><span class="info-value">Lumina Metals Corp.</span></div>
+      <div class="info-item"><span class="info-label">成立时间</span><span class="info-value">2010年（2024年12月更名）</span></div>
+      <div class="info-item"><span class="info-label">总部</span><span class="info-value">加拿大温哥华</span></div>
+      <div class="info-item"><span class="info-label">波兰办公室</span><span class="info-value">华沙 / Nowa Sól / Zielona Góra</span></div>
+      <div class="info-item"><span class="info-label">上市信息</span><span class="info-value">TSX:LMCU（2026年4月）/ WSE:LMCU（2026年6月）</span></div>
+      <div class="info-item"><span class="info-label">员工人数</span><span class="info-value">14人</span></div>
+      <div class="info-item"><span class="info-label">IPO发行价</span><span class="info-value">C$12.50/股</span></div>
+      <div class="info-item"><span class="info-label">IPO募资规模</span><span class="info-value">C$4.062亿（超额认购）</span></div>
+    </div>
+
+    <div class="subsection-title">旗舰项目 Nowa Sól 资源量</div>
+    <table class="resource-table">
+      <tr><th>类别</th><th>资源量</th><th>铜品位</th><th>银品位</th><th>含铜量</th><th>含银量</th></tr>
+      <tr><td>探明+控制 (M&I)</td><td>6.04亿吨</td><td>1.24%</td><td>38.29 g/t</td><td>约749万吨</td><td>约7.44亿盎司</td></tr>
+      <tr><td>推断 (Inferred)</td><td>1.12亿吨</td><td>1.08%</td><td>28.91 g/t</td><td>约121万吨</td><td>约1.04亿盎司</td></tr>
+      <tr><td><strong>合计</strong></td><td><strong>7.16亿吨</strong></td><td>-</td><td>-</td><td><strong>约870万吨</strong></td><td><strong>约8.48亿盎司</strong></td></tr>
+    </table>
+
+    <div class="subsection-title">Nowa Sól PEA 核心经济指标</div>
+    <div class="pea-grid">
+      <div class="pea-item">
+        <div class="pea-label">税前 NPV（7%折现）</div>
+        <div class="pea-value">$83亿</div>
+        <div class="pea-unit">美元</div>
       </div>
-      <div class="subsection-title">旗舰项目 Nowa Sól 资源量</div>
-      <table class="resource-table">
-        <tr><th>类别</th><th>资源量</th><th>铜品位</th><th>银品位</th><th>含铜量</th><th>含银量</th></tr>
-        <tr><td>探明+控制 (M&I)</td><td>6.04亿吨</td><td>1.24%</td><td>38.29 g/t</td><td>约749万吨</td><td>约7.44亿盎司</td></tr>
-        <tr><td>推断 (Inferred)</td><td>1.12亿吨</td><td>1.08%</td><td>28.91 g/t</td><td>约121万吨</td><td>约1.04亿盎司</td></tr>
-        <tr><td><strong>合计</strong></td><td><strong>7.16亿吨</strong></td><td>-</td><td>-</td><td><strong>约870万吨</strong></td><td><strong>约8.48亿盎司</strong></td></tr>
-      </table>
-      <div class="subsection-title">Nowa Sól PEA 核心经济指标</div>
-      <div class="pea-grid">
-        <div class="pea-item">
-          <div class="pea-label">税前 NPV（7%折现）</div>
-          <div class="pea-value">$83亿</div>
-          <div class="pea-unit">美元</div>
-        </div>
-        <div class="pea-item">
-          <div class="pea-label">税前 IRR</div>
-          <div class="pea-value">20.5%</div>
-          <div class="pea-unit">-</div>
-        </div>
-        <div class="pea-item">
-          <div class="pea-label">初始资本开支</div>
-          <div class="pea-value">$64亿</div>
-          <div class="pea-unit">美元</div>
-        </div>
-        <div class="pea-item">
-          <div class="pea-label">前10年 AISC</div>
-          <div class="pea-value">$1.17</div>
-          <div class="pea-unit">/磅铜</div>
-        </div>
-        <div class="pea-item">
-          <div class="pea-label">前10年年均 EBITDA</div>
-          <div class="pea-value">$25亿</div>
-          <div class="pea-unit">美元</div>
-        </div>
-        <div class="pea-item">
-          <div class="pea-label">矿山寿命</div>
-          <div class="pea-value">25-30年</div>
-          <div class="pea-unit">-</div>
-        </div>
+      <div class="pea-item">
+        <div class="pea-label">税前 IRR</div>
+        <div class="pea-value">20.5%</div>
+        <div class="pea-unit">-</div>
       </div>
-      <div class="subsection-title">项目组合</div>
-      <div class="highlight-box">
-        <div class="highlight-title">Sulmierzyce 项目</div>
-        <div style="font-size:13px;color:#555;">推断资源量 <strong>3.08亿吨 @ 2.09% Cu、31.9 g/t Ag</strong>，距 Nowa Sól 约150公里。若后续钻探证实与 Nowa Sól 规模相当，Lumina 总白银资源可能超20亿盎司，成为全球最大白银资源持有公司。公司计划2027年可能将其分拆为独立公司。</div>
+      <div class="pea-item">
+        <div class="pea-label">初始资本开支</div>
+        <div class="pea-value">$64亿</div>
+        <div class="pea-unit">美元</div>
       </div>
-      <div class="highlight-box">
-        <div class="highlight-title">Mozów 项目</div>
-        <div style="font-size:13px;color:#555;">位于 Nowa Sól 西北35公里，面积93km²，处于早期勘探阶段。六口历史钻孔均见矿，铜品位1.10%-3.86%，银8-52 g/t。</div>
+      <div class="pea-item">
+        <div class="pea-label">前10年 AISC</div>
+        <div class="pea-value">$1.17</div>
+        <div class="pea-unit">/磅铜</div>
       </div>
-      <div class="subsection-title">关键里程碑</div>
-      <div class="info-grid">
-        <div class="info-item"><span class="info-label">2026年4月</span><span class="info-value">IPO完成，TSX上市</span></div>
-        <div class="info-item"><span class="info-label">2026年5月</span><span class="info-value">启动PFS（Fluor主导）</span></div>
-        <div class="info-item"><span class="info-label">2026年6月</span><span class="info-value">WSE上市，首日涨19%</span></div>
-        <div class="info-item"><span class="info-label">2027年下半年</span><span class="info-value">预计PFS完成</span></div>
-        <div class="info-item"><span class="info-label">约2030年</span><span class="info-value">预计获得采矿许可</span></div>
+      <div class="pea-item">
+        <div class="pea-label">前10年年均 EBITDA</div>
+        <div class="pea-value">$25亿</div>
+        <div class="pea-unit">美元</div>
+      </div>
+      <div class="pea-item">
+        <div class="pea-label">矿山寿命</div>
+        <div class="pea-value">25-30年</div>
+        <div class="pea-unit">-</div>
       </div>
     </div>
 
-    <div class="section-card">
-      <div class="section-title">最近新闻</div>
-      <div class="news-main">
-        <div class="news-date">2026年8月13日 · Newsfile Corp.</div>
-        <div class="news-title">Lumina Metals Reports Q2 2026 Results</div>
-        <div class="news-body">
-          <p><strong>Q2 财务摘要：</strong>Q2净亏损$1,034.8万（去年同期$142.9万），主要因IPO、WSE上市及技术报告准备支出增加。上半年净亏损$1,697.8万。截至6月30日，公司持有<strong>现金$3.44亿</strong>（2025年底$4,894.3万），营运资本$3.43亿，流动性充足。</p>
-          <p><strong>项目进展：</strong>完成Nowa Sól PEA技术报告并提交SEDAR+；聘请全球工程巨头<strong>Fluor</strong>主导PFS（预可行性研究）；启动环境基线研究；Nowa Sól三台钻机平台已完成场地准备和设备进场。</p>
-          <p><strong>IPO后续：</strong>5月29日超额配售权部分行使，额外发行120万股，募资$1,500万。IPO总募资（含超额配售）约<strong>$4.21亿</strong>。</p>
-          <p><strong>管理层：</strong>Adrian Karolko（P.Geo.，18年国际勘探经验，曾任赞比亚Midnight Sun Mining VP Exploration）正式出任VP, Exploration。</p>
-          <p><strong>展望：</strong>2026年下半年重点推进Nowa Sól PFS、环境许可及Sulmierzyce/Mozów勘探。PFS预算约$7,410万（含15%应急），其中$5,481万用于加密钻探。</p>
-        </div>
-      </div>
-      <div class="news-main" style="margin-top:16px;">
-        <div class="news-date">2026年8月3日 · Newsfile Corp.</div>
-        <div class="news-title">Lumina Metals Reports on 2026 Drilling at Its Three Projects in Poland</div>
-        <div class="news-body">
-          <p><strong>Nowa Sól：</strong>计划约8,200米钻探（4个孔），两台钻机正在作业。首个钻孔已达目标深度1,900米，初步XRF结果与周边矿化一致。钻探由具有丰富Kupferschiefer型矿床经验的波兰本地承包商执行。</p>
-          <p><strong>Sulmierzyce：</strong>2026年4月发布了 maiden NI 43-101 推断资源量（308Mt @ 2.09% Cu、31.85 g/t Ag）。2026年钻探计划旨在增加资源量，包括1个新增钻孔和对该地区历史油气勘探钻孔的分析。</p>
-          <p><strong>Mozów：</strong>六口历史钻孔均见矿（铜1.10%-3.86%，银8-52 g/t）。公司计划在未来一年内完成1个新增钻孔以扩展资源潜力。</p>
-          <p><strong>人事变动：</strong>任命 Adrian Karolko（P.Geo.，18年国际矿产勘探经验）为 VP, Exploration，接替 Leo Hathaway。Adrian 曾在赞比亚 Midnight Sun Mining 担任 VP Exploration，并在波兰 Lumina 和厄瓜多尔 Lumina Gold 担任勘探经理。</p>
-        </div>
-      </div>
-      <div class="subsection-title">历史新闻摘要</div>
-      <div class="news-list">
-        <div class="news-item">
-          <div class="ni-date">2026年6月16日</div>
-          <div class="ni-title">华沙证券交易所上市，首日股价上涨19%至35.5兹罗提</div>
-        </div>
-        <div class="news-item">
-          <div class="ni-date">2026年5月29日</div>
-          <div class="ni-title">IPO超额配售权完成，额外募资约6,093万加元</div>
-        </div>
-        <div class="news-item">
-          <div class="ni-date">2026年5月19日</div>
-          <div class="ni-title">获波兰金融监管局批准华沙上市；启动Nowa Sól预可行性研究</div>
-        </div>
-        <div class="news-item">
-          <div class="ni-date">2026年5月5日</div>
-          <div class="ni-title">与KGHM签署铜精矿供应和战略合作意向书</div>
-        </div>
-        <div class="news-item">
-          <div class="ni-date">2026年4月30日</div>
-          <div class="ni-title">完成上调规模的首次公开发行，募资4.062亿加元</div>
-        </div>
-        <div class="news-item">
-          <div class="ni-date">2026年4月22日</div>
-          <div class="ni-title">上调IPO规模，发行价维持12.50加元/股</div>
-        </div>
+    <div class="subsection-title">项目组合</div>
+    <div class="highlight-box">
+      <div class="highlight-title">Sulmierzyce 项目</div>
+      <div style="font-size:13px;color:#555;">推断资源量 <strong>3.08亿吨 @ 2.09% Cu、31.9 g/t Ag</strong>，距 Nowa Sól 约150公里。若后续钻探证实与 Nowa Sól 规模相当，Lumina 总白银资源可能超20亿盎司，成为全球最大白银资源持有公司。公司计划2027年可能将其分拆为独立公司。</div>
+    </div>
+    <div class="highlight-box">
+      <div class="highlight-title">Mozów 项目</div>
+      <div style="font-size:13px;color:#555;">位于 Nowa Sól 西北35公里，面积93km²，处于早期勘探阶段。六口历史钻孔均见矿，铜品位1.10%-3.86%，银8-52 g/t。</div>
+    </div>
+
+    <div class="subsection-title">关键里程碑</div>
+    <div class="info-grid">
+      <div class="info-item"><span class="info-label">2026年4月</span><span class="info-value">IPO完成，TSX上市</span></div>
+      <div class="info-item"><span class="info-label">2026年5月</span><span class="info-value">启动PFS（Fluor主导）</span></div>
+      <div class="info-item"><span class="info-label">2026年6月</span><span class="info-value">WSE上市，首日涨19%</span></div>
+      <div class="info-item"><span class="info-label">2027年下半年</span><span class="info-value">预计PFS完成</span></div>
+      <div class="info-item"><span class="info-label">约2030年</span><span class="info-value">预计获得采矿许可</span></div>
+    </div>
+  </div>
+
+  <!-- 最近新闻 -->
+  <div class="section-card">
+    <div class="section-title">最近新闻</div>
+
+    <div class="news-main">
+      <div class="news-date">2026年8月3日 · Newsfile Corp.</div>
+      <div class="news-title">Lumina Metals Reports on 2026 Drilling at Its Three Projects in Poland</div>
+      <div class="news-body">
+        <p><strong>Nowa Sól：</strong>计划约8,200米钻探（4个孔），两台钻机正在作业。首个钻孔已达目标深度1,900米，初步XRF结果与周边矿化一致。钻探由具有丰富Kupferschiefer型矿床经验的波兰本地承包商执行。</p>
+        <p><strong>Sulmierzyce：</strong>2026年4月发布了 maiden NI 43-101 推断资源量（308Mt @ 2.09% Cu、31.85 g/t Ag）。2026年钻探计划旨在增加资源量，包括1个新增钻孔和对该地区历史油气勘探钻孔的分析。</p>
+        <p><strong>Mozów：</strong>六口历史钻孔均见矿（铜1.10%-3.86%，银8-52 g/t）。公司计划在未来一年内完成1个新增钻孔以扩展资源潜力。</p>
+        <p><strong>人事变动：</strong>任命 Adrian Karolko（P.Geo.，18年国际矿产勘探经验）为 VP, Exploration，接替 Leo Hathaway。Adrian 曾在赞比亚 Midnight Sun Mining 担任 VP Exploration，并在波兰 Lumina 和厄瓜多尔 Lumina Gold 担任勘探经理。</p>
       </div>
     </div>
 
-    <div class="section-card">
-      <div class="section-title">研报解读</div>
-      <div class="subsection-title">分析师目标价（7家覆盖）</div>
-      <div class="target-price-grid">
-        <div class="tp-item"><div class="tp-bank">Canaccord</div><div class="tp-price">C$21.50</div></div>
-        <div class="tp-item"><div class="tp-bank">RBC / NBC</div><div class="tp-price">C$20.00</div></div>
-        <div class="tp-item"><div class="tp-bank">Morgan Stanley / CIBC</div><div class="tp-price">C$18.00</div></div>
-        <div class="tp-item tp-consensus"><div class="tp-bank">一致目标价</div><div class="tp-price">~C$18.6</div></div>
+    <div class="subsection-title">历史新闻摘要</div>
+    <div class="news-list">
+      <div class="news-item">
+        <div class="ni-date">2026年6月16日</div>
+        <div class="ni-title">华沙证券交易所上市，首日股价上涨19%至35.5兹罗提</div>
       </div>
-      <div style="font-size:13px;color:#666;margin-bottom:12px;">较当前股价（C$9.71）隐含约 <strong>91% 上行空间</strong>。分析师一致评级为"跑赢大盘"（Outperform）。</div>
-      <div class="bull-bear-grid">
-        <div class="bull-card">
-          <div class="bb-title">看多主要依据</div>
-          <ul class="bb-list">
-            <li>全球顶级的未开发铜银资源（规模+品位+区位）</li>
-            <li>成本曲线位于下半部，AISC $1.17/lb（前10年）</li>
-            <li>资本强度$16,416/t CuEq，显著低于同业</li>
-            <li>与KGHM冶炼厂仅20-25km，已签LOI</li>
-            <li>Lumina班底历史上8次成功退出（含CMOC、五矿等）</li>
-            <li>欧洲能源转型驱动长期铜需求增长</li>
-            <li>波兰政府支持"铜谷"战略，总理出席上市仪式</li>
-          </ul>
-        </div>
-        <div class="bear-card">
-          <div class="bb-title">看空/风险主要依据</div>
-          <ul class="bb-list">
-            <li><strong>波兰矿产开采税（MET）</strong>：使税后NPV从$63亿降至$16亿（-75%），IRR从18%降至10.8%</li>
-            <li>深部开采挑战：平均埋深1,950m，高温/岩压/通风</li>
-            <li>$64亿初始资本开支 vs 当前市值$8.57亿</li>
-            <li>许可周期长：预计2030年才能获得采矿特许权</li>
-            <li>股价已跌破IPO发行价</li>
-            <li>无收入、持续亏损、依赖资本市场融资</li>
-            <li>公司明确：无MET豁免/修法则不建矿</li>
-          </ul>
-        </div>
+      <div class="news-item">
+        <div class="ni-date">2026年5月29日</div>
+        <div class="ni-title">IPO超额配售权完成，额外募资约6,093万加元</div>
       </div>
-      <div class="subsection-title">核心看点</div>
-      <div style="font-size:13px;color:#555;line-height:1.7;">
-        <strong>资源的世界级确定性 vs 波兰税制与巨额资本开支的不确定性</strong>——这是当前估值折让（EV仅$6.15亿，原地铜价约$0.04/lb）的核心来源。MET改革进展、PFS结果与2030年采矿特许权是关键里程碑节点。历史上Lumina班底8次成功退出，对手方包括第一量子、Teck、五矿、CMOC等产业资本，该项目最终大概率走向<strong>产业方并购/合资开发</strong>。
+      <div class="news-item">
+        <div class="ni-date">2026年5月19日</div>
+        <div class="ni-title">获波兰金融监管局批准华沙上市；启动Nowa Sól预可行性研究</div>
+      </div>
+      <div class="news-item">
+        <div class="ni-date">2026年5月5日</div>
+        <div class="ni-title">与KGHM签署铜精矿供应和战略合作意向书</div>
+      </div>
+      <div class="news-item">
+        <div class="ni-date">2026年4月30日</div>
+        <div class="ni-title">完成上调规模的首次公开发行，募资4.062亿加元</div>
+      </div>
+      <div class="news-item">
+        <div class="ni-date">2026年4月22日</div>
+        <div class="ni-title">上调IPO规模，发行价维持12.50加元/股</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 研报解读 -->
+  <div class="section-card">
+    <div class="section-title">研报解读</div>
+
+    <div class="subsection-title">分析师目标价（7家覆盖）</div>
+    <div class="target-price-grid">
+      <div class="tp-item"><div class="tp-bank">Canaccord</div><div class="tp-price">C$21.50</div></div>
+      <div class="tp-item"><div class="tp-bank">RBC / NBC</div><div class="tp-price">C$20.00</div></div>
+      <div class="tp-item"><div class="tp-bank">Morgan Stanley / CIBC</div><div class="tp-price">C$18.00</div></div>
+      <div class="tp-item tp-consensus"><div class="tp-bank">一致目标价</div><div class="tp-price">~C$18.6</div></div>
+    </div>
+    <div style="font-size:13px;color:#666;margin-bottom:12px;">较当前股价（C$8.77-10.40区间）隐含约 <strong>80%+ 上行空间</strong>。分析师一致评级为"跑赢大盘"（Outperform）。</div>
+
+    <div class="bull-bear-grid">
+      <div class="bull-card">
+        <div class="bb-title">看多主要依据</div>
+        <ul class="bb-list">
+          <li>全球顶级的未开发铜银资源（规模+品位+区位）</li>
+          <li>成本曲线位于下半部，AISC $1.17/lb（前10年）</li>
+          <li>资本强度$16,416/t CuEq，显著低于同业</li>
+          <li>与KGHM冶炼厂仅20-25km，已签LOI</li>
+          <li>Lumina班底历史上8次成功退出（含CMOC、五矿等）</li>
+          <li>欧洲能源转型驱动长期铜需求增长</li>
+          <li>波兰政府支持"铜谷"战略，总理出席上市仪式</li>
+        </ul>
+      </div>
+      <div class="bear-card">
+        <div class="bb-title">看空/风险主要依据</div>
+        <ul class="bb-list">
+          <li><strong>波兰矿产开采税（MET）</strong>：使税后NPV从$63亿降至$16亿（-75%），IRR从18%降至10.8%</li>
+          <li>深部开采挑战：平均埋深1,950m，高温/岩压/通风</li>
+          <li>$64亿初始资本开支 vs 当前市值$8.57亿</li>
+          <li>许可周期长：预计2030年才能获得采矿特许权</li>
+          <li>股价已跌破IPO发行价（C$10.40 vs C$12.50）</li>
+          <li>无收入、持续亏损、依赖资本市场融资</li>
+          <li>公司明确：无MET豁免/修法则不建矿</li>
+        </ul>
       </div>
     </div>
 
-    <div class="footer">
-      公司资料整理自公开信息与研报，仅供参考，不构成投资建议
+    <div class="subsection-title">核心看点</div>
+    <div style="font-size:13px;color:#555;line-height:1.7;">
+      <strong>资源的世界级确定性 vs 波兰税制与巨额资本开支的不确定性</strong>——这是当前估值折让（EV仅$6.15亿，原地铜价约$0.04/lb）的核心来源。MET改革进展、PFS结果与2030年采矿特许权是关键里程碑节点。历史上Lumina班底8次成功退出，对手方包括第一量子、Teck、五矿、CMOC等产业资本，该项目最终大概率走向<strong>产业方并购/合资开发</strong>。
     </div>
+  </div>
+
   </div>
 </div>
 
 <script>
-function switchTab(idx) {
-  var buttons = document.querySelectorAll('.tab-btn');
-  var contents = document.querySelectorAll('.tab-content');
-  buttons.forEach(function(b, i) { b.classList.toggle('active', i === idx); });
-  contents.forEach(function(c, i) { c.classList.toggle('active', i === idx); });
-  // Resize chart when tab 0 is shown
-  if (idx === 0 && window._chartInst) {
-    setTimeout(function() { window._chartInst.resize(); }, 50);
-  }
-}
+const DASHBOARD_DATA = {"chart_data":[{"Date_str":"2026-05-19","TSX_Close":11.95,"WSE_Close":null,"Silver":73.7015,"Copper":13333.9,"Gold":4482.13},{"Date_str":"2026-05-20","TSX_Close":12.15,"WSE_Close":null,"Silver":75.8672,"Copper":13595.63,"Gold":4543.87},{"Date_str":"2026-05-21","TSX_Close":12.08,"WSE_Close":null,"Silver":76.6678,"Copper":13455.86,"Gold":4543.11},{"Date_str":"2026-05-22","TSX_Close":11.84,"WSE_Close":null,"Silver":75.4982,"Copper":13614.84,"Gold":4509.5},{"Date_str":"2026-05-23","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-05-24","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-05-25","TSX_Close":12.07,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-05-26","TSX_Close":12.11,"WSE_Close":null,"Silver":null,"Copper":13565.69,"Gold":null},{"Date_str":"2026-05-27","TSX_Close":11.95,"WSE_Close":null,"Silver":74.6483,"Copper":13465.16,"Gold":4456.39},{"Date_str":"2026-05-28","TSX_Close":12.06,"WSE_Close":null,"Silver":75.6616,"Copper":13656.19,"Gold":4495.88},{"Date_str":"2026-05-29","TSX_Close":11.95,"WSE_Close":null,"Silver":75.2837,"Copper":13503.11,"Gold":4540.33},{"Date_str":"2026-05-30","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-05-31","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-06-01","TSX_Close":11.69,"WSE_Close":null,"Silver":null,"Copper":13808.12,"Gold":null},{"Date_str":"2026-06-02","TSX_Close":11.66,"WSE_Close":null,"Silver":75.1276,"Copper":14036.66,"Gold":4488.17},{"Date_str":"2026-06-03","TSX_Close":11.85,"WSE_Close":null,"Silver":72.7299,"Copper":13802.37,"Gold":4434.44},{"Date_str":"2026-06-04","TSX_Close":12.69,"WSE_Close":null,"Silver":73.89,"Copper":13920.49,"Gold":4475.54},{"Date_str":"2026-06-05","TSX_Close":10.98,"WSE_Close":null,"Silver":67.8347,"Copper":13490.32,"Gold":4328.7},{"Date_str":"2026-06-06","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-06-07","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-06-08","TSX_Close":10.9,"WSE_Close":null,"Silver":68.177,"Copper":13592.08,"Gold":4330.09},{"Date_str":"2026-06-09","TSX_Close":10.3,"WSE_Close":null,"Silver":65.366,"Copper":13573.34,"Gold":4259.69},{"Date_str":"2026-06-10","TSX_Close":10.05,"WSE_Close":null,"Silver":63.4151,"Copper":13466.23,"Gold":4071.39},{"Date_str":"2026-06-11","TSX_Close":10.39,"WSE_Close":null,"Silver":67.3357,"Copper":13448.01,"Gold":4210.96},{"Date_str":"2026-06-12","TSX_Close":11.09,"WSE_Close":null,"Silver":67.7815,"Copper":13645.33,"Gold":4210.91},{"Date_str":"2026-06-13","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-06-14","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-06-15","TSX_Close":11.6,"WSE_Close":null,"Silver":69.9725,"Copper":13669.66,"Gold":4309.33},{"Date_str":"2026-06-16","TSX_Close":11.7,"WSE_Close":35.5,"Silver":70.0317,"Copper":13699.9,"Gold":4331.27},{"Date_str":"2026-06-17","TSX_Close":11.92,"WSE_Close":35.41,"Silver":67.9443,"Copper":13763.45,"Gold":4258.0},{"Date_str":"2026-06-18","TSX_Close":11.4,"WSE_Close":32.0,"Silver":65.7221,"Copper":13624.19,"Gold":4209.01},{"Date_str":"2026-06-19","TSX_Close":11.29,"WSE_Close":31.8,"Silver":64.81,"Copper":null,"Gold":4155.53},{"Date_str":"2026-06-20","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-06-21","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-06-22","TSX_Close":10.93,"WSE_Close":29.9,"Silver":65.1027,"Copper":13580.37,"Gold":4191.59},{"Date_str":"2026-06-23","TSX_Close":10.49,"WSE_Close":29.99,"Silver":61.5535,"Copper":13302.84,"Gold":4110.09},{"Date_str":"2026-06-24","TSX_Close":10.07,"WSE_Close":28.0,"Silver":57.4508,"Copper":13029.71,"Gold":4000.52},{"Date_str":"2026-06-25","TSX_Close":10.28,"WSE_Close":28.8,"Silver":57.8582,"Copper":13227.58,"Gold":4026.56},{"Date_str":"2026-06-26","TSX_Close":10.4,"WSE_Close":28.2,"Silver":58.924,"Copper":13335.92,"Gold":4071.95},{"Date_str":"2026-06-27","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-06-28","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-06-29","TSX_Close":10.3,"WSE_Close":27.18,"Silver":58.2942,"Copper":13252.81,"Gold":4016.61},{"Date_str":"2026-06-30","TSX_Close":10.23,"WSE_Close":27.5,"Silver":58.5934,"Copper":13348.9,"Gold":4007.59},{"Date_str":"2026-07-01","TSX_Close":null,"WSE_Close":28.3,"Silver":59.107,"Copper":13249.24,"Gold":4031.28},{"Date_str":"2026-07-02","TSX_Close":10.57,"WSE_Close":27.15,"Silver":60.971,"Copper":13287.6,"Gold":4123.91},{"Date_str":"2026-07-03","TSX_Close":10.68,"WSE_Close":28.17,"Silver":62.3853,"Copper":null,"Gold":4175.02},{"Date_str":"2026-07-04","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-07-05","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-07-06","TSX_Close":10.31,"WSE_Close":27.82,"Silver":62.0472,"Copper":13348.43,"Gold":4164.88},{"Date_str":"2026-07-07","TSX_Close":9.6,"WSE_Close":26.95,"Silver":59.9825,"Copper":13298.49,"Gold":4106.18},{"Date_str":"2026-07-08","TSX_Close":9.21,"WSE_Close":24.7,"Silver":58.2888,"Copper":13097.18,"Gold":4077.58},{"Date_str":"2026-07-09","TSX_Close":9.55,"WSE_Close":25.69,"Silver":59.9619,"Copper":13439.8,"Gold":4123.65},{"Date_str":"2026-07-10","TSX_Close":9.51,"WSE_Close":25.81,"Silver":59.702,"Copper":13418.55,"Gold":4108.44},{"Date_str":"2026-07-11","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-07-12","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-07-13","TSX_Close":9.26,"WSE_Close":25.18,"Silver":57.6529,"Copper":13487.86,"Gold":4001.02},{"Date_str":"2026-07-14","TSX_Close":9.52,"WSE_Close":25.48,"Silver":58.6999,"Copper":13595.75,"Gold":4052.96},{"Date_str":"2026-07-15","TSX_Close":9.15,"WSE_Close":25.08,"Silver":57.7808,"Copper":13534.07,"Gold":4060.59},{"Date_str":"2026-07-16","TSX_Close":8.6,"WSE_Close":23.54,"Silver":55.5185,"Copper":13554.35,"Gold":3976.49},{"Date_str":"2026-07-17","TSX_Close":8.77,"WSE_Close":23.28,"Silver":55.8995,"Copper":13500.88,"Gold":4017.26},{"Date_str":"2026-07-18","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-07-19","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-07-20","TSX_Close":8.93,"WSE_Close":23.8,"Silver":56.4178,"Copper":13621.19,"Gold":4007.7},{"Date_str":"2026-07-21","TSX_Close":9.2,"WSE_Close":24.9,"Silver":58.7908,"Copper":13898.49,"Gold":4077.85},{"Date_str":"2026-07-22","TSX_Close":9.28,"WSE_Close":25.4,"Silver":59.7112,"Copper":13812.7,"Gold":4130.14},{"Date_str":"2026-07-23","TSX_Close":8.86,"WSE_Close":24.5,"Silver":57.6534,"Copper":13599.1,"Gold":4049.55},{"Date_str":"2026-07-24","TSX_Close":8.99,"WSE_Close":25.4,"Silver":58.211,"Copper":13653.8,"Gold":4054.94},{"Date_str":"2026-07-25","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-07-26","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-07-27","TSX_Close":9.13,"WSE_Close":24.06,"Silver":58.4015,"Copper":13770.61,"Gold":4076.78},{"Date_str":"2026-07-28","TSX_Close":8.87,"WSE_Close":25.1,"Silver":57.1153,"Copper":13715.2,"Gold":4028.67},{"Date_str":"2026-07-29","TSX_Close":8.75,"WSE_Close":24.95,"Silver":57.6253,"Copper":13605.04,"Gold":4066.16},{"Date_str":"2026-07-30","TSX_Close":8.93,"WSE_Close":23.5,"Silver":58.9963,"Copper":13843.49,"Gold":4103.48},{"Date_str":"2026-07-31","TSX_Close":8.77,"WSE_Close":23.15,"Silver":57.633,"Copper":13835.7,"Gold":4044.76},{"Date_str":"2026-08-01","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-08-02","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-08-03","TSX_Close":null,"WSE_Close":24.48,"Silver":58.1946,"Copper":13943.57,"Gold":4055.4},{"Date_str":"2026-08-04","TSX_Close":9.47,"WSE_Close":24.4,"Silver":59.5251,"Copper":14168.88,"Gold":4077.52},{"Date_str":"2026-08-05","TSX_Close":9.68,"WSE_Close":26.97,"Silver":62.0411,"Copper":14218.65,"Gold":4246.85},{"Date_str":"2026-08-06","TSX_Close":8.98,"WSE_Close":25.0,"Silver":61.5336,"Copper":14226.64,"Gold":4240.66},{"Date_str":"2026-08-07","TSX_Close":9.56,"WSE_Close":25.02,"Silver":63.5709,"Copper":14190.59,"Gold":4342.39},{"Date_str":"2026-08-08","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-08-09","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-08-10","TSX_Close":10.03,"WSE_Close":25.95,"Silver":65.7423,"Copper":14190.59,"Gold":4390.08},{"Date_str":"2026-08-11","TSX_Close":9.88,"WSE_Close":26.75,"Silver":64.6845,"Copper":14352.36,"Gold":4368.04},{"Date_str":"2026-08-12","TSX_Close":9.79,"WSE_Close":26.66,"Silver":65.3255,"Copper":14294.25,"Gold":4408.66},{"Date_str":"2026-08-13","TSX_Close":9.6,"WSE_Close":26.27,"Silver":64.4744,"Copper":14394.14,"Gold":4350.85},{"Date_str":"2026-08-14","TSX_Close":9.71,"WSE_Close":26.21,"Silver":64.6966,"Copper":14576.29,"Gold":4376.24},{"Date_str":"2026-08-15","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-08-16","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-08-17","TSX_Close":9.85,"WSE_Close":26.95,"Silver":65.7897,"Copper":14593.98,"Gold":4416.66},{"Date_str":"2026-08-18","TSX_Close":9.37,"WSE_Close":25.97,"Silver":63.3327,"Copper":14234.5,"Gold":4334.82},{"Date_str":"2026-08-19","TSX_Close":9.88,"WSE_Close":26.6,"Silver":67.0128,"Copper":14364.31,"Gold":4523.27},{"Date_str":"2026-08-20","TSX_Close":9.72,"WSE_Close":26.1,"Silver":68.0912,"Copper":14113.21,"Gold":4519.32},{"Date_str":"2026-08-21","TSX_Close":10.38,"WSE_Close":26.54,"Silver":68.995,"Copper":14276.82,"Gold":4603.71},{"Date_str":"2026-08-22","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-08-23","TSX_Close":null,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-08-24","TSX_Close":10.43,"WSE_Close":28.65,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-08-25","TSX_Close":10.76,"WSE_Close":27.7,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-08-26","TSX_Close":10.5,"WSE_Close":28.42,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-08-27","TSX_Close":10.78,"WSE_Close":28.5,"Silver":null,"Copper":null,"Gold":null},{"Date_str":"2026-08-28","TSX_Close":10.99,"WSE_Close":null,"Silver":null,"Copper":null,"Gold":null}],"stats":{"tsx_latest_date":"2026-08-28","tsx_latest_close":10.99,"wse_latest_date":"2026-08-27","wse_latest_close":28.5,"copper_latest_date":"2026-08-21","copper_latest_price":14276.82,"silver_latest_date":"2026-08-21","silver_latest_price":68.995,"gold_latest_date":"2026-08-21","gold_latest_price":4603.71,"first_date":"2026-05-19","last_date":"2026-08-28","total_days":102},"axis_ranges":{"tsx":{"min":7.74,"max":13.959000000000001},"wse":{"min":20.835,"max":39.050000000000004},"silver":{"min":49.96665,"max":84.33458},"copper":{"min":11726.739,"max":16053.378}}};
 
 function fmtInt(val) {
   if (val === null || val === undefined || isNaN(val)) return '—';
@@ -383,120 +347,172 @@ function fmtInt(val) {
 
 function fmt2(val) {
   if (val === null || val === undefined || isNaN(val)) return '—';
-  return Number(val).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  return val.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
 
-function buildTooltip(dateStr, seriesList) {
-  var html = '<div style="font-weight:600;margin-bottom:6px;font-size:14px;">' + dateStr + '</div>';
-  seriesList.forEach(function(s) {
-    html += '<div style="display:flex;align-items:center;margin:3px 0;">';
-    html += '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + s.color + ';margin-right:8px;"></span>';
-    html += '<span style="flex:1;">' + s.name + '</span>';
-    html += '<span style="font-weight:600;margin-left:12px;">' + s.value + '</span>';
-    html += '</div>';
-  });
-  return html;
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  if (tab === 'stock') {
+    document.querySelectorAll('.tab-btn')[0].classList.add('active');
+    document.getElementById('tab-stock').classList.add('active');
+    if (window.mainChart) { window.mainChart.resize(); }
+  } else {
+    document.querySelectorAll('.tab-btn')[1].classList.add('active');
+    document.getElementById('tab-company').classList.add('active');
+  }
 }
 
-function initDashboard(data) {
-  var stats = data.stats;
-  var axis = data.axis_ranges;
-  var records = data.records;
+function initDashboard() {
+  const data = DASHBOARD_DATA;
+  const stats = data.stats;
+  const axis = data.axis_ranges;
 
-  document.getElementById('copper-price').textContent = '$' + fmt2(stats.copper_latest_price);
-  document.getElementById('copper-date').textContent = '更新于 ' + stats.copper_latest_date;
+  // Update stat cards
+  document.getElementById('copper-price').textContent = '$' + fmtInt(stats.copper_latest_price);
+  document.getElementById('copper-date').textContent = '截至 ' + stats.copper_latest_date;
   document.getElementById('silver-price').textContent = '$' + fmt2(stats.silver_latest_price);
-  document.getElementById('silver-date').textContent = '更新于 ' + stats.silver_latest_date;
+  document.getElementById('silver-date').textContent = '截至 ' + stats.silver_latest_date;
   document.getElementById('tsx-price').textContent = 'C$' + fmt2(stats.tsx_latest_close);
-  document.getElementById('tsx-date').textContent = '更新于 ' + stats.tsx_latest_date;
+  document.getElementById('tsx-date').textContent = '截至 ' + stats.tsx_latest_date;
   document.getElementById('wse-price').textContent = 'zł' + fmt2(stats.wse_latest_close);
-  document.getElementById('wse-date').textContent = '更新于 ' + stats.wse_latest_date;
+  document.getElementById('wse-date').textContent = '截至 ' + stats.wse_latest_date;
   document.getElementById('update-time').textContent = new Date().toLocaleString('zh-CN');
 
-  var dates = records.map(function(r) { return r.Date_str; });
-  var tsxData = records.map(function(r) { return r.TSX; });
-  var wseData = records.map(function(r) { return r.WSE; });
-  var silverData = records.map(function(r) { return r.Silver; });
-  var copperData = records.map(function(r) { return r.Copper; });
+  const dates = data.chart_data.map(r => r.Date_str);
+  const tsxClose = data.chart_data.map(r => r.TSX_Close);
+  const wseClose = data.chart_data.map(r => r.WSE_Close);
+  const silverData = data.chart_data.map(r => r.Silver);
+  const copperData = data.chart_data.map(r => r.Copper);
 
-  var chart = echarts.init(document.getElementById('main-chart'));
-  window._chartInst = chart;
+  // 4-axis chart
+  const chart = echarts.init(document.getElementById('main-chart'));
+  window.mainChart = chart;
+
   chart.setOption({
     tooltip: {
       trigger: 'axis',
       formatter: function(params) {
-        var dateStr = params[0].axisValue;
-        var list = params.map(function(p) {
-          var prefix = '$';
-          var suffix = '';
-          if (p.seriesName === 'TSX 股价') prefix = 'C$';
-          if (p.seriesName === 'WSE 股价') prefix = 'zł';
-          if (p.seriesName === '铜价') suffix = '/t';
-          if (p.seriesName === '银价') suffix = '/oz';
-          return { name: p.seriesName, value: prefix + fmt2(p.value) + suffix, color: p.color };
+        const dateStr = params[0].axisValue;
+        let html = '<div style="font-weight:600;margin-bottom:6px;font-size:13px;">' + dateStr + '</div>';
+        params.forEach(function(p) {
+          let prefix = '$';
+          if (p.seriesName.indexOf('TSX') >= 0) prefix = 'C$';
+          if (p.seriesName.indexOf('WSE') >= 0) prefix = 'zł';
+          const val = p.value !== null && p.value !== undefined ? prefix + fmt2(p.value) : '—';
+          html += '<div style="display:flex;align-items:center;margin:3px 0;">';
+          html += '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + p.color + ';margin-right:8px;"></span>';
+          html += '<span style="flex:1;font-size:12px;">' + p.seriesName + '</span>';
+          html += '<span style="font-weight:600;margin-left:10px;font-size:12px;">' + val + '</span>';
+          html += '</div>';
         });
-        return buildTooltip(dateStr, list);
+        return html;
       }
     },
-    legend: { data: ['TSX 股价', 'WSE 股价', '银价', '铜价'], top: 8 },
-    grid: { left: '14%', right: '16%', top: '15%', bottom: '10%' },
+    legend: {
+      data: ['TSX 收盘价', 'WSE 收盘价', 'LBMA 银价', 'LME 铜价'],
+      top: 4,
+      textStyle: { fontSize: 12 }
+    },
+    grid: { left: '14%', right: '16%', top: 40, bottom: 50 },
     xAxis: {
       type: 'category',
       data: dates,
-      axisLabel: { rotate: 45, fontSize: 10, interval: 6 }
+      axisLabel: { rotate: 45, fontSize: 10, interval: 6 },
+      axisLine: { lineStyle: { color: '#ccc' } }
     },
     yAxis: [
       {
-        type: 'value', name: 'TSX 股价 (C$)', position: 'left', offset: 0,
-        min: axis.tsx.min, max: axis.tsx.max,
+        type: 'value',
+        name: 'TSX 股价 (C$)',
+        position: 'left',
+        offset: 0,
+        min: axis.tsx.min,
+        max: axis.tsx.max,
+        nameTextStyle: { color: '#1565c0', fontSize: 11 },
         axisLine: { lineStyle: { color: '#1565c0' } },
-        axisLabel: { color: '#1565c0', formatter: function(v) { return Number(v).toLocaleString('en-US', {maximumFractionDigits: 0}); } },
+        axisLabel: { color: '#1565c0', fontSize: 10, formatter: function(v) { return fmtInt(v); } },
         splitLine: { show: true, lineStyle: { type: 'dashed', color: '#eee' } }
       },
       {
-        type: 'value', name: 'WSE 股价 (zł)', position: 'left', offset: 70,
-        min: axis.wse.min, max: axis.wse.max,
+        type: 'value',
+        name: 'WSE 股价 (zł)',
+        position: 'left',
+        offset: 70,
+        min: axis.wse.min,
+        max: axis.wse.max,
+        nameTextStyle: { color: '#2e7d32', fontSize: 11 },
         axisLine: { lineStyle: { color: '#2e7d32' } },
-        axisLabel: { color: '#2e7d32', formatter: function(v) { return Number(v).toLocaleString('en-US', {maximumFractionDigits: 0}); } },
+        axisLabel: { color: '#2e7d32', fontSize: 10, formatter: function(v) { return fmtInt(v); } },
         splitLine: { show: false }
       },
       {
-        type: 'value', name: '银价 ($)', position: 'right', offset: 0,
-        min: axis.silver.min, max: axis.silver.max,
+        type: 'value',
+        name: '银价 ($)',
+        position: 'right',
+        offset: 0,
+        min: axis.silver.min,
+        max: axis.silver.max,
+        nameTextStyle: { color: '#78909c', fontSize: 11 },
         axisLine: { lineStyle: { color: '#78909c' } },
-        axisLabel: { color: '#78909c', formatter: function(v) { return Number(v).toLocaleString('en-US', {maximumFractionDigits: 0}); } },
+        axisLabel: { color: '#78909c', fontSize: 10, formatter: function(v) { return fmtInt(v); } },
         splitLine: { show: false }
       },
       {
-        type: 'value', name: '铜价 ($)', position: 'right', offset: 70,
-        min: axis.copper.min, max: axis.copper.max,
+        type: 'value',
+        name: '铜价 ($/吨)',
+        position: 'right',
+        offset: 70,
+        min: axis.copper.min,
+        max: axis.copper.max,
+        nameTextStyle: { color: '#e65100', fontSize: 11 },
         axisLine: { lineStyle: { color: '#e65100' } },
-        axisLabel: { color: '#e65100', formatter: function(v) { return Number(v).toLocaleString('en-US', {maximumFractionDigits: 0}); } },
+        axisLabel: { color: '#e65100', fontSize: 10, formatter: function(v) { return fmtInt(v); } },
         splitLine: { show: false }
       }
     ],
     series: [
       {
-        name: 'TSX 股价', type: 'line', data: tsxData,
-        yAxisIndex: 0, smooth: false, symbol: 'none', connectNulls: true,
+        name: 'TSX 收盘价',
+        type: 'line',
+        data: tsxClose,
+        yAxisIndex: 0,
+        smooth: false,
+        symbol: 'none',
+        connectNulls: true,
         lineStyle: { width: 2.5, color: '#1565c0', type: 'solid' },
         itemStyle: { color: '#1565c0' }
       },
       {
-        name: 'WSE 股价', type: 'line', data: wseData,
-        yAxisIndex: 1, smooth: false, symbol: 'none', connectNulls: true,
+        name: 'WSE 收盘价',
+        type: 'line',
+        data: wseClose,
+        yAxisIndex: 1,
+        smooth: false,
+        symbol: 'none',
+        connectNulls: true,
         lineStyle: { width: 2.5, color: '#2e7d32', type: 'solid' },
         itemStyle: { color: '#2e7d32' }
       },
       {
-        name: '银价', type: 'line', data: silverData,
-        yAxisIndex: 2, smooth: false, symbol: 'none', connectNulls: true,
+        name: 'LBMA 银价',
+        type: 'line',
+        data: silverData,
+        yAxisIndex: 2,
+        smooth: false,
+        symbol: 'none',
+        connectNulls: true,
         lineStyle: { width: 2, color: '#78909c', type: 'dashed' },
         itemStyle: { color: '#78909c' }
       },
       {
-        name: '铜价', type: 'line', data: copperData,
-        yAxisIndex: 3, smooth: false, symbol: 'none', connectNulls: true,
+        name: 'LME 铜价',
+        type: 'line',
+        data: copperData,
+        yAxisIndex: 3,
+        smooth: false,
+        symbol: 'none',
+        connectNulls: true,
         lineStyle: { width: 2, color: '#e65100', type: 'dashed' },
         itemStyle: { color: '#e65100' }
       }
@@ -504,21 +520,11 @@ function initDashboard(data) {
   });
 
   window.addEventListener('resize', function() {
-    if (window._chartInst) window._chartInst.resize();
+    if (window.mainChart) { window.mainChart.resize(); }
   });
 }
 
-fetch('dashboard_data.json')
-  .then(function(response) {
-    if (!response.ok) throw new Error('数据文件加载失败: ' + response.status);
-    return response.json();
-  })
-  .then(function(data) {
-    initDashboard(data);
-  })
-  .catch(function(error) {
-    console.error('数据加载错误:', error);
-  });
+initDashboard();
 </script>
 </body>
 </html>
