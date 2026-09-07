@@ -354,13 +354,24 @@ function initDashboard() {
   chartMain.setOption({
     tooltip: {
       trigger: 'axis',
+      axisPointer: { type: 'cross' },
       formatter: function(params) {
         var dateStr = params[0].axisValue;
-        var list = params.map(function(p) {
-          if (p.value === null || p.value === undefined || isNaN(p.value)) return null;
-          return { name: p.seriesName, value: getPrefix(p.seriesName) + fmt2(p.value), color: p.color };
-        }).filter(function(x) { return x !== null; });
-        return buildTooltip(dateStr, list);
+        var validParams = params.filter(function(p) {
+          return p.value !== null && p.value !== undefined && !isNaN(p.value);
+        });
+        if (!validParams.length) {
+          return '<div style="font-weight:600;">' + dateStr + '</div><div style="color:#999;font-size:12px;">无数据</div>';
+        }
+        var html = '<div style="font-weight:600;margin-bottom:6px;font-size:14px;">' + dateStr + '</div>';
+        validParams.forEach(function(p) {
+          html += '<div style="display:flex;align-items:center;margin:3px 0;">';
+          html += '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + p.color + ';margin-right:8px;flex-shrink:0;"></span>';
+          html += '<span style="flex:1;font-size:13px;">' + p.seriesName + '</span>';
+          html += '<span style="font-weight:600;margin-left:12px;font-size:13px;">' + getPrefix(p.seriesName) + fmt2(p.value) + '</span>';
+          html += '</div>';
+        });
+        return html;
       }
     },
     legend: {
