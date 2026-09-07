@@ -7,130 +7,1197 @@
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; color: #333; }
-.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-.header { text-align: center; margin-bottom: 24px; }
-.header h1 { font-size: 28px; color: #1a237e; margin-bottom: 8px; }
-.header .subtitle { color: #666; font-size: 14px; }
-.tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 2px solid #e0e0e0; }
-.tab-btn { padding: 12px 28px; background: none; border: none; font-size: 16px; cursor: pointer; color: #666; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
-.tab-btn.active { color: #1565c0; border-bottom-color: #1565c0; font-weight: 600; }
-.tab-btn:hover { color: #1565c0; }
-.tab-content { display: none; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    background: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+.header {
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+    color: white;
+    padding: 24px 32px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.header h1 { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
+.header .subtitle { font-size: 14px; opacity: 0.85; }
+.header .update-time { font-size: 12px; opacity: 0.7; margin-top: 8px; }
+
+.tabs {
+    display: flex;
+    background: white;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0 32px;
+}
+.tab {
+    padding: 14px 24px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+}
+.tab:hover { color: #1565c0; }
+.tab.active {
+    color: #1565c0;
+    border-bottom-color: #1565c0;
+}
+.tab-content { display: none; padding: 24px 32px; }
 .tab-content.active { display: block; }
-.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
-.stat-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+
+/* 统计卡片 */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
 .stat-card .label { font-size: 13px; color: #888; margin-bottom: 8px; }
-.stat-card .value { font-size: 24px; font-weight: 700; }
-.stat-card .change { font-size: 13px; margin-top: 4px; }
-.stat-card .change.up { color: #2e7d32; }
-.stat-card .change.down { color: #c62828; }
-.chart-container { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-#chart { width: 100%; height: 640px; }
-.company-section { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px; }
-.company-section h2 { font-size: 20px; color: #1a237e; margin-bottom: 16px; }
-.company-section h3 { font-size: 16px; color: #333; margin: 16px 0 10px; }
-.company-section p { line-height: 1.6; color: #555; margin-bottom: 10px; }
-.news-item { padding: 12px 0; border-bottom: 1px solid #eee; }
-.news-item:last-child { border-bottom: none; }
-.news-item .date { font-size: 12px; color: #999; margin-bottom: 4px; }
-.news-item .title { font-size: 15px; font-weight: 500; }
-.news-item .title a { color: #1565c0; text-decoration: none; }
-.news-item .title a:hover { text-decoration: underline; }
-.footer { text-align: center; color: #aaa; font-size: 12px; margin-top: 24px; padding: 16px; }
+.stat-card .value { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+.stat-card .date { font-size: 12px; color: #aaa; }
+.stat-card.copper .value { color: #e65100; }
+.stat-card.silver .value { color: #78909c; }
+.stat-card.tsx .value { color: #1565c0; }
+.stat-card.wse .value { color: #2e7d32; }
+
+/* 图表 */
+.chart-container {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 24px;
+}
+.chart-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; color: #333; }
+#mainChart { width: 100%; height: 560px; }
+
+/* 公司情况页面 */
+.container { max-width: 1200px; margin: 0 auto; }
+.section-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1565c0;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e3f2fd;
+}
+.subsection-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin: 16px 0 12px 0;
+}
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+.info-item {
+    background: #f8f9fc;
+    padding: 12px 14px;
+    border-radius: 8px;
+}
+.info-label { display: block; font-size: 12px; color: #888; margin-bottom: 4px; }
+.info-value { font-size: 14px; font-weight: 500; color: #333; }
+
+.resource-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.resource-table th, .resource-table td {
+    padding: 10px 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+}
+.resource-table th { background: #f5f7fa; font-weight: 600; color: #555; }
+
+.pea-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+.pea-item {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+}
+.pea-label { font-size: 12px; color: #1565c0; margin-bottom: 6px; }
+.pea-value { font-size: 24px; font-weight: 700; color: #0d47a1; }
+.pea-unit { font-size: 11px; color: #1565c0; opacity: 0.7; }
+
+.highlight-box {
+    background: #fff8e1;
+    border-left: 4px solid #ff8f00;
+    padding: 14px 16px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 12px;
+}
+.highlight-title { font-size: 14px; font-weight: 600; color: #e65100; margin-bottom: 6px; }
+
+.news-main {
+    background: #f8f9fc;
+    padding: 18px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+.news-date { font-size: 12px; color: #888; margin-bottom: 6px; }
+.news-title { font-size: 16px; font-weight: 600; color: #1565c0; margin-bottom: 10px; }
+.news-body p { margin-bottom: 8px; font-size: 13px; line-height: 1.7; }
+.news-body strong { color: #333; }
+
+.news-list { display: flex; flex-direction: column; gap: 8px; }
+.news-item {
+    display: flex;
+    padding: 10px 12px;
+    background: #f8f9fc;
+    border-radius: 6px;
+    font-size: 13px;
+}
+.ni-date { color: #888; min-width: 90px; font-size: 12px; }
+.ni-title { color: #333; }
+
+.target-price-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.tp-item {
+    background: #f5f7fa;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+}
+.tp-item.tp-consensus { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); }
+.tp-bank { font-size: 12px; color: #666; margin-bottom: 4px; }
+.tp-price { font-size: 18px; font-weight: 700; color: #2e7d32; }
+
+.bull-bear-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+.bull-card, .bear-card { padding: 16px; border-radius: 8px; }
+.bull-card { background: #e8f5e9; border-left: 4px solid #2e7d32; }
+.bear-card { background: #ffebee; border-left: 4px solid #c62828; }
+.bb-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+.bull-card .bb-title { color: #2e7d32; }
+.bear-card .bb-title { color: #c62828; }
+.bb-list { padding-left: 18px; font-size: 13px; line-height: 1.8; }
+.bb-list li { margin-bottom: 2px; }
+
+@media (max-width: 768px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .info-grid { grid-template-columns: repeat(2, 1fr); }
+    .pea-grid { grid-template-columns: repeat(2, 1fr); }
+    .bull-bear-grid { grid-template-columns: 1fr; }
+    .target-price-grid { grid-template-columns: repeat(2, 1fr); }
+    .header { padding: 16px; }
+    .tabs { padding: 0 16px; }
+    .tab-content { padding: 16px; }
+}
 </style>
 </head>
 <body>
-<div class="container">
 <div class="header">
-<h1>Lumina Metals 综合看板</h1>
-<div class="subtitle">TSX:LMCU · WSE:LMU · 铜价 · 银价 · 金价</div>
+    <h1>Lumina Metals 综合看板</h1>
+    <div class="subtitle">TSX:LMCU · WSE:LMU · 铜价 · 银价 · 金价</div>
+    <div class="update-time">最后更新: 2026-09-07 · 数据截至 2026-09-04</div>
 </div>
 
 <div class="tabs">
-<button class="tab-btn active" onclick="switchTab('prices')">股价数据</button>
-<button class="tab-btn" onclick="switchTab('company')">公司情况</button>
+    <div class="tab active" onclick="switchTab('price')">股价数据</div>
+    <div class="tab" onclick="switchTab('company')">公司情况</div>
 </div>
 
-<div id="prices-tab" class="tab-content active">
-<div class="stats-grid">
-<div class="stat-card">
-<div class="label">LME 铜价</div>
-<div class="value" style="color:#e65100">$14,490</div>
-<div class="change">/吨 · 更新于 2026-09-04</div>
-</div>
-<div class="stat-card">
-<div class="label">LBMA 银价</div>
-<div class="value" style="color:#78909c">$66.22</div>
-<div class="change">/盎司 · 更新于 2026-09-04</div>
-</div>
-<div class="stat-card">
-<div class="label">TSX:LMCU 收盘</div>
-<div class="value" style="color:#1565c0">C$10.91</div>
-<div class="change down">-0.46% · 2026-09-04</div>
-</div>
-<div class="stat-card">
-<div class="label">WSE:LMU 收盘</div>
-<div class="value" style="color:#2e7d32">zł28.82</div>
-<div class="change down">-2.98% · 2026-09-04</div>
-</div>
+<div id="tab-price" class="tab-content active">
+    <div class="stats-grid">
+        <div class="stat-card copper">
+            <div class="label">LME 铜价</div>
+            <div class="value">$14,490</div>
+            <div class="date">美元/吨 · 2026-09-04</div>
+        </div>
+        <div class="stat-card silver">
+            <div class="label">银价</div>
+            <div class="value">$66.22</div>
+            <div class="date">美元/盎司 · 2026-09-04</div>
+        </div>
+        <div class="stat-card tsx">
+            <div class="label">TSX 收盘价</div>
+            <div class="value">C$10.91</div>
+            <div class="date">TSX:LMCU · 2026-09-04</div>
+        </div>
+        <div class="stat-card wse">
+            <div class="label">WSE 收盘价</div>
+            <div class="value">zł28.82</div>
+            <div class="date">WSE:LMU · 2026-09-04</div>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <div class="chart-title">股价与金属价格走势（四轴）</div>
+        <div id="mainChart"></div>
+    </div>
 </div>
 
-<div class="chart-container">
-<div id="chart"></div>
-</div>
-</div>
-
-<div id="company-tab" class="tab-content">
-<div class="company-section">
-<h2>项目概况</h2>
-<p>Lumina Metals 是一家加拿大矿产勘探开发公司，专注于波兰的铜银项目。公司在多伦多证券交易所（TSX:LMCU）和华沙证券交易所（WSE:LMU）双重上市。</p>
-<p>公司核心资产位于波兰的三个铜银项目区，均处于欧洲重要的铜银成矿带上。</p>
-</div>
-
-<div class="company-section">
-<h2>最近新闻</h2>
-<div class="news-item">
-<div class="date">2026年8月13日</div>
-<div class="title"><a href="https://www.luminametals.pl/newsroom/lumina-metals-reports-q2-2026-results" target="_blank">Lumina Metals Reports Q2 2026 Results</a></div>
-</div>
-<div class="news-item">
-<div class="date">2026年8月3日</div>
-<div class="title"><a href="https://www.luminametals.pl/newsroom/lumina-metals-reports-on-2026-drilling-at-its-three-projects-in-poland" target="_blank">Lumina Metals Reports On 2026 Drilling At Its Three Projects in Poland</a></div>
-</div>
-<div class="news-item">
-<div class="date">2026年6月16日</div>
-<div class="title"><a href="https://www.luminametals.pl/newsroom/lumina-metals-commences-trading-on-the-warsaw-stock-exchange" target="_blank">Lumina Metals Commences Trading On The Warsaw Stock Exchange</a></div>
-</div>
-</div>
-
-<div class="company-section">
-<h2>研报解读</h2>
-<p>多家券商已覆盖 Lumina Metals，包括 RBC Capital、CIBC、Morgan Stanley、BMO Capital、National Bank、Canaccord Genuity 等，评级多为 Outperform / Speculative Buy。</p>
-</div>
-</div>
-
-<div class="footer">
-数据来源：S&P Global Market Intelligence · LME · LBMA · Lumina Metals 官网<br>
-最后更新：2026-09-04
-</div>
+<div id="tab-company" class="tab-content">
+<div class="container">
+  <!-- 项目概况 -->
+  <div class="section-card">
+    <div class="section-title">项目概况</div>
+    <div class="subsection-title">公司基本信息</div>
+    <div class="info-grid">
+      <div class="info-item"><span class="info-label">公司全称</span><span class="info-value">Lumina Metals Corp.</span></div>
+      <div class="info-item"><span class="info-label">成立时间</span><span class="info-value">2010年（2024年12月更名）</span></div>
+      <div class="info-item"><span class="info-label">总部</span><span class="info-value">加拿大温哥华</span></div>
+      <div class="info-item"><span class="info-label">波兰办公室</span><span class="info-value">华沙 / Nowa Sól / Zielona Góra</span></div>
+      <div class="info-item"><span class="info-label">上市信息</span><span class="info-value">TSX:LMCU（2026年4月）/ WSE:LMCU（2026年6月）</span></div>
+      <div class="info-item"><span class="info-label">员工人数</span><span class="info-value">14人</span></div>
+      <div class="info-item"><span class="info-label">IPO发行价</span><span class="info-value">C$12.50/股</span></div>
+      <div class="info-item"><span class="info-label">IPO募资规模</span><span class="info-value">C$4.062亿（超额认购）</span></div>
+    </div>
+    <div class="subsection-title">旗舰项目 Nowa Sól 资源量</div>
+    <table class="resource-table">
+      <tr><th>类别</th><th>资源量</th><th>铜品位</th><th>银品位</th><th>含铜量</th><th>含银量</th></tr>
+      <tr><td>探明+控制 (M&I)</td><td>6.04亿吨</td><td>1.24%</td><td>38.29 g/t</td><td>约749万吨</td><td>约7.44亿盎司</td></tr>
+      <tr><td>推断 (Inferred)</td><td>1.12亿吨</td><td>1.08%</td><td>28.91 g/t</td><td>约121万吨</td><td>约1.04亿盎司</td></tr>
+      <tr><td><strong>合计</strong></td><td><strong>7.16亿吨</strong></td><td>-</td><td>-</td><td><strong>约870万吨</strong></td><td><strong>约8.48亿盎司</strong></td></tr>
+    </table>
+    <div class="subsection-title">Nowa Sól PEA 核心经济指标</div>
+    <div class="pea-grid">
+      <div class="pea-item">
+        <div class="pea-label">税前 NPV（7%折现）</div>
+        <div class="pea-value">$83亿</div>
+        <div class="pea-unit">美元</div>
+      </div>
+      <div class="pea-item">
+        <div class="pea-label">税前 IRR</div>
+        <div class="pea-value">20.5%</div>
+        <div class="pea-unit">-</div>
+      </div>
+      <div class="pea-item">
+        <div class="pea-label">初始资本开支</div>
+        <div class="pea-value">$64亿</div>
+        <div class="pea-unit">美元</div>
+      </div>
+      <div class="pea-item">
+        <div class="pea-label">前10年 AISC</div>
+        <div class="pea-value">$1.17</div>
+        <div class="pea-unit">/磅铜</div>
+      </div>
+      <div class="pea-item">
+        <div class="pea-label">前10年年均 EBITDA</div>
+        <div class="pea-value">$25亿</div>
+        <div class="pea-unit">美元</div>
+      </div>
+      <div class="pea-item">
+        <div class="pea-label">矿山寿命</div>
+        <div class="pea-value">25-30年</div>
+        <div class="pea-unit">-</div>
+      </div>
+    </div>
+    <div class="subsection-title">项目组合</div>
+    <div class="highlight-box">
+      <div class="highlight-title">Sulmierzyce 项目</div>
+      <div style="font-size:13px;color:#555;">推断资源量 <strong>3.08亿吨 @ 2.09% Cu、31.9 g/t Ag</strong>，距 Nowa Sól 约150公里。若后续钻探证实与 Nowa Sól 规模相当，Lumina 总白银资源可能超20亿盎司，成为全球最大白银资源持有公司。公司计划2027年可能将其分拆为独立公司。</div>
+    </div>
+    <div class="highlight-box">
+      <div class="highlight-title">Mozów 项目</div>
+      <div style="font-size:13px;color:#555;">位于 Nowa Sól 西北35公里，面积93km²，处于早期勘探阶段。六口历史钻孔均见矿，铜品位1.10%-3.86%，银8-52 g/t。</div>
+    </div>
+    <div class="subsection-title">关键里程碑</div>
+    <div class="info-grid">
+      <div class="info-item"><span class="info-label">2026年4月</span><span class="info-value">IPO完成，TSX上市</span></div>
+      <div class="info-item"><span class="info-label">2026年5月</span><span class="info-value">启动PFS（Fluor主导）</span></div>
+      <div class="info-item"><span class="info-label">2026年6月</span><span class="info-value">WSE上市，首日涨19%</span></div>
+      <div class="info-item"><span class="info-label">2027年下半年</span><span class="info-value">预计PFS完成</span></div>
+      <div class="info-item"><span class="info-label">约2030年</span><span class="info-value">预计获得采矿许可</span></div>
+    </div>
+  </div>
+  <!-- 最近新闻 -->
+  <div class="section-card">
+    <div class="section-title">最近新闻</div>
+    <div class="news-main">
+      <div class="news-date">2026年8月3日 · Newsfile Corp.</div>
+      <div class="news-title">Lumina Metals Reports on 2026 Drilling at Its Three Projects in Poland</div>
+      <div class="news-body">
+        <p><strong>Nowa Sól：</strong>计划约8,200米钻探（4个孔），两台钻机正在作业。首个钻孔已达目标深度1,900米，初步XRF结果与周边矿化一致。钻探由具有丰富Kupferschiefer型矿床经验的波兰本地承包商执行。</p>
+        <p><strong>Sulmierzyce：</strong>2026年4月发布了 maiden NI 43-101 推断资源量（308Mt @ 2.09% Cu、31.85 g/t Ag）。2026年钻探计划旨在增加资源量，包括1个新增钻孔和对该地区历史油气勘探钻孔的分析。</p>
+        <p><strong>Mozów：</strong>六口历史钻孔均见矿（铜1.10%-3.86%，银8-52 g/t）。公司计划在未来一年内完成1个新增钻孔以扩展资源潜力。</p>
+        <p><strong>人事变动：</strong>任命 Adrian Karolko（P.Geo.，18年国际矿产勘探经验）为 VP, Exploration，接替 Leo Hathaway。Adrian 曾在赞比亚 Midnight Sun Mining 担任 VP Exploration，并在波兰 Lumina 和厄瓜多尔 Lumina Gold 担任勘探经理。</p>
+      </div>
+    </div>
+    <div class="subsection-title">历史新闻摘要</div>
+    <div class="news-list">
+      <div class="news-item">
+        <div class="ni-date">2026年6月16日</div>
+        <div class="ni-title">华沙证券交易所上市，首日股价上涨19%至35.5兹罗提</div>
+      </div>
+      <div class="news-item">
+        <div class="ni-date">2026年5月29日</div>
+        <div class="ni-title">IPO超额配售权完成，额外募资约6,093万加元</div>
+      </div>
+      <div class="news-item">
+        <div class="ni-date">2026年5月19日</div>
+        <div class="ni-title">获波兰金融监管局批准华沙上市；启动Nowa Sól预可行性研究</div>
+      </div>
+      <div class="news-item">
+        <div class="ni-date">2026年5月5日</div>
+        <div class="ni-title">与KGHM签署铜精矿供应和战略合作意向书</div>
+      </div>
+      <div class="news-item">
+        <div class="ni-date">2026年4月30日</div>
+        <div class="ni-title">完成上调规模的首次公开发行，募资4.062亿加元</div>
+      </div>
+      <div class="news-item">
+        <div class="ni-date">2026年4月22日</div>
+        <div class="ni-title">上调IPO规模，发行价维持12.50加元/股</div>
+      </div>
+    </div>
+  </div>
+  <!-- 研报解读 -->
+  <div class="section-card">
+    <div class="section-title">研报解读</div>
+    <div class="subsection-title">分析师目标价（7家覆盖）</div>
+    <div class="target-price-grid">
+      <div class="tp-item"><div class="tp-bank">Canaccord</div><div class="tp-price">C$21.50</div></div>
+      <div class="tp-item"><div class="tp-bank">RBC / NBC</div><div class="tp-price">C$20.00</div></div>
+      <div class="tp-item"><div class="tp-bank">Morgan Stanley / CIBC</div><div class="tp-price">C$18.00</div></div>
+      <div class="tp-item tp-consensus"><div class="tp-bank">一致目标价</div><div class="tp-price">~C$18.6</div></div>
+    </div>
+    <div style="font-size:13px;color:#666;margin-bottom:12px;">较当前股价（C$8.77-10.40区间）隐含约 <strong>80%+ 上行空间</strong>。分析师一致评级为"跑赢大盘"（Outperform）。</div>
+    <div class="bull-bear-grid">
+      <div class="bull-card">
+        <div class="bb-title">看多主要依据</div>
+        <ul class="bb-list">
+          <li>全球顶级的未开发铜银资源（规模+品位+区位）</li>
+          <li>成本曲线位于下半部，AISC $1.17/lb（前10年）</li>
+          <li>资本强度$16,416/t CuEq，显著低于同业</li>
+          <li>与KGHM冶炼厂仅20-25km，已签LOI</li>
+          <li>Lumina班底历史上8次成功退出（含CMOC、五矿等）</li>
+          <li>欧洲能源转型驱动长期铜需求增长</li>
+          <li>波兰政府支持"铜谷"战略，总理出席上市仪式</li>
+        </ul>
+      </div>
+      <div class="bear-card">
+        <div class="bb-title">看空/风险主要依据</div>
+        <ul class="bb-list">
+          <li><strong>波兰矿产开采税（MET）</strong>：使税后NPV从$63亿降至$16亿（-75%），IRR从18%降至10.8%</li>
+          <li>深部开采挑战：平均埋深1,950m，高温/岩压/通风</li>
+          <li>$64亿初始资本开支 vs 当前市值$8.57亿</li>
+          <li>许可周期长：预计2030年才能获得采矿特许权</li>
+          <li>股价已跌破IPO发行价（C$10.40 vs C$12.50）</li>
+          <li>无收入、持续亏损、依赖资本市场融资</li>
+          <li>公司明确：无MET豁免/修法则不建矿</li>
+        </ul>
+      </div>
+    </div>
+    <div class="subsection-title">核心看点</div>
+    <div style="font-size:13px;color:#555;line-height:1.7;">
+      <strong>资源的世界级确定性 vs 波兰税制与巨额资本开支的不确定性</strong>——这是当前估值折让（EV仅$6.15亿，原地铜价约$0.04/lb）的核心来源。MET改革进展、PFS结果与2030年采矿特许权是关键里程碑节点。历史上Lumina班底8次成功退出，对手方包括第一量子、Teck、五矿、CMOC等产业资本，该项目最终大概率走向<strong>产业方并购/合资开发</strong>。
+    </div>
+  </div>
+  </div>
 </div>
 
 <script>
 function switchTab(tab) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(tab + '-tab').classList.add('active');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     event.target.classList.add('active');
-    if (tab === 'prices') {
-        setTimeout(() => chart.resize(), 50);
+    document.getElementById('tab-' + tab).classList.add('active');
+    if (tab === 'price' && typeof chart !== 'undefined') {
+        setTimeout(() => chart.resize(), 100);
     }
 }
 
-var chart = echarts.init(document.getElementById('chart'));
-var option = {"tooltip": {"trigger": "axis", "axisPointer": {"type": "cross"}, "formatter": "function(params) {\n            let html = params[0].axisValue + '<br/>';\n            params.forEach(p => {\n                let prefix = '';\n                if (p.seriesName === 'TSX:LMCU') prefix = 'C$';\n                else if (p.seriesName === 'WSE:LMU') prefix = 'zł';\n                else prefix = '$';\n                html += '<span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:' + p.color + ';\"></span>' + p.seriesName + ': ' + prefix + (p.value != null ? p.value.toLocaleString() : '-') + '<br/>';\n            });\n            return html;\n        }"}, "legend": {"data": ["TSX:LMCU", "WSE:LMU", "银价", "铜价"], "top": 0}, "grid": {"left": "14%", "right": "16%", "top": 40, "bottom": 40, "height": 560}, "xAxis": {"type": "category", "data": ["2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-23", "2026-05-24", "2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30", "2026-05-31", "2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05", "2026-06-06", "2026-06-07", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-11", "2026-06-12", "2026-06-13", "2026-06-14", "2026-06-15", "2026-06-16", "2026-06-17", "2026-06-18", "2026-06-19", "2026-06-20", "2026-06-21", "2026-06-22", "2026-06-23", "2026-06-24", "2026-06-25", "2026-06-26", "2026-06-27", "2026-06-28", "2026-06-29", "2026-06-30", "2026-07-01", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05", "2026-07-06", "2026-07-07", "2026-07-08", "2026-07-09", "2026-07-10", "2026-07-11", "2026-07-12", "2026-07-13", "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17", "2026-07-18", "2026-07-19", "2026-07-20", "2026-07-21", "2026-07-22", "2026-07-23", "2026-07-24", "2026-07-25", "2026-07-26", "2026-07-27", "2026-07-28", "2026-07-29", "2026-07-30", "2026-07-31", "2026-08-01", "2026-08-02", "2026-08-03", "2026-08-04", "2026-08-05", "2026-08-06", "2026-08-07", "2026-08-08", "2026-08-09", "2026-08-10", "2026-08-11", "2026-08-12", "2026-08-13", "2026-08-14", "2026-08-15", "2026-08-16", "2026-08-17", "2026-08-18", "2026-08-19", "2026-08-20", "2026-08-21", "2026-08-22", "2026-08-23", "2026-08-24", "2026-08-25", "2026-08-26", "2026-08-27", "2026-08-28", "2026-08-29", "2026-08-30", "2026-08-31", "2026-09-01", "2026-09-02", "2026-09-03", "2026-09-04"], "axisLabel": {"interval": 5, "rotate": 0}}, "yAxis": [{"type": "value", "name": "TSX (C$)", "position": "left", "offset": 0, "min": 7.74, "max": 13.96, "axisLabel": {"color": "#1565c0", "formatter": "{value}"}, "nameTextStyle": {"color": "#1565c0"}}, {"type": "value", "name": "WSE (zł)", "position": "left", "offset": 70, "min": 20.84, "max": 39.05, "axisLabel": {"color": "#2e7d32", "formatter": "{value}"}, "nameTextStyle": {"color": "#2e7d32"}}, {"type": "value", "name": "银价 ($/oz)", "position": "right", "offset": 0, "min": 49.97, "max": 84.34, "axisLabel": {"color": "#78909c", "formatter": "{value}"}, "nameTextStyle": {"color": "#78909c"}}, {"type": "value", "name": "铜价 ($/吨)", "position": "right", "offset": 70, "min": 11726.74, "max": 16053.38, "axisLabel": {"color": "#e65100", "formatter": "{value}"}, "nameTextStyle": {"color": "#e65100"}}], "series": [{"name": "TSX:LMCU", "type": "line", "yAxisIndex": 0, "data": [11.95, 12.15, 12.08, 11.84, null, null, 12.07, 12.11, 11.95, 12.06, 11.95, null, null, 11.69, 11.66, 11.85, 12.69, 10.98, null, null, 10.9, 10.3, 10.05, 10.39, 11.09, null, null, 11.6, 11.7, 11.92, 11.4, 11.29, null, null, 10.93, 10.49, 10.07, 10.28, 10.4, null, null, 10.3, 10.23, null, 10.57, 10.68, null, null, 10.31, 9.6, 9.21, 9.55, 9.51, null, null, 9.26, 9.52, 9.15, 8.6, 8.77, null, null, 8.93, 9.2, 9.28, 8.86, 8.99, null, null, 9.13, 8.87, 8.75, 8.93, 8.77, null, null, null, 9.47, 9.68, 8.98, 9.56, null, null, 10.03, 9.88, 9.79, 9.6, 9.71, null, null, 9.85, 9.37, 9.88, 9.72, 10.38, null, null, 10.43, 10.76, 10.5, 10.78, 10.99, null, null, 10.85, 10.47, 10.91, 10.96, 10.91], "itemStyle": {"color": "#1565c0"}, "lineStyle": {"width": 2.5, "type": "solid"}, "connectNulls": true, "smooth": false, "showSymbol": false}, {"name": "WSE:LMU", "type": "line", "yAxisIndex": 1, "data": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 35.5, 35.41, 32.0, 31.8, null, null, 29.9, 29.99, 28.0, 28.8, 28.2, null, null, 27.18, 27.5, 28.3, 27.15, 28.17, null, null, 27.82, 26.95, 24.7, 25.69, 25.81, null, null, 25.18, 25.48, 25.08, 23.54, 23.28, null, null, 23.8, 24.9, 25.4, 24.5, 25.4, null, null, 24.06, 25.1, 24.95, 23.5, 23.15, null, null, 24.48, 24.4, 26.97, 25.0, 25.02, null, null, 25.95, 26.75, 26.66, 26.27, 26.21, null, null, 26.95, 25.97, 26.6, 26.1, 26.54, null, null, 28.65, 27.7, 28.42, 28.5, 29.6, null, null, 30.45, 29.99, 29.76, 29.7, 28.82], "itemStyle": {"color": "#2e7d32"}, "lineStyle": {"width": 2.5, "type": "solid"}, "connectNulls": true, "smooth": false, "showSymbol": false}, {"name": "银价", "type": "line", "yAxisIndex": 2, "data": [73.7, 75.87, 76.67, 75.5, null, null, null, null, 74.65, 75.66, 75.28, null, null, null, 75.13, 72.73, 73.89, 67.83, null, null, 68.18, 65.37, 63.42, 67.34, 67.78, null, null, 69.97, 70.03, 67.94, 65.72, 64.81, null, null, 65.1, 61.55, 57.45, 57.86, 58.92, null, null, 58.29, 58.59, 59.11, 60.97, 62.39, null, null, 62.05, 59.98, 58.29, 59.96, 59.7, null, null, 57.65, 58.7, 57.78, 55.52, 55.9, null, null, 56.42, 58.79, 59.71, 57.65, 58.21, null, null, 58.4, 57.12, 57.63, 59.0, 57.63, null, null, 58.19, 59.53, 62.04, 61.53, 63.57, null, null, 65.74, 64.68, 65.33, 64.47, 64.7, null, null, 65.79, 63.33, 67.01, 68.09, 69.0, null, null, 68.96, 68.67, 68.12, 69.25, 66.37, null, null, 66.55, 64.08, 65.33, 66.98, 66.22], "itemStyle": {"color": "#78909c"}, "lineStyle": {"width": 2, "type": "dashed"}, "connectNulls": true, "smooth": false, "showSymbol": false}, {"name": "铜价", "type": "line", "yAxisIndex": 3, "data": [13333.9, 13595.63, 13455.86, 13614.84, null, null, null, 13565.69, 13465.16, 13656.19, 13503.11, null, null, 13808.12, 14036.66, 13802.37, 13920.49, 13490.32, null, null, 13592.08, 13573.34, 13466.23, 13448.01, 13645.33, null, null, 13669.66, 13699.9, 13763.45, 13624.19, null, null, null, 13580.37, 13302.84, 13029.71, 13227.58, 13335.92, null, null, 13252.81, 13348.9, 13249.24, 13287.6, null, null, null, 13348.43, 13298.49, 13097.18, 13439.8, 13418.55, null, null, 13487.86, 13595.75, 13534.07, 13554.35, 13500.88, null, null, 13621.19, 13898.49, 13812.7, 13599.1, 13653.8, null, null, 13770.61, 13715.2, 13605.04, 13843.49, 13835.7, null, null, 13943.57, 14168.88, 14218.65, 14226.64, 14190.59, null, null, 14190.59, 14352.36, 14294.25, 14394.14, 14576.29, null, null, 14593.98, 14234.5, 14364.31, 14113.21, 14276.82, null, null, 14361.55, 14505.94, 14461.57, 14453.9, 14445.59, null, null, 14445.59, 14405.6, 14303.06, 14391.43, 14490.24], "itemStyle": {"color": "#e65100"}, "lineStyle": {"width": 2, "type": "dashed"}, "connectNulls": true, "smooth": false, "showSymbol": false}]};
+var chart = echarts.init(document.getElementById('mainChart'));
+var option = {
+  "tooltip": {
+    "trigger": "axis",
+    "axisPointer": {
+      "type": "cross"
+    },
+    "formatter": "function(params) {\n            var html = params[0].axisValueLabel + '<br/>';\n            var dotStyle = 'display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle;';\n            params.forEach(function(p) {\n                var color = p.color;\n                var dot = '<span style=\"' + dotStyle + 'background-color:' + color + '\"></span>';\n                var val = p.value !== null && p.value !== undefined ? p.value.toLocaleString() : '-';\n                var prefix = '';\n                if (p.seriesName.indexOf('TSX') >= 0) prefix = 'C$';\n                else if (p.seriesName.indexOf('WSE') >= 0) prefix = 'zł';\n                else prefix = '$';\n                html += dot + p.seriesName + ': ' + prefix + ' ' + val + '<br/>';\n            });\n            return html;\n        }"
+  },
+  "legend": {
+    "data": [
+      "TSX股价",
+      "WSE股价",
+      "银价",
+      "铜价"
+    ],
+    "top": 0,
+    "textStyle": {
+      "fontSize": 12
+    }
+  },
+  "grid": {
+    "left": "14%",
+    "right": "16%",
+    "top": 60,
+    "bottom": 60
+  },
+  "xAxis": {
+    "type": "category",
+    "data": [
+      "2026-05-19",
+      "2026-05-20",
+      "2026-05-21",
+      "2026-05-22",
+      "2026-05-23",
+      "2026-05-24",
+      "2026-05-25",
+      "2026-05-26",
+      "2026-05-27",
+      "2026-05-28",
+      "2026-05-29",
+      "2026-05-30",
+      "2026-05-31",
+      "2026-06-01",
+      "2026-06-02",
+      "2026-06-03",
+      "2026-06-04",
+      "2026-06-05",
+      "2026-06-06",
+      "2026-06-07",
+      "2026-06-08",
+      "2026-06-09",
+      "2026-06-10",
+      "2026-06-11",
+      "2026-06-12",
+      "2026-06-13",
+      "2026-06-14",
+      "2026-06-15",
+      "2026-06-16",
+      "2026-06-17",
+      "2026-06-18",
+      "2026-06-19",
+      "2026-06-20",
+      "2026-06-21",
+      "2026-06-22",
+      "2026-06-23",
+      "2026-06-24",
+      "2026-06-25",
+      "2026-06-26",
+      "2026-06-27",
+      "2026-06-28",
+      "2026-06-29",
+      "2026-06-30",
+      "2026-07-01",
+      "2026-07-02",
+      "2026-07-03",
+      "2026-07-04",
+      "2026-07-05",
+      "2026-07-06",
+      "2026-07-07",
+      "2026-07-08",
+      "2026-07-09",
+      "2026-07-10",
+      "2026-07-11",
+      "2026-07-12",
+      "2026-07-13",
+      "2026-07-14",
+      "2026-07-15",
+      "2026-07-16",
+      "2026-07-17",
+      "2026-07-18",
+      "2026-07-19",
+      "2026-07-20",
+      "2026-07-21",
+      "2026-07-22",
+      "2026-07-23",
+      "2026-07-24",
+      "2026-07-25",
+      "2026-07-26",
+      "2026-07-27",
+      "2026-07-28",
+      "2026-07-29",
+      "2026-07-30",
+      "2026-07-31",
+      "2026-08-01",
+      "2026-08-02",
+      "2026-08-03",
+      "2026-08-04",
+      "2026-08-05",
+      "2026-08-06",
+      "2026-08-07",
+      "2026-08-08",
+      "2026-08-09",
+      "2026-08-10",
+      "2026-08-11",
+      "2026-08-12",
+      "2026-08-13",
+      "2026-08-14",
+      "2026-08-15",
+      "2026-08-16",
+      "2026-08-17",
+      "2026-08-18",
+      "2026-08-19",
+      "2026-08-20",
+      "2026-08-21",
+      "2026-08-22",
+      "2026-08-23",
+      "2026-08-24",
+      "2026-08-25",
+      "2026-08-26",
+      "2026-08-27",
+      "2026-08-28",
+      "2026-08-29",
+      "2026-08-30",
+      "2026-08-31",
+      "2026-09-01",
+      "2026-09-02",
+      "2026-09-03",
+      "2026-09-04"
+    ],
+    "axisLabel": {
+      "formatter": "function(value, index) {\n                if (index % 6 === 0) return value.substring(5);\n                return '';\n            }",
+      "fontSize": 11
+    },
+    "axisLine": {
+      "lineStyle": {
+        "color": "#ccc"
+      }
+    }
+  },
+  "yAxis": [
+    {
+      "type": "value",
+      "name": "TSX (C$)",
+      "min": 8,
+      "max": 14,
+      "position": "left",
+      "offset": 0,
+      "axisLine": {
+        "show": true,
+        "lineStyle": {
+          "color": "#1565c0"
+        }
+      },
+      "axisLabel": {
+        "color": "#1565c0",
+        "formatter": "{value}",
+        "fontSize": 11
+      },
+      "splitLine": {
+        "lineStyle": {
+          "type": "dashed",
+          "color": "#eee"
+        }
+      }
+    },
+    {
+      "type": "value",
+      "name": "WSE (zł)",
+      "min": 21,
+      "max": 39,
+      "position": "left",
+      "offset": 70,
+      "axisLine": {
+        "show": true,
+        "lineStyle": {
+          "color": "#2e7d32"
+        }
+      },
+      "axisLabel": {
+        "color": "#2e7d32",
+        "formatter": "{value}",
+        "fontSize": 11
+      },
+      "splitLine": {
+        "show": false
+      }
+    },
+    {
+      "type": "value",
+      "name": "银价 ($)",
+      "min": 50,
+      "max": 84,
+      "position": "right",
+      "offset": 0,
+      "axisLine": {
+        "show": true,
+        "lineStyle": {
+          "color": "#78909c"
+        }
+      },
+      "axisLabel": {
+        "color": "#78909c",
+        "formatter": "{value}",
+        "fontSize": 11
+      },
+      "splitLine": {
+        "show": false
+      }
+    },
+    {
+      "type": "value",
+      "name": "铜价 ($)",
+      "min": 11726,
+      "max": 16053,
+      "position": "right",
+      "offset": 70,
+      "axisLine": {
+        "show": true,
+        "lineStyle": {
+          "color": "#e65100"
+        }
+      },
+      "axisLabel": {
+        "color": "#e65100",
+        "formatter": "{value}",
+        "fontSize": 11
+      },
+      "splitLine": {
+        "show": false
+      }
+    }
+  ],
+  "series": [
+    {
+      "name": "TSX股价",
+      "type": "line",
+      "yAxisIndex": 0,
+      "data": [
+        11.95,
+        12.15,
+        12.08,
+        11.84,
+        null,
+        null,
+        12.07,
+        12.11,
+        11.95,
+        12.06,
+        11.95,
+        null,
+        null,
+        11.69,
+        11.66,
+        11.85,
+        12.69,
+        10.98,
+        null,
+        null,
+        10.9,
+        10.3,
+        10.05,
+        10.39,
+        11.09,
+        null,
+        null,
+        11.6,
+        11.7,
+        11.92,
+        11.4,
+        11.29,
+        null,
+        null,
+        10.93,
+        10.49,
+        10.07,
+        10.28,
+        10.4,
+        null,
+        null,
+        10.3,
+        10.23,
+        null,
+        10.57,
+        10.68,
+        null,
+        null,
+        10.31,
+        9.6,
+        9.21,
+        9.55,
+        9.51,
+        null,
+        null,
+        9.26,
+        9.52,
+        9.15,
+        8.6,
+        8.77,
+        null,
+        null,
+        8.93,
+        9.2,
+        9.28,
+        8.86,
+        8.99,
+        null,
+        null,
+        9.13,
+        8.87,
+        8.75,
+        8.93,
+        8.77,
+        null,
+        null,
+        null,
+        9.47,
+        9.68,
+        8.98,
+        9.56,
+        null,
+        null,
+        10.03,
+        9.88,
+        9.79,
+        9.6,
+        9.71,
+        null,
+        null,
+        9.85,
+        9.37,
+        9.88,
+        9.72,
+        10.38,
+        null,
+        null,
+        10.43,
+        10.76,
+        10.5,
+        10.78,
+        10.99,
+        null,
+        null,
+        10.85,
+        10.47,
+        10.91,
+        10.96,
+        10.91
+      ],
+      "smooth": false,
+      "lineStyle": {
+        "width": 2.5,
+        "type": "solid",
+        "color": "#1565c0"
+      },
+      "itemStyle": {
+        "color": "#1565c0"
+      },
+      "connectNulls": true,
+      "showSymbol": false
+    },
+    {
+      "name": "WSE股价",
+      "type": "line",
+      "yAxisIndex": 1,
+      "data": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        35.5,
+        35.41,
+        32.0,
+        31.8,
+        null,
+        null,
+        29.9,
+        29.99,
+        28.0,
+        28.8,
+        28.2,
+        null,
+        null,
+        27.18,
+        27.5,
+        28.3,
+        27.15,
+        28.17,
+        null,
+        null,
+        27.82,
+        26.95,
+        24.7,
+        25.69,
+        25.81,
+        null,
+        null,
+        25.18,
+        25.48,
+        25.08,
+        23.54,
+        23.28,
+        null,
+        null,
+        23.8,
+        24.9,
+        25.4,
+        24.5,
+        25.4,
+        null,
+        null,
+        24.06,
+        25.1,
+        24.95,
+        23.5,
+        23.15,
+        null,
+        null,
+        24.48,
+        24.4,
+        26.97,
+        25.0,
+        25.02,
+        null,
+        null,
+        25.95,
+        26.75,
+        26.66,
+        26.27,
+        26.21,
+        null,
+        null,
+        26.95,
+        25.97,
+        26.6,
+        26.1,
+        26.54,
+        null,
+        null,
+        28.65,
+        27.7,
+        28.42,
+        28.5,
+        29.6,
+        null,
+        null,
+        30.45,
+        29.99,
+        29.76,
+        29.7,
+        28.82
+      ],
+      "smooth": false,
+      "lineStyle": {
+        "width": 2.5,
+        "type": "solid",
+        "color": "#2e7d32"
+      },
+      "itemStyle": {
+        "color": "#2e7d32"
+      },
+      "connectNulls": true,
+      "showSymbol": false
+    },
+    {
+      "name": "银价",
+      "type": "line",
+      "yAxisIndex": 2,
+      "data": [
+        73.7,
+        75.87,
+        76.67,
+        75.5,
+        null,
+        null,
+        null,
+        null,
+        74.65,
+        75.66,
+        75.28,
+        null,
+        null,
+        null,
+        75.13,
+        72.73,
+        73.89,
+        67.83,
+        null,
+        null,
+        68.18,
+        65.37,
+        63.42,
+        67.34,
+        67.78,
+        null,
+        null,
+        69.97,
+        70.03,
+        67.94,
+        65.72,
+        64.81,
+        null,
+        null,
+        65.1,
+        61.55,
+        57.45,
+        57.86,
+        58.92,
+        null,
+        null,
+        58.29,
+        58.59,
+        59.11,
+        60.97,
+        62.39,
+        null,
+        null,
+        62.05,
+        59.98,
+        58.29,
+        59.96,
+        59.7,
+        null,
+        null,
+        57.65,
+        58.7,
+        57.78,
+        55.52,
+        55.9,
+        null,
+        null,
+        56.42,
+        58.79,
+        59.71,
+        57.65,
+        58.21,
+        null,
+        null,
+        58.4,
+        57.12,
+        57.63,
+        59.0,
+        57.63,
+        null,
+        null,
+        58.19,
+        59.53,
+        62.04,
+        61.53,
+        63.57,
+        null,
+        null,
+        65.74,
+        64.68,
+        65.33,
+        64.47,
+        64.7,
+        null,
+        null,
+        65.79,
+        63.33,
+        67.01,
+        68.09,
+        69.0,
+        null,
+        null,
+        68.96,
+        68.67,
+        68.12,
+        69.25,
+        66.37,
+        null,
+        null,
+        66.55,
+        64.08,
+        65.33,
+        66.98,
+        66.22
+      ],
+      "smooth": false,
+      "lineStyle": {
+        "width": 2,
+        "type": "dashed",
+        "color": "#78909c"
+      },
+      "itemStyle": {
+        "color": "#78909c"
+      },
+      "connectNulls": true,
+      "showSymbol": false
+    },
+    {
+      "name": "铜价",
+      "type": "line",
+      "yAxisIndex": 3,
+      "data": [
+        13333.9,
+        13595.63,
+        13455.86,
+        13614.84,
+        null,
+        null,
+        null,
+        13565.69,
+        13465.16,
+        13656.19,
+        13503.11,
+        null,
+        null,
+        13808.12,
+        14036.66,
+        13802.37,
+        13920.49,
+        13490.32,
+        null,
+        null,
+        13592.08,
+        13573.34,
+        13466.23,
+        13448.01,
+        13645.33,
+        null,
+        null,
+        13669.66,
+        13699.9,
+        13763.45,
+        13624.19,
+        null,
+        null,
+        null,
+        13580.37,
+        13302.84,
+        13029.71,
+        13227.58,
+        13335.92,
+        null,
+        null,
+        13252.81,
+        13348.9,
+        13249.24,
+        13287.6,
+        null,
+        null,
+        null,
+        13348.43,
+        13298.49,
+        13097.18,
+        13439.8,
+        13418.55,
+        null,
+        null,
+        13487.86,
+        13595.75,
+        13534.07,
+        13554.35,
+        13500.88,
+        null,
+        null,
+        13621.19,
+        13898.49,
+        13812.7,
+        13599.1,
+        13653.8,
+        null,
+        null,
+        13770.61,
+        13715.2,
+        13605.04,
+        13843.49,
+        13835.7,
+        null,
+        null,
+        13943.57,
+        14168.88,
+        14218.65,
+        14226.64,
+        14190.59,
+        null,
+        null,
+        14190.59,
+        14352.36,
+        14294.25,
+        14394.14,
+        14576.29,
+        null,
+        null,
+        14593.98,
+        14234.5,
+        14364.31,
+        14113.21,
+        14276.82,
+        null,
+        null,
+        14361.55,
+        14505.94,
+        14461.57,
+        14453.9,
+        14445.59,
+        null,
+        null,
+        14445.59,
+        14405.6,
+        14303.06,
+        14391.43,
+        14490.24
+      ],
+      "smooth": false,
+      "lineStyle": {
+        "width": 2,
+        "type": "dashed",
+        "color": "#e65100"
+      },
+      "itemStyle": {
+        "color": "#e65100"
+      },
+      "connectNulls": true,
+      "showSymbol": false
+    }
+  ],
+  "dataZoom": [
+    {
+      "type": "inside",
+      "start": 0,
+      "end": 100
+    }
+  ]
+};
+
+// 处理函数形式的formatter（JSON无法存储函数，需要eval转换）
+if (option.tooltip && option.tooltip.formatter && typeof option.tooltip.formatter === 'string' && option.tooltip.formatter.indexOf('function') === 0) {
+    option.tooltip.formatter = eval('(' + option.tooltip.formatter + ')');
+}
+if (option.xAxis && option.xAxis.axisLabel && option.xAxis.axisLabel.formatter && typeof option.xAxis.axisLabel.formatter === 'string' && option.xAxis.axisLabel.formatter.indexOf('function') === 0) {
+    option.xAxis.axisLabel.formatter = eval('(' + option.xAxis.axisLabel.formatter + ')');
+}
+
 chart.setOption(option);
-window.addEventListener('resize', () => chart.resize());
+window.addEventListener('resize', function() {
+    chart.resize();
+});
 </script>
 </body>
 </html>
