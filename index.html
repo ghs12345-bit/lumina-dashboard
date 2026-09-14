@@ -3,27 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lumina Metals 综合数据看板</title>
+<title>Lumina Metals 综合看板</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #f5f7fa; color: #333; }
-
-.header { background: linear-gradient(135deg, #1a237e 0%, #283593 100%); color: #fff; padding: 20px 32px; }
-.header h1 { font-size: 22px; font-weight: 600; }
-.header .subtitle { font-size: 13px; opacity: 0.8; margin-top: 4px; }
-
-.tab-nav { display: flex; gap: 4px; padding: 12px 32px; background: #fff; border-bottom: 1px solid #e8e8e8; }
-.tab-btn { padding: 8px 20px; border: none; background: transparent; color: #666; font-size: 14px; font-weight: 500; cursor: pointer; border-radius: 6px 6px 0 0; transition: all 0.2s; }
-.tab-btn:hover { background: #f0f4ff; color: #1a237e; }
-.tab-btn.active { background: #1a237e; color: #fff; }
-
+.header { background: linear-gradient(135deg, #1a237e 0%, #283593 100%); color: #fff; padding: 24px 32px; }
+.header h1 { font-size: 24px; font-weight: 600; }
+.header .subtitle { font-size: 13px; opacity: 0.8; margin-top: 6px; }
+.tabs { background: #fff; border-bottom: 1px solid #e0e0e0; display: flex; padding: 0 32px; }
+.tab { padding: 14px 24px; cursor: pointer; font-size: 15px; color: #666; border-bottom: 3px solid transparent; transition: all 0.2s; }
+.tab:hover { color: #1a237e; }
+.tab.active { color: #1a237e; border-bottom-color: #1a237e; font-weight: 600; }
+.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
-
-.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-
-/* 四指标卡 */
 .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
 .stat-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid; }
 .stat-card.copper { border-left-color: #e65100; }
@@ -33,82 +27,78 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC'
 .stat-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
 .stat-value { font-size: 22px; font-weight: 700; margin: 8px 0 4px; }
 .stat-date { font-size: 12px; color: #aaa; }
-
-/* 单图表 */
 .chart-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px; }
 .chart-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #444; }
 .chart { width: 100%; height: 560px; }
+.footer { text-align: center; padding: 20px; font-size: 12px; color: #999; }
+@media (max-width: 1100px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .chart { height: 480px; }
+}
+@media (max-width: 700px) {
+  .stats-row { grid-template-columns: 1fr; }
+  .chart { height: 400px; }
+}
 
-.footer { text-align: center; padding: 20px; font-size: 12px; color: #999; margin-top: 12px; }
-
-/* 公司情况 */
+/* Company profile styles (subset) */
 .section-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px; }
-.section-title { font-size: 18px; font-weight: 600; color: #1a237e; border-left: 4px solid #1a237e; padding-left: 12px; margin-bottom: 16px; }
-.subsection-title { font-size: 14px; font-weight: 600; color: #333; margin: 16px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #eee; }
-.info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
-.info-item { display: flex; gap: 8px; font-size: 13px; }
-.info-label { color: #888; min-width: 90px; }
-.info-value { color: #333; font-weight: 500; }
-
-.resource-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
-.resource-table th { background: #f5f7fa; color: #1a237e; padding: 8px 12px; text-align: left; border-bottom: 2px solid #e0e0e0; }
-.resource-table td { padding: 8px 12px; border-bottom: 1px solid #f0f0f0; }
-.resource-table tr:last-child td { border-bottom: none; font-weight: 600; }
-
-.pea-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 12px 0; }
-.pea-item { background: linear-gradient(135deg, #f0f4ff, #e8eaf6); border-radius: 8px; padding: 16px; text-align: center; }
-.pea-label { font-size: 12px; color: #666; margin-bottom: 4px; }
-.pea-value { font-size: 20px; font-weight: 700; color: #1a237e; }
-.pea-unit { font-size: 11px; color: #999; }
-
-.highlight-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; }
-.highlight-title { font-size: 13px; font-weight: 600; color: #1a237e; margin-bottom: 6px; }
-
-.news-main { background: linear-gradient(135deg, #f0f4ff, #e8eaf6); border-radius: 8px; padding: 16px 20px; margin-bottom: 16px; border-left: 4px solid #1a237e; }
-.news-date { font-size: 12px; color: #888; margin-bottom: 6px; }
-.news-title { font-size: 15px; font-weight: 600; color: #1a237e; margin-bottom: 10px; }
-.news-body p { font-size: 13px; color: #444; line-height: 1.7; margin-bottom: 8px; }
-.news-body p strong { color: #1a237e; }
-
-.news-list { display: flex; flex-direction: column; gap: 8px; }
-.news-item { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
-.news-item:last-child { border-bottom: none; }
-.ni-date { font-size: 12px; color: #888; min-width: 80px; }
-.ni-title { font-size: 13px; color: #333; }
-
-.target-price-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px; }
-.tp-item { background: #f5f7fa; border-radius: 8px; padding: 12px; text-align: center; }
-.tp-bank { font-size: 12px; color: #888; }
-.tp-price { font-size: 18px; font-weight: 700; color: #1a237e; }
-.tp-consensus { background: #e8eaf6; }
-
-.bull-bear-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
-.bull-card { background: #e8f5e9; border-radius: 8px; padding: 16px; }
-.bear-card { background: #ffebee; border-radius: 8px; padding: 16px; }
-.bb-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+.section-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; color: #1a237e; border-bottom: 2px solid #e8eaf6; padding-bottom: 8px; }
+.subsection-title { font-size: 14px; font-weight: 600; color: #444; margin: 16px 0 10px; }
+.info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 20px; }
+.info-item { display: flex; padding: 4px 0; font-size: 13px; }
+.info-label { color: #888; min-width: 110px; }
+.info-value { color: #222; font-weight: 500; }
+.resource-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0; }
+.resource-table th, .resource-table td { padding: 8px 10px; border: 1px solid #e0e0e0; text-align: center; }
+.resource-table th { background: #f0f2f8; font-weight: 600; }
+.pea-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 12px 0; }
+.pea-item { background: #f5f7fa; border-radius: 8px; padding: 12px; text-align: center; }
+.pea-label { font-size: 12px; color: #888; }
+.pea-value { font-size: 20px; font-weight: 700; color: #1a237e; margin: 4px 0; }
+.pea-unit { font-size: 11px; color: #aaa; }
+.highlight-box { background: #f0f4ff; border-left: 3px solid #1a237e; padding: 10px 14px; border-radius: 6px; margin: 10px 0; }
+.highlight-title { font-size: 14px; font-weight: 600; color: #1a237e; margin-bottom: 4px; }
+.news-main { background: #fff8e1; border-left: 4px solid #ffb300; padding: 14px; border-radius: 6px; margin-bottom: 14px; }
+.news-date { font-size: 12px; color: #b26a00; font-weight: 500; }
+.news-title { font-size: 16px; font-weight: 600; color: #222; margin: 6px 0; }
+.news-body { font-size: 13px; line-height: 1.7; color: #444; }
+.news-body p { margin: 6px 0; }
+.news-list { margin-top: 8px; }
+.news-item { padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 13px; }
+.ni-date { color: #888; font-size: 12px; }
+.ni-title { color: #222; margin-top: 2px; }
+.target-price-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0; }
+.tp-item { background: #f5f7fa; padding: 10px; border-radius: 6px; text-align: center; }
+.tp-consensus { background: #fff3e0; border: 1px solid #ffb300; }
+.tp-bank { font-size: 11px; color: #888; }
+.tp-price { font-size: 16px; font-weight: 700; color: #1a237e; margin-top: 4px; }
+.bull-bear-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 12px 0; }
+.bull-card { background: #e8f5e9; border-left: 3px solid #2e7d32; padding: 12px; border-radius: 6px; }
+.bear-card { background: #ffebee; border-left: 3px solid #c62828; padding: 12px; border-radius: 6px; }
+.bb-title { font-weight: 600; margin-bottom: 8px; font-size: 14px; }
 .bull-card .bb-title { color: #2e7d32; }
 .bear-card .bb-title { color: #c62828; }
-.bb-list { font-size: 13px; color: #444; line-height: 1.7; padding-left: 16px; }
-.bb-list li { margin-bottom: 4px; }
-
-@media (max-width: 1100px) { .stats-row { grid-template-columns: repeat(3, 1fr); } .chart { height: 480px; } .pea-grid { grid-template-columns: repeat(2, 1fr); } .target-price-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 700px) { .stats-row { grid-template-columns: repeat(2, 1fr); } .chart { height: 420px; } .info-grid { grid-template-columns: 1fr; } .bull-bear-grid { grid-template-columns: 1fr; } }
-@media (max-width: 480px) { .stats-row { grid-template-columns: 1fr; } .chart { height: 360px; } }
+.bb-list { font-size: 12px; line-height: 1.7; padding-left: 18px; }
+@media (max-width: 800px) {
+  .info-grid { grid-template-columns: 1fr; }
+  .pea-grid { grid-template-columns: 1fr; }
+  .target-price-grid { grid-template-columns: 1fr 1fr; }
+  .bull-bear-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 <div class="header">
-  <h1>Lumina Metals 综合数据看板</h1>
-  <div class="subtitle">TSX:LMCU · WSE:LMU · LME 铜价 · LBMA 银价</div>
+  <h1>Lumina Metals 综合看板</h1>
+  <div class="subtitle">TSX:LMCU · WSE:LMU · LME 铜价 · LBMA 银价 — 四市场多轴对比</div>
+</div>
+<div class="tabs">
+  <div class="tab active" data-tab="stock" onclick="switchTab('stock')">股价数据</div>
+  <div class="tab" data-tab="company" onclick="switchTab('company')">公司情况</div>
 </div>
 
-<div class="tab-nav">
-  <button class="tab-btn active" id="btn-price" onclick="switchTab('price')">📈 股价数据</button>
-  <button class="tab-btn" id="btn-company" onclick="switchTab('company')">🏢 公司情况</button>
-</div>
-
-<!-- 股价数据 tab: 四指标卡 + 单个四轴合并图表 -->
-<div id="tab-price" class="tab-content active">
+<!-- 股价数据 标签页 -->
+<div id="tab-stock" class="tab-content active">
   <div class="container">
     <div class="stats-row">
       <div class="stat-card copper">
@@ -122,182 +112,159 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC'
         <div class="stat-date" id="silver-date">--</div>
       </div>
       <div class="stat-card tsx">
-        <div class="stat-label">TSX 最新收盘价 (LUM.CA)</div>
+        <div class="stat-label">TSX 最新收盘价 (LMCU)</div>
         <div class="stat-value" id="tsx-price">--</div>
         <div class="stat-date" id="tsx-date">--</div>
       </div>
       <div class="stat-card wse">
-        <div class="stat-label">WSE 最新收盘价 (LUM)</div>
+        <div class="stat-label">WSE 最新收盘价 (LMU)</div>
         <div class="stat-value" id="wse-price">--</div>
         <div class="stat-date" id="wse-date">--</div>
       </div>
     </div>
 
     <div class="chart-card">
-      <div class="chart-title">TSX 股价 vs WSE 股价 vs 铜价 vs 银价 — 四轴合并走势对比</div>
+      <div class="chart-title">四轴综合走势 · TSX 股价 vs WSE 股价 vs 银价 vs 铜价</div>
       <div class="chart" id="chart-main"></div>
     </div>
 
     <div class="footer">
-      数据更新于 <span id="update-time"></span> | 铜价来源：S&amp;P Global / LME | 银价来源：LBMA | 股价来源：stockanalysis.com
+      数据更新于 <span id="update-time"></span> | 铜价：LME | 银价：LBMA | 股价：stockanalysis.com
     </div>
   </div>
 </div>
 
-<!-- 公司情况 tab -->
+<!-- 公司情况 标签页 -->
 <div id="tab-company" class="tab-content">
-<div class="container">
-
-  <div class="section-card">
-    <div class="section-title">项目概况</div>
-    <div class="subsection-title">公司基本信息</div>
-    <div class="info-grid">
-      <div class="info-item"><span class="info-label">公司全称</span><span class="info-value">Lumina Metals Corp.</span></div>
-      <div class="info-item"><span class="info-label">成立时间</span><span class="info-value">2010年（2024年12月更名）</span></div>
-      <div class="info-item"><span class="info-label">总部</span><span class="info-value">加拿大温哥华</span></div>
-      <div class="info-item"><span class="info-label">波兰办公室</span><span class="info-value">华沙 / Nowa Sól / Zielona Góra</span></div>
-      <div class="info-item"><span class="info-label">上市信息</span><span class="info-value">TSX:LMCU（2026年4月）/ WSE:LMU（2026年6月）</span></div>
-      <div class="info-item"><span class="info-label">员工人数</span><span class="info-value">14人</span></div>
-      <div class="info-item"><span class="info-label">IPO发行价</span><span class="info-value">C$12.50/股</span></div>
-      <div class="info-item"><span class="info-label">IPO募资规模</span><span class="info-value">C$4.062亿（超额认购）</span></div>
-    </div>
-
-    <div class="subsection-title">旗舰项目 Nowa Sól 资源量</div>
-    <table class="resource-table">
-      <tr><th>类别</th><th>资源量</th><th>铜品位</th><th>银品位</th><th>含铜量</th><th>含银量</th></tr>
-      <tr><td>探明+控制 (M&amp;I)</td><td>6.04亿吨</td><td>1.24%</td><td>38.29 g/t</td><td>约749万吨</td><td>约7.44亿盎司</td></tr>
-      <tr><td>推断 (Inferred)</td><td>1.12亿吨</td><td>1.08%</td><td>28.91 g/t</td><td>约121万吨</td><td>约1.04亿盎司</td></tr>
-      <tr><td><strong>合计</strong></td><td><strong>7.16亿吨</strong></td><td>-</td><td>-</td><td><strong>约870万吨</strong></td><td><strong>约8.48亿盎司</strong></td></tr>
-    </table>
-
-    <div class="subsection-title">Nowa Sól PEA 核心经济指标</div>
-    <div class="pea-grid">
-      <div class="pea-item"><div class="pea-label">税前 NPV（7%折现）</div><div class="pea-value">$83亿</div><div class="pea-unit">美元</div></div>
-      <div class="pea-item"><div class="pea-label">税前 IRR</div><div class="pea-value">20.5%</div><div class="pea-unit">-</div></div>
-      <div class="pea-item"><div class="pea-label">初始资本开支</div><div class="pea-value">$64亿</div><div class="pea-unit">美元</div></div>
-      <div class="pea-item"><div class="pea-label">前10年 AISC</div><div class="pea-value">$1.17</div><div class="pea-unit">/磅铜</div></div>
-      <div class="pea-item"><div class="pea-label">前10年年均 EBITDA</div><div class="pea-value">$25亿</div><div class="pea-unit">美元</div></div>
-      <div class="pea-item"><div class="pea-label">矿山寿命</div><div class="pea-value">25-30年</div><div class="pea-unit">-</div></div>
-    </div>
-
-    <div class="subsection-title">项目组合</div>
-    <div class="highlight-box"><div class="highlight-title">Sulmierzyce 项目</div><div style="font-size:13px;color:#555;">推断资源量 <strong>3.08亿吨 @ 2.09% Cu、31.9 g/t Ag</strong>，距 Nowa Sól 约150公里。若后续钻探证实与 Nowa Sól 规模相当，Lumina 总白银资源可能超20亿盎司。公司计划2027年可能将其分拆为独立公司。</div></div>
-    <div class="highlight-box"><div class="highlight-title">Mozów 项目</div><div style="font-size:13px;color:#555;">位于 Nowa Sól 西北35公里，面积93km²，处于早期勘探阶段。六口历史钻孔均见矿，铜品位1.10%-3.86%，银8-52 g/t。</div></div>
-
-    <div class="subsection-title">关键里程碑</div>
-    <div class="info-grid">
-      <div class="info-item"><span class="info-label">2026年4月</span><span class="info-value">IPO完成，TSX上市</span></div>
-      <div class="info-item"><span class="info-label">2026年5月</span><span class="info-value">启动PFS（Fluor主导）</span></div>
-      <div class="info-item"><span class="info-label">2026年6月</span><span class="info-value">WSE上市，首日涨19%</span></div>
-      <div class="info-item"><span class="info-label">2027年下半年</span><span class="info-value">预计PFS完成</span></div>
-      <div class="info-item"><span class="info-label">约2030年</span><span class="info-value">预计获得采矿许可</span></div>
-    </div>
-  </div>
-
-  <div class="section-card">
-    <div class="section-title">最近新闻</div>
-    <div class="news-main">
-      <div class="news-date">2026年8月3日 · Newsfile Corp.</div>
-      <div class="news-title">Lumina Metals Reports on 2026 Drilling at Its Three Projects in Poland</div>
-      <div class="news-body">
-        <p><strong>Nowa Sól：</strong>计划约8,200米钻探（4个孔），两台钻机正在作业。首个钻孔已达目标深度1,900米，初步XRF结果与周边矿化一致。</p>
-        <p><strong>Sulmierzyce：</strong>2026年4月发布了 maiden NI 43-101 推断资源量（308Mt @ 2.09% Cu、31.85 g/t Ag）。</p>
-        <p><strong>Mozów：</strong>六口历史钻孔均见矿（铜1.10%-3.86%，银8-52 g/t）。公司计划在未来一年内完成1个新增钻孔。</p>
-        <p><strong>人事变动：</strong>任命 Adrian Karolko（P.Geo.，18年国际矿产勘探经验）为 VP, Exploration，接替 Leo Hathaway。</p>
+  <div class="container">
+    <div class="section-card">
+      <div class="section-title">项目概况</div>
+      <div class="subsection-title">公司基本信息</div>
+      <div class="info-grid">
+        <div class="info-item"><span class="info-label">公司全称</span><span class="info-value">Lumina Metals Corp.</span></div>
+        <div class="info-item"><span class="info-label">成立时间</span><span class="info-value">2010年（2024年12月更名）</span></div>
+        <div class="info-item"><span class="info-label">总部</span><span class="info-value">加拿大温哥华</span></div>
+        <div class="info-item"><span class="info-label">波兰办公室</span><span class="info-value">华沙 / Nowa Sól / Zielona Góra</span></div>
+        <div class="info-item"><span class="info-label">上市信息</span><span class="info-value">TSX:LMCU（2026年4月）/ WSE:LMU（2026年6月）</span></div>
+        <div class="info-item"><span class="info-label">员工人数</span><span class="info-value">14人</span></div>
+        <div class="info-item"><span class="info-label">IPO 发行价</span><span class="info-value">C$12.50/股</span></div>
+        <div class="info-item"><span class="info-label">IPO 募资规模</span><span class="info-value">C$4.062亿（超额认购）</span></div>
+      </div>
+      <div class="subsection-title">旗舰项目 Nowa Sól 资源量</div>
+      <table class="resource-table">
+        <tr><th>类别</th><th>资源量</th><th>铜品位</th><th>银品位</th><th>含铜量</th><th>含银量</th></tr>
+        <tr><td>探明+控制 (M&amp;I)</td><td>6.04亿吨</td><td>1.24%</td><td>38.29 g/t</td><td>约749万吨</td><td>约7.44亿盎司</td></tr>
+        <tr><td>推断 (Inferred)</td><td>1.12亿吨</td><td>1.08%</td><td>28.91 g/t</td><td>约121万吨</td><td>约1.04亿盎司</td></tr>
+        <tr><td><strong>合计</strong></td><td><strong>7.16亿吨</strong></td><td>-</td><td>-</td><td><strong>约870万吨</strong></td><td><strong>约8.48亿盎司</strong></td></tr>
+      </table>
+      <div class="subsection-title">Nowa Sól PEA 核心经济指标</div>
+      <div class="pea-grid">
+        <div class="pea-item"><div class="pea-label">税前 NPV（7%折现）</div><div class="pea-value">$83亿</div><div class="pea-unit">美元</div></div>
+        <div class="pea-item"><div class="pea-label">税前 IRR</div><div class="pea-value">20.5%</div><div class="pea-unit">-</div></div>
+        <div class="pea-item"><div class="pea-label">初始资本开支</div><div class="pea-value">$64亿</div><div class="pea-unit">美元</div></div>
+        <div class="pea-item"><div class="pea-label">前10年 AISC</div><div class="pea-value">$1.17</div><div class="pea-unit">/磅铜</div></div>
+        <div class="pea-item"><div class="pea-label">前10年年均 EBITDA</div><div class="pea-value">$25亿</div><div class="pea-unit">美元</div></div>
+        <div class="pea-item"><div class="pea-label">矿山寿命</div><div class="pea-value">25-30年</div><div class="pea-unit">-</div></div>
+      </div>
+      <div class="subsection-title">项目组合</div>
+      <div class="highlight-box">
+        <div class="highlight-title">Sulmierzyce 项目</div>
+        <div style="font-size:13px;color:#555;">推断资源量 <strong>3.08亿吨 @ 2.09% Cu、31.9 g/t Ag</strong>，距 Nowa Sól 约150公里。若后续钻探证实与 Nowa Sól 规模相当，Lumina 总白银资源可能超20亿盎司，成为全球最大白银资源持有公司。公司计划2027年可能将其分拆为独立公司。</div>
+      </div>
+      <div class="highlight-box">
+        <div class="highlight-title">Mozów 项目</div>
+        <div style="font-size:13px;color:#555;">位于 Nowa Sól 西北35公里，面积93km²，处于早期勘探阶段。六口历史钻孔均见矿，铜品位1.10%-3.86%，银8-52 g/t。</div>
+      </div>
+      <div class="subsection-title">关键里程碑</div>
+      <div class="info-grid">
+        <div class="info-item"><span class="info-label">2026年4月</span><span class="info-value">IPO完成，TSX上市</span></div>
+        <div class="info-item"><span class="info-label">2026年5月</span><span class="info-value">启动PFS（Fluor主导）</span></div>
+        <div class="info-item"><span class="info-label">2026年6月</span><span class="info-value">WSE上市，首日涨19%</span></div>
+        <div class="info-item"><span class="info-label">2027年下半年</span><span class="info-value">预计PFS完成</span></div>
+        <div class="info-item"><span class="info-label">约2030年</span><span class="info-value">预计获得采矿许可</span></div>
       </div>
     </div>
-    <div class="news-list">
-      <div class="news-item"><div class="ni-date">2026年6月16日</div><div class="ni-title">华沙证券交易所上市，首日股价上涨19%至35.5兹罗提</div></div>
-      <div class="news-item"><div class="ni-date">2026年5月29日</div><div class="ni-title">IPO超额配售权完成，额外募资约6,093万加元</div></div>
-      <div class="news-item"><div class="ni-date">2026年5月19日</div><div class="ni-title">获波兰金融监管局批准华沙上市；启动Nowa Sól预可行性研究</div></div>
-      <div class="news-item"><div class="ni-date">2026年5月5日</div><div class="ni-title">与KGHM签署铜精矿供应和战略合作意向书</div></div>
-      <div class="news-item"><div class="ni-date">2026年4月30日</div><div class="ni-title">完成上调规模的首次公开发行，募资4.062亿加元</div></div>
-    </div>
-  </div>
-
-  <div class="section-card">
-    <div class="section-title">研报解读</div>
-    <div class="subsection-title">分析师目标价（7家覆盖）</div>
-    <div class="target-price-grid">
-      <div class="tp-item"><div class="tp-bank">Canaccord</div><div class="tp-price">C$21.50</div></div>
-      <div class="tp-item"><div class="tp-bank">RBC / NBC</div><div class="tp-price">C$20.00</div></div>
-      <div class="tp-item"><div class="tp-bank">Morgan Stanley / CIBC</div><div class="tp-price">C$18.00</div></div>
-      <div class="tp-item tp-consensus"><div class="tp-bank">一致目标价</div><div class="tp-price">~C$18.6</div></div>
-    </div>
-    <div style="font-size:13px;color:#666;margin-bottom:12px;">较当前股价（C$8.77-10.40区间）隐含约 <strong>80%+ 上行空间</strong>。分析师一致评级为"跑赢大盘"（Outperform）。</div>
-    <div class="bull-bear-grid">
-      <div class="bull-card">
-        <div class="bb-title">看多主要依据</div>
-        <ul class="bb-list">
-          <li>全球顶级的未开发铜银资源（规模+品位+区位）</li>
-          <li>成本曲线位于下半部，AISC $1.17/lb（前10年）</li>
-          <li>资本强度$16,416/t CuEq，显著低于同业</li>
-          <li>与KGHM冶炼厂仅20-25km，已签LOI</li>
-          <li>Lumina班底历史上8次成功退出（含CMOC、五矿等）</li>
-          <li>欧洲能源转型驱动长期铜需求增长</li>
-          <li>波兰政府支持"铜谷"战略，总理出席上市仪式</li>
-        </ul>
+    <div class="section-card">
+      <div class="section-title">最近新闻</div>
+      <div class="news-main">
+        <div class="news-date">2026年8月13日 · Newsfile Corp.</div>
+        <div class="news-title">Lumina Metals Reports Q2 2026 Results</div>
+        <div class="news-body">
+          <p><strong>Q2 2026 财务亮点：</strong>截至 2026年6月30日，公司现金及短期投资约 <strong>C$3.65亿</strong>，无重大债务。Q2 净亏损约 <strong>C$420万</strong>（约 C$0.012/股），主要来自 PFS 推进及行政开支。</p>
+          <p><strong>项目进展：</strong>Nowa Sól 预可行性研究（PFS）按计划推进，由 Fluor 主导，预计 <strong>2027年下半年</strong>完成。2026 钻探计划涵盖三个项目共约 8,200 米（Nowa Sól 1 个 1,900 米深孔 + Sulmierzyce + Mozów）。</p>
+          <p><strong>人事变动：</strong>Adrian Karolko（P.Geo.，18 年矿产勘探经验）出任 VP, Exploration。</p>
+        </div>
       </div>
-      <div class="bear-card">
-        <div class="bb-title">看空/风险主要依据</div>
-        <ul class="bb-list">
-          <li><strong>波兰矿产开采税（MET）</strong>：使税后NPV从$63亿降至$16亿（-75%），IRR从18%降至10.8%</li>
-          <li>深部开采挑战：平均埋深1,950m，高温/岩压/通风</li>
-          <li>$64亿初始资本开支 vs 当前市值$8.57亿</li>
-          <li>许可周期长：预计2030年才能获得采矿特许权</li>
-          <li>股价已跌破IPO发行价（C$10.40 vs C$12.50）</li>
-          <li>无收入、持续亏损、依赖资本市场融资</li>
-          <li>公司明确：无MET豁免/修法则不建矿</li>
-        </ul>
+      <div class="subsection-title">历史新闻摘要</div>
+      <div class="news-list">
+        <div class="news-item"><div class="ni-date">2026年8月3日</div><div class="ni-title">2026 钻探在三项目推进，Adrian Karolko 出任 VP Exploration</div></div>
+        <div class="news-item"><div class="ni-date">2026年6月16日</div><div class="ni-title">华沙证券交易所上市，首日股价上涨19%至35.5兹罗提</div></div>
+        <div class="news-item"><div class="ni-date">2026年5月29日</div><div class="ni-title">IPO超额配售权完成，额外募资约6,093万加元</div></div>
+        <div class="news-item"><div class="ni-date">2026年5月19日</div><div class="ni-title">获波兰金融监管局批准华沙上市；启动Nowa Sól预可行性研究</div></div>
+        <div class="news-item"><div class="ni-date">2026年5月5日</div><div class="ni-title">与KGHM签署铜精矿供应和战略合作意向书</div></div>
+        <div class="news-item"><div class="ni-date">2026年4月30日</div><div class="ni-title">完成上调规模的首次公开发行，募资4.062亿加元</div></div>
+        <div class="news-item"><div class="ni-date">2026年4月22日</div><div class="ni-title">上调IPO规模，发行价维持12.50加元/股</div></div>
       </div>
     </div>
-    <div class="subsection-title">核心看点</div>
-    <div style="font-size:13px;color:#555;line-height:1.7;"><strong>资源的世界级确定性 vs 波兰税制与巨额资本开支的不确定性</strong>——这是当前估值折让的核心来源。MET改革进展、PFS结果与2030年采矿特许权是关键里程碑节点。历史上Lumina班底8次成功退出，对手方包括第一量子、Teck、五矿、CMOC等产业资本，该项目最终大概率走向<strong>产业方并购/合资开发</strong>。</div>
+    <div class="section-card">
+      <div class="section-title">研报解读</div>
+      <div class="subsection-title">分析师目标价（7家覆盖）</div>
+      <div class="target-price-grid">
+        <div class="tp-item"><div class="tp-bank">Canaccord</div><div class="tp-price">C$21.50</div></div>
+        <div class="tp-item"><div class="tp-bank">RBC / NBC</div><div class="tp-price">C$20.00</div></div>
+        <div class="tp-item"><div class="tp-bank">Morgan Stanley / CIBC</div><div class="tp-price">C$18.00</div></div>
+        <div class="tp-item tp-consensus"><div class="tp-bank">一致目标价</div><div class="tp-price">~C$18.6</div></div>
+      </div>
+      <div style="font-size:13px;color:#666;margin-bottom:12px;">较当前股价（C$10.40 附近）隐含约 <strong>80%+ 上行空间</strong>。分析师一致评级为"跑赢大盘"（Outperform）。</div>
+      <div class="bull-bear-grid">
+        <div class="bull-card">
+          <div class="bb-title">看多主要依据</div>
+          <ul class="bb-list">
+            <li>全球顶级的未开发铜银资源（规模+品位+区位）</li>
+            <li>成本曲线位于下半部，AISC $1.17/lb（前10年）</li>
+            <li>资本强度$16,416/t CuEq，显著低于同业</li>
+            <li>与KGHM冶炼厂仅20-25km，已签LOI</li>
+            <li>Lumina班底历史上8次成功退出（含CMOC、五矿等）</li>
+            <li>欧洲能源转型驱动长期铜需求增长</li>
+            <li>波兰政府支持"铜谷"战略，总理出席上市仪式</li>
+          </ul>
+        </div>
+        <div class="bear-card">
+          <div class="bb-title">看空/风险主要依据</div>
+          <ul class="bb-list">
+            <li><strong>波兰矿产开采税（MET）</strong>：使税后NPV从$63亿降至$16亿（-75%），IRR从18%降至10.8%</li>
+            <li>深部开采挑战：平均埋深1,950m，高温/岩压/通风</li>
+            <li>$64亿初始资本开支 vs 当前市值$8.57亿</li>
+            <li>许可周期长：预计2030年才能获得采矿特许权</li>
+            <li>股价已跌破IPO发行价（C$10.49 vs C$12.50）</li>
+            <li>无收入、持续亏损、依赖资本市场融资</li>
+            <li>公司明确：无MET豁免/修法则不建矿</li>
+          </ul>
+        </div>
+      </div>
+      <div class="subsection-title">核心看点</div>
+      <div style="font-size:13px;color:#555;line-height:1.7;">
+        <strong>资源的世界级确定性 vs 波兰税制与巨额资本开支的不确定性</strong>——这是当前估值折让（EV 仅$6.15亿，原地铜价约$0.04/lb）的核心来源。MET 改革进展、PFS 结果与 2030 年采矿特许权是关键里程碑节点。历史上 Lumina 班底 8 次成功退出，对手方包括第一量子、Teck、五矿、CMOC 等产业资本，该项目最终大概率走向<strong>产业方并购/合资开发</strong>。
+      </div>
+    </div>
   </div>
-
-</div>
 </div>
 
 <script>
-// Tab switching
-function switchTab(tab) {
-  var btns = document.querySelectorAll('.tab-btn');
-  var contents = document.querySelectorAll('.tab-content');
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].classList.remove('active');
-    contents[i].classList.remove('active');
-  }
-  if (tab === 'price') {
-    btns[0].classList.add('active');
-    contents[0].classList.add('active');
-  } else {
-    btns[1].classList.add('active');
-    contents[1].classList.add('active');
-  }
-  window.dispatchEvent(new Event('resize'));
+const DASHBOARD_DATA = {"records":[{"Date_str":"2026-05-19","TSX":11.95,"WSE":null,"Silver":73.7015,"Copper":13333.9},{"Date_str":"2026-05-20","TSX":12.15,"WSE":null,"Silver":75.8672,"Copper":13595.63},{"Date_str":"2026-05-21","TSX":12.08,"WSE":null,"Silver":76.6678,"Copper":13455.86},{"Date_str":"2026-05-22","TSX":11.84,"WSE":null,"Silver":75.4982,"Copper":13614.84},{"Date_str":"2026-05-23","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-05-24","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-05-25","TSX":12.07,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-05-26","TSX":12.11,"WSE":null,"Silver":null,"Copper":13565.69},{"Date_str":"2026-05-27","TSX":11.95,"WSE":null,"Silver":74.6483,"Copper":13465.16},{"Date_str":"2026-05-28","TSX":12.06,"WSE":null,"Silver":75.6616,"Copper":13656.19},{"Date_str":"2026-05-29","TSX":11.95,"WSE":null,"Silver":75.2837,"Copper":13503.11},{"Date_str":"2026-05-30","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-05-31","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-01","TSX":11.69,"WSE":null,"Silver":null,"Copper":13808.12},{"Date_str":"2026-06-02","TSX":11.66,"WSE":null,"Silver":75.1276,"Copper":14036.66},{"Date_str":"2026-06-03","TSX":11.85,"WSE":null,"Silver":72.7299,"Copper":13802.37},{"Date_str":"2026-06-04","TSX":12.69,"WSE":null,"Silver":73.89,"Copper":13920.49},{"Date_str":"2026-06-05","TSX":10.98,"WSE":null,"Silver":67.8347,"Copper":13490.32},{"Date_str":"2026-06-06","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-07","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-08","TSX":10.9,"WSE":null,"Silver":68.177,"Copper":13592.08},{"Date_str":"2026-06-09","TSX":10.3,"WSE":null,"Silver":65.366,"Copper":13573.34},{"Date_str":"2026-06-10","TSX":10.05,"WSE":null,"Silver":63.4151,"Copper":13466.23},{"Date_str":"2026-06-11","TSX":10.39,"WSE":null,"Silver":67.3357,"Copper":13448.01},{"Date_str":"2026-06-12","TSX":11.09,"WSE":null,"Silver":67.7815,"Copper":13645.33},{"Date_str":"2026-06-13","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-14","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-15","TSX":11.6,"WSE":null,"Silver":69.9725,"Copper":13669.66},{"Date_str":"2026-06-16","TSX":11.7,"WSE":35.5,"Silver":70.0317,"Copper":13699.9},{"Date_str":"2026-06-17","TSX":11.92,"WSE":35.41,"Silver":67.9443,"Copper":13763.45},{"Date_str":"2026-06-18","TSX":11.4,"WSE":32.0,"Silver":65.7221,"Copper":13624.19},{"Date_str":"2026-06-19","TSX":11.29,"WSE":31.8,"Silver":null,"Copper":null},{"Date_str":"2026-06-20","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-21","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-22","TSX":10.93,"WSE":29.9,"Silver":65.1027,"Copper":13580.37},{"Date_str":"2026-06-23","TSX":10.49,"WSE":29.99,"Silver":61.5535,"Copper":13302.84},{"Date_str":"2026-06-24","TSX":10.07,"WSE":28.0,"Silver":57.4508,"Copper":13029.71},{"Date_str":"2026-06-25","TSX":10.28,"WSE":28.8,"Silver":57.8582,"Copper":13227.58},{"Date_str":"2026-06-26","TSX":10.4,"WSE":28.2,"Silver":58.924,"Copper":13335.92},{"Date_str":"2026-06-27","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-28","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-29","TSX":10.3,"WSE":27.18,"Silver":58.2942,"Copper":13252.81},{"Date_str":"2026-06-30","TSX":10.23,"WSE":27.5,"Silver":58.5934,"Copper":13348.9},{"Date_str":"2026-07-01","TSX":null,"WSE":28.3,"Silver":59.107,"Copper":13249.24},{"Date_str":"2026-07-02","TSX":10.57,"WSE":27.15,"Silver":60.971,"Copper":13287.6},{"Date_str":"2026-07-03","TSX":10.68,"WSE":28.17,"Silver":null,"Copper":null},{"Date_str":"2026-07-04","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-05","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-06","TSX":10.31,"WSE":27.82,"Silver":62.0472,"Copper":13348.43},{"Date_str":"2026-07-07","TSX":9.6,"WSE":26.95,"Silver":59.9825,"Copper":13298.49},{"Date_str":"2026-07-08","TSX":9.21,"WSE":24.7,"Silver":58.2888,"Copper":13097.18},{"Date_str":"2026-07-09","TSX":9.55,"WSE":25.69,"Silver":59.9619,"Copper":13439.8},{"Date_str":"2026-07-10","TSX":9.51,"WSE":25.81,"Silver":59.702,"Copper":13418.55},{"Date_str":"2026-07-11","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-12","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-13","TSX":9.26,"WSE":25.18,"Silver":57.6529,"Copper":13487.86},{"Date_str":"2026-07-14","TSX":9.52,"WSE":25.48,"Silver":58.6999,"Copper":13595.75},{"Date_str":"2026-07-15","TSX":9.15,"WSE":25.08,"Silver":57.7808,"Copper":13534.07},{"Date_str":"2026-07-16","TSX":8.6,"WSE":23.54,"Silver":55.5185,"Copper":13554.35},{"Date_str":"2026-07-17","TSX":8.77,"WSE":23.28,"Silver":55.8995,"Copper":13500.88},{"Date_str":"2026-07-18","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-19","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-20","TSX":8.93,"WSE":23.8,"Silver":56.4178,"Copper":13621.19},{"Date_str":"2026-07-21","TSX":9.2,"WSE":24.9,"Silver":58.7908,"Copper":13898.49},{"Date_str":"2026-07-22","TSX":9.28,"WSE":25.4,"Silver":59.7112,"Copper":13812.7},{"Date_str":"2026-07-23","TSX":8.86,"WSE":24.5,"Silver":57.6534,"Copper":13599.1},{"Date_str":"2026-07-24","TSX":8.99,"WSE":25.4,"Silver":58.211,"Copper":13653.8},{"Date_str":"2026-07-25","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-26","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-27","TSX":9.13,"WSE":24.06,"Silver":58.4015,"Copper":13770.61},{"Date_str":"2026-07-28","TSX":8.87,"WSE":25.1,"Silver":57.1153,"Copper":13715.2},{"Date_str":"2026-07-29","TSX":8.75,"WSE":24.95,"Silver":57.6253,"Copper":13605.04},{"Date_str":"2026-07-30","TSX":8.93,"WSE":23.5,"Silver":58.9963,"Copper":13843.49},{"Date_str":"2026-07-31","TSX":8.77,"WSE":23.15,"Silver":57.633,"Copper":13835.7},{"Date_str":"2026-08-01","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-02","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-03","TSX":null,"WSE":24.48,"Silver":58.1946,"Copper":13943.57},{"Date_str":"2026-08-04","TSX":9.47,"WSE":24.4,"Silver":59.5251,"Copper":14168.88},{"Date_str":"2026-08-05","TSX":9.68,"WSE":26.97,"Silver":62.0411,"Copper":14218.65},{"Date_str":"2026-08-06","TSX":8.98,"WSE":25.0,"Silver":61.5336,"Copper":14226.64},{"Date_str":"2026-08-07","TSX":9.56,"WSE":25.02,"Silver":63.5709,"Copper":14190.59},{"Date_str":"2026-08-08","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-09","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-10","TSX":10.03,"WSE":25.95,"Silver":65.7423,"Copper":14190.59},{"Date_str":"2026-08-11","TSX":9.88,"WSE":26.75,"Silver":64.6845,"Copper":14352.36},{"Date_str":"2026-08-12","TSX":9.79,"WSE":26.66,"Silver":65.3255,"Copper":14294.25},{"Date_str":"2026-08-13","TSX":9.6,"WSE":26.27,"Silver":64.4744,"Copper":14394.14},{"Date_str":"2026-08-14","TSX":9.71,"WSE":26.21,"Silver":64.6966,"Copper":14576.29},{"Date_str":"2026-08-15","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-16","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-17","TSX":9.85,"WSE":26.95,"Silver":65.7897,"Copper":14593.98},{"Date_str":"2026-08-18","TSX":9.37,"WSE":25.97,"Silver":63.3327,"Copper":14234.5},{"Date_str":"2026-08-19","TSX":9.88,"WSE":26.6,"Silver":67.0128,"Copper":14364.31},{"Date_str":"2026-08-20","TSX":9.72,"WSE":26.1,"Silver":68.0912,"Copper":14113.21},{"Date_str":"2026-08-21","TSX":10.38,"WSE":26.54,"Silver":68.995,"Copper":14276.82},{"Date_str":"2026-08-22","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-23","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-24","TSX":10.43,"WSE":28.65,"Silver":68.9648,"Copper":14361.55},{"Date_str":"2026-08-25","TSX":10.76,"WSE":27.7,"Silver":68.6735,"Copper":14505.94},{"Date_str":"2026-08-26","TSX":10.5,"WSE":28.42,"Silver":68.1241,"Copper":14461.57},{"Date_str":"2026-08-27","TSX":10.78,"WSE":28.5,"Silver":69.2471,"Copper":14453.9},{"Date_str":"2026-08-28","TSX":10.99,"WSE":29.6,"Silver":66.3682,"Copper":14445.59},{"Date_str":"2026-08-29","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-30","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-31","TSX":10.85,"WSE":30.45,"Silver":66.5543,"Copper":14445.59},{"Date_str":"2026-09-01","TSX":10.47,"WSE":29.99,"Silver":64.0756,"Copper":14405.6},{"Date_str":"2026-09-02","TSX":10.91,"WSE":29.76,"Silver":65.3278,"Copper":14303.06},{"Date_str":"2026-09-03","TSX":10.96,"WSE":29.7,"Silver":66.9766,"Copper":14391.43},{"Date_str":"2026-09-04","TSX":10.91,"WSE":28.82,"Silver":66.2162,"Copper":14490.24},{"Date_str":"2026-09-05","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-09-06","TSX":null,"WSE":null,"Silver":null,"Copper":null},{"Date_str":"2026-09-07","TSX":null,"WSE":29.54,"Silver":null,"Copper":null},{"Date_str":"2026-09-08","TSX":10.95,"WSE":29.88,"Silver":null,"Copper":null},{"Date_str":"2026-09-09","TSX":11.38,"WSE":30.0,"Silver":null,"Copper":null},{"Date_str":"2026-09-10","TSX":11.01,"WSE":29.97,"Silver":null,"Copper":null},{"Date_str":"2026-09-11","TSX":10.49,"WSE":29.68,"Silver":null,"Copper":null}],"stats":{"tsx_latest_date":"2026-09-11","tsx_latest_close":10.49,"wse_latest_date":"2026-09-11","wse_latest_close":29.68,"copper_latest_date":"2026-09-04","copper_latest_price":14490.24,"silver_latest_date":"2026-09-04","silver_latest_price":66.2162},"axis_ranges":{"tsx":{"min":7.74,"max":13.959000000000001},"wse":{"min":20.835,"max":39.050000000000004},"silver":{"min":49.96665,"max":84.33458},"copper":{"min":11726.739,"max":16053.378}}};
+
+function fmtInt(v) {
+  if (v === null || v === undefined || isNaN(v)) return '—';
+  return Math.round(v).toLocaleString('en-US');
 }
-
-const DASHBOARD_DATA = {"tsx":[{"Date_str":"2026-05-19","Close":11.95,"Silver":73.7,"Copper":13333.9},{"Date_str":"2026-05-20","Close":12.15,"Silver":75.87,"Copper":13595.63},{"Date_str":"2026-05-21","Close":12.08,"Silver":76.67,"Copper":13455.86},{"Date_str":"2026-05-22","Close":11.84,"Silver":75.5,"Copper":13614.84},{"Date_str":"2026-05-23","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-05-24","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-05-25","Close":12.07,"Silver":null,"Copper":null},{"Date_str":"2026-05-26","Close":12.11,"Silver":null,"Copper":13565.69},{"Date_str":"2026-05-27","Close":11.95,"Silver":74.65,"Copper":13465.16},{"Date_str":"2026-05-28","Close":12.06,"Silver":75.66,"Copper":13656.19},{"Date_str":"2026-05-29","Close":11.95,"Silver":75.28,"Copper":13503.11},{"Date_str":"2026-05-30","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-05-31","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-01","Close":11.69,"Silver":null,"Copper":13808.12},{"Date_str":"2026-06-02","Close":11.66,"Silver":75.13,"Copper":14036.66},{"Date_str":"2026-06-03","Close":11.85,"Silver":72.73,"Copper":13802.37},{"Date_str":"2026-06-04","Close":12.69,"Silver":73.89,"Copper":13920.49},{"Date_str":"2026-06-05","Close":10.98,"Silver":67.83,"Copper":13490.32},{"Date_str":"2026-06-06","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-07","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-08","Close":10.9,"Silver":68.18,"Copper":13592.08},{"Date_str":"2026-06-09","Close":10.3,"Silver":65.37,"Copper":13573.34},{"Date_str":"2026-06-10","Close":10.05,"Silver":63.42,"Copper":13466.23},{"Date_str":"2026-06-11","Close":10.39,"Silver":67.34,"Copper":13448.01},{"Date_str":"2026-06-12","Close":11.09,"Silver":67.78,"Copper":13645.33},{"Date_str":"2026-06-13","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-14","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-15","Close":11.6,"Silver":69.97,"Copper":13669.66},{"Date_str":"2026-06-16","Close":11.7,"Silver":70.03,"Copper":13699.9},{"Date_str":"2026-06-17","Close":11.92,"Silver":67.94,"Copper":13763.45},{"Date_str":"2026-06-18","Close":11.4,"Silver":65.72,"Copper":13624.19},{"Date_str":"2026-06-19","Close":11.29,"Silver":64.81,"Copper":null},{"Date_str":"2026-06-20","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-21","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-22","Close":10.93,"Silver":65.1,"Copper":13580.37},{"Date_str":"2026-06-23","Close":10.49,"Silver":61.55,"Copper":13302.84},{"Date_str":"2026-06-24","Close":10.07,"Silver":57.45,"Copper":13029.71},{"Date_str":"2026-06-25","Close":10.28,"Silver":57.86,"Copper":13227.58},{"Date_str":"2026-06-26","Close":10.4,"Silver":58.92,"Copper":13335.92},{"Date_str":"2026-06-27","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-28","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-29","Close":10.3,"Silver":58.29,"Copper":13252.81},{"Date_str":"2026-06-30","Close":10.23,"Silver":58.59,"Copper":13348.9},{"Date_str":"2026-07-01","Close":null,"Silver":59.11,"Copper":13249.24},{"Date_str":"2026-07-02","Close":10.57,"Silver":60.97,"Copper":13287.6},{"Date_str":"2026-07-03","Close":10.68,"Silver":62.39,"Copper":null},{"Date_str":"2026-07-04","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-05","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-06","Close":10.31,"Silver":62.05,"Copper":13348.43},{"Date_str":"2026-07-07","Close":9.6,"Silver":59.98,"Copper":13298.49},{"Date_str":"2026-07-08","Close":9.21,"Silver":58.29,"Copper":13097.18},{"Date_str":"2026-07-09","Close":9.55,"Silver":59.96,"Copper":13439.8},{"Date_str":"2026-07-10","Close":9.51,"Silver":59.7,"Copper":13418.55},{"Date_str":"2026-07-11","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-12","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-13","Close":9.26,"Silver":57.65,"Copper":13487.86},{"Date_str":"2026-07-14","Close":9.52,"Silver":58.7,"Copper":13595.75},{"Date_str":"2026-07-15","Close":9.15,"Silver":57.78,"Copper":13534.07},{"Date_str":"2026-07-16","Close":8.6,"Silver":55.52,"Copper":13554.35},{"Date_str":"2026-07-17","Close":8.77,"Silver":55.9,"Copper":13500.88},{"Date_str":"2026-07-18","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-19","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-20","Close":8.93,"Silver":56.42,"Copper":13621.19},{"Date_str":"2026-07-21","Close":9.2,"Silver":58.79,"Copper":13898.49},{"Date_str":"2026-07-22","Close":9.28,"Silver":59.71,"Copper":13812.7},{"Date_str":"2026-07-23","Close":8.86,"Silver":57.65,"Copper":13599.1},{"Date_str":"2026-07-24","Close":8.99,"Silver":58.21,"Copper":13653.8},{"Date_str":"2026-07-25","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-26","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-27","Close":9.13,"Silver":58.4,"Copper":13770.61},{"Date_str":"2026-07-28","Close":8.87,"Silver":57.12,"Copper":13715.2},{"Date_str":"2026-07-29","Close":8.75,"Silver":57.63,"Copper":13605.04},{"Date_str":"2026-07-30","Close":8.93,"Silver":59.0,"Copper":13843.49},{"Date_str":"2026-07-31","Close":8.77,"Silver":57.63,"Copper":13835.7},{"Date_str":"2026-08-01","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-02","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-03","Close":null,"Silver":58.19,"Copper":13943.57},{"Date_str":"2026-08-04","Close":9.47,"Silver":59.53,"Copper":14168.88},{"Date_str":"2026-08-05","Close":9.68,"Silver":62.04,"Copper":14218.65},{"Date_str":"2026-08-06","Close":8.98,"Silver":61.53,"Copper":14226.64},{"Date_str":"2026-08-07","Close":9.56,"Silver":63.57,"Copper":14190.59},{"Date_str":"2026-08-08","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-09","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-10","Close":10.03,"Silver":65.74,"Copper":14190.59},{"Date_str":"2026-08-11","Close":9.88,"Silver":64.68,"Copper":14352.36},{"Date_str":"2026-08-12","Close":9.79,"Silver":65.33,"Copper":14294.25},{"Date_str":"2026-08-13","Close":9.6,"Silver":64.47,"Copper":14394.14},{"Date_str":"2026-08-14","Close":9.71,"Silver":64.7,"Copper":14576.29},{"Date_str":"2026-08-15","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-16","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-17","Close":9.85,"Silver":65.79,"Copper":14593.98},{"Date_str":"2026-08-18","Close":9.37,"Silver":63.33,"Copper":14234.5},{"Date_str":"2026-08-19","Close":9.88,"Silver":67.01,"Copper":14364.31},{"Date_str":"2026-08-20","Close":9.72,"Silver":68.09,"Copper":14113.21},{"Date_str":"2026-08-21","Close":10.38,"Silver":69.0,"Copper":14276.82},{"Date_str":"2026-08-22","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-23","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-24","Close":10.43,"Silver":68.96,"Copper":14361.55},{"Date_str":"2026-08-25","Close":10.76,"Silver":68.67,"Copper":14505.94},{"Date_str":"2026-08-26","Close":10.5,"Silver":68.12,"Copper":14461.57},{"Date_str":"2026-08-27","Close":10.78,"Silver":69.25,"Copper":14453.9},{"Date_str":"2026-08-28","Close":10.99,"Silver":66.37,"Copper":14445.59},{"Date_str":"2026-08-29","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-30","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-31","Close":10.85,"Silver":66.55,"Copper":14445.59},{"Date_str":"2026-09-01","Close":10.47,"Silver":64.08,"Copper":14405.6},{"Date_str":"2026-09-02","Close":10.91,"Silver":65.33,"Copper":14303.06},{"Date_str":"2026-09-03","Close":10.96,"Silver":66.98,"Copper":14391.43},{"Date_str":"2026-09-04","Close":10.91,"Silver":66.22,"Copper":14490.24}],"wse":[{"Date_str":"2026-05-19","Close":null,"Silver":73.7,"Copper":13333.9},{"Date_str":"2026-05-20","Close":null,"Silver":75.87,"Copper":13595.63},{"Date_str":"2026-05-21","Close":null,"Silver":76.67,"Copper":13455.86},{"Date_str":"2026-05-22","Close":null,"Silver":75.5,"Copper":13614.84},{"Date_str":"2026-05-23","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-05-24","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-05-25","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-05-26","Close":null,"Silver":null,"Copper":13565.69},{"Date_str":"2026-05-27","Close":null,"Silver":74.65,"Copper":13465.16},{"Date_str":"2026-05-28","Close":null,"Silver":75.66,"Copper":13656.19},{"Date_str":"2026-05-29","Close":null,"Silver":75.28,"Copper":13503.11},{"Date_str":"2026-05-30","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-05-31","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-01","Close":null,"Silver":null,"Copper":13808.12},{"Date_str":"2026-06-02","Close":null,"Silver":75.13,"Copper":14036.66},{"Date_str":"2026-06-03","Close":null,"Silver":72.73,"Copper":13802.37},{"Date_str":"2026-06-04","Close":null,"Silver":73.89,"Copper":13920.49},{"Date_str":"2026-06-05","Close":null,"Silver":67.83,"Copper":13490.32},{"Date_str":"2026-06-06","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-07","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-08","Close":null,"Silver":68.18,"Copper":13592.08},{"Date_str":"2026-06-09","Close":null,"Silver":65.37,"Copper":13573.34},{"Date_str":"2026-06-10","Close":null,"Silver":63.42,"Copper":13466.23},{"Date_str":"2026-06-11","Close":null,"Silver":67.34,"Copper":13448.01},{"Date_str":"2026-06-12","Close":null,"Silver":67.78,"Copper":13645.33},{"Date_str":"2026-06-13","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-14","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-15","Close":null,"Silver":69.97,"Copper":13669.66},{"Date_str":"2026-06-16","Close":35.5,"Silver":70.03,"Copper":13699.9},{"Date_str":"2026-06-17","Close":35.41,"Silver":67.94,"Copper":13763.45},{"Date_str":"2026-06-18","Close":32.0,"Silver":65.72,"Copper":13624.19},{"Date_str":"2026-06-19","Close":31.8,"Silver":64.81,"Copper":null},{"Date_str":"2026-06-20","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-21","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-22","Close":29.9,"Silver":65.1,"Copper":13580.37},{"Date_str":"2026-06-23","Close":29.99,"Silver":61.55,"Copper":13302.84},{"Date_str":"2026-06-24","Close":28.0,"Silver":57.45,"Copper":13029.71},{"Date_str":"2026-06-25","Close":28.8,"Silver":57.86,"Copper":13227.58},{"Date_str":"2026-06-26","Close":28.2,"Silver":58.92,"Copper":13335.92},{"Date_str":"2026-06-27","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-28","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-06-29","Close":27.18,"Silver":58.29,"Copper":13252.81},{"Date_str":"2026-06-30","Close":27.5,"Silver":58.59,"Copper":13348.9},{"Date_str":"2026-07-01","Close":28.3,"Silver":59.11,"Copper":13249.24},{"Date_str":"2026-07-02","Close":27.15,"Silver":60.97,"Copper":13287.6},{"Date_str":"2026-07-03","Close":28.17,"Silver":62.39,"Copper":null},{"Date_str":"2026-07-04","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-05","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-06","Close":27.82,"Silver":62.05,"Copper":13348.43},{"Date_str":"2026-07-07","Close":26.95,"Silver":59.98,"Copper":13298.49},{"Date_str":"2026-07-08","Close":24.7,"Silver":58.29,"Copper":13097.18},{"Date_str":"2026-07-09","Close":25.69,"Silver":59.96,"Copper":13439.8},{"Date_str":"2026-07-10","Close":25.81,"Silver":59.7,"Copper":13418.55},{"Date_str":"2026-07-11","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-12","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-13","Close":25.18,"Silver":57.65,"Copper":13487.86},{"Date_str":"2026-07-14","Close":25.48,"Silver":58.7,"Copper":13595.75},{"Date_str":"2026-07-15","Close":25.08,"Silver":57.78,"Copper":13534.07},{"Date_str":"2026-07-16","Close":23.54,"Silver":55.52,"Copper":13554.35},{"Date_str":"2026-07-17","Close":23.28,"Silver":55.9,"Copper":13500.88},{"Date_str":"2026-07-18","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-19","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-20","Close":23.8,"Silver":56.42,"Copper":13621.19},{"Date_str":"2026-07-21","Close":24.9,"Silver":58.79,"Copper":13898.49},{"Date_str":"2026-07-22","Close":25.4,"Silver":59.71,"Copper":13812.7},{"Date_str":"2026-07-23","Close":24.5,"Silver":57.65,"Copper":13599.1},{"Date_str":"2026-07-24","Close":25.4,"Silver":58.21,"Copper":13653.8},{"Date_str":"2026-07-25","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-26","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-07-27","Close":24.06,"Silver":58.4,"Copper":13770.61},{"Date_str":"2026-07-28","Close":25.1,"Silver":57.12,"Copper":13715.2},{"Date_str":"2026-07-29","Close":24.95,"Silver":57.63,"Copper":13605.04},{"Date_str":"2026-07-30","Close":23.5,"Silver":59.0,"Copper":13843.49},{"Date_str":"2026-07-31","Close":23.15,"Silver":57.63,"Copper":13835.7},{"Date_str":"2026-08-01","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-02","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-03","Close":24.48,"Silver":58.19,"Copper":13943.57},{"Date_str":"2026-08-04","Close":24.4,"Silver":59.53,"Copper":14168.88},{"Date_str":"2026-08-05","Close":26.97,"Silver":62.04,"Copper":14218.65},{"Date_str":"2026-08-06","Close":25.0,"Silver":61.53,"Copper":14226.64},{"Date_str":"2026-08-07","Close":25.02,"Silver":63.57,"Copper":14190.59},{"Date_str":"2026-08-08","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-09","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-10","Close":25.95,"Silver":65.74,"Copper":14190.59},{"Date_str":"2026-08-11","Close":26.75,"Silver":64.68,"Copper":14352.36},{"Date_str":"2026-08-12","Close":26.66,"Silver":65.33,"Copper":14294.25},{"Date_str":"2026-08-13","Close":26.27,"Silver":64.47,"Copper":14394.14},{"Date_str":"2026-08-14","Close":26.21,"Silver":64.7,"Copper":14576.29},{"Date_str":"2026-08-15","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-16","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-17","Close":26.95,"Silver":65.79,"Copper":14593.98},{"Date_str":"2026-08-18","Close":25.97,"Silver":63.33,"Copper":14234.5},{"Date_str":"2026-08-19","Close":26.6,"Silver":67.01,"Copper":14364.31},{"Date_str":"2026-08-20","Close":26.1,"Silver":68.09,"Copper":14113.21},{"Date_str":"2026-08-21","Close":26.54,"Silver":69.0,"Copper":14276.82},{"Date_str":"2026-08-22","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-23","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-24","Close":28.65,"Silver":68.96,"Copper":14361.55},{"Date_str":"2026-08-25","Close":27.7,"Silver":68.67,"Copper":14505.94},{"Date_str":"2026-08-26","Close":28.42,"Silver":68.12,"Copper":14461.57},{"Date_str":"2026-08-27","Close":28.5,"Silver":69.25,"Copper":14453.9},{"Date_str":"2026-08-28","Close":29.6,"Silver":66.37,"Copper":14445.59},{"Date_str":"2026-08-29","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-30","Close":null,"Silver":null,"Copper":null},{"Date_str":"2026-08-31","Close":30.45,"Silver":66.55,"Copper":14445.59},{"Date_str":"2026-09-01","Close":29.99,"Silver":64.08,"Copper":14405.6},{"Date_str":"2026-09-02","Close":29.76,"Silver":65.33,"Copper":14303.06},{"Date_str":"2026-09-03","Close":29.7,"Silver":66.98,"Copper":14391.43},{"Date_str":"2026-09-04","Close":28.82,"Silver":66.22,"Copper":14490.24}],"stats":{"tsx_latest_date":"2026-09-04","tsx_latest_close":10.91,"wse_latest_date":"2026-09-04","wse_latest_close":28.82,"copper_latest_date":"2026-09-04","copper_latest_price":14490.24,"silver_latest_date":"2026-09-04","silver_latest_price":66.22},"axis_ranges":{"tsx":{"min":7.74,"max":13.96},"wse":{"min":20.84,"max":39.05},"silver":{"min":49.97,"max":84.34},"copper":{"min":11726.74,"max":16053.38}}};
-
-function fmtInt(val) {
-  if (val === null || val === undefined || isNaN(val)) return '—';
-  return Math.round(val).toLocaleString('en-US');
-}
-
-function fmt2(val) {
-  if (val === null || val === undefined || isNaN(val)) return '—';
-  return val.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+function fmt2(v) {
+  if (v === null || v === undefined || isNaN(v)) return '—';
+  return v.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
 
 function buildTooltip(dateStr, seriesList) {
-  var validSeries = seriesList.filter(function(s) {
-    return s.value !== null && s.value !== undefined && !isNaN(s.value);
-  });
-  if (validSeries.length === 0) {
-    return '<div style="font-weight:600;">' + dateStr + '</div><div style="color:#999;font-size:12px;">无数据</div>';
-  }
-  var html = '<div style="font-weight:600;margin-bottom:6px;font-size:14px;">' + dateStr + '</div>';
-  validSeries.forEach(function(s) {
+  let html = '<div style="font-weight:600;margin-bottom:6px;font-size:13px;">' + dateStr + '</div>';
+  seriesList.forEach(function(s) {
     html += '<div style="display:flex;align-items:center;margin:3px 0;">';
     html += '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + s.color + ';margin-right:8px;"></span>';
     html += '<span style="flex:1;">' + s.name + '</span>';
@@ -307,18 +274,19 @@ function buildTooltip(dateStr, seriesList) {
   return html;
 }
 
-function getPrefix(name) {
-  if (name.indexOf('TSX') >= 0) return 'C$';
-  if (name.indexOf('WSE') >= 0) return 'zł';
-  return '$';
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelector('.tab[data-tab="' + name + '"]').classList.add('active');
+  if (name === 'stock' && window._mainChart) window._mainChart.resize();
 }
 
 function initDashboard() {
-  var data = DASHBOARD_DATA;
-  var stats = data.stats;
-  var axis = data.axis_ranges;
+  const data = DASHBOARD_DATA;
+  const stats = data.stats;
+  const axis = data.axis_ranges;
 
-  // 填充指标卡
   document.getElementById('copper-price').textContent = '$' + fmt2(stats.copper_latest_price);
   document.getElementById('copper-date').textContent = '更新于 ' + stats.copper_latest_date;
   document.getElementById('silver-price').textContent = '$' + fmt2(stats.silver_latest_price);
@@ -329,146 +297,90 @@ function initDashboard() {
   document.getElementById('wse-date').textContent = '更新于 ' + stats.wse_latest_date;
   document.getElementById('update-time').textContent = new Date().toLocaleString('zh-CN');
 
-  // 取 TSX 序列作为 X 轴基准（日期最完整）
-  var tsxDates = data.tsx.map(function(r) { return r.Date_str; });
-  var tsxClose = data.tsx.map(function(r) { return r.Close; });
-  var tsxSilver = data.tsx.map(function(r) { return r.Silver; });
-  var tsxCopper = data.tsx.map(function(r) { return r.Copper; });
-  var wseClose = data.tsx.map(function(r) { return r.WSE_Close || null; });
+  const dates = data.records.map(r => r.Date_str);
+  const tsxClose = data.records.map(r => r.TSX);
+  const wseClose = data.records.map(r => r.WSE);
+  const silver = data.records.map(r => r.Silver);
+  const copper = data.records.map(r => r.Copper);
 
-  // 用 WSE 数据中有效（非 null）的最新记录构建 WSE 序列
-  // 实际上 WSE 日期与 TSX 不同，需要单独处理
-  // 由于 TSX 和 WSE 日期范围不同，图表取并集
-  var allDates = {};
-  data.tsx.forEach(function(r) { allDates[r.Date_str] = true; });
-  data.wse.forEach(function(r) { allDates[r.Date_str] = true; });
-  var sortedDates = Object.keys(allDates).sort();
-  // 构建映射
-  var tsxMap = {};
-  data.tsx.forEach(function(r) { tsxMap[r.Date_str] = r; });
-  var wseMap = {};
-  data.wse.forEach(function(r) { wseMap[r.Date_str] = r; });
-
-  // 四轴合并图表
-  var chartMain = echarts.init(document.getElementById('chart-main'));
-  chartMain.setOption({
+  // Four-axis chart: left TSX(0) + WSE(70), right Silver(0) + Copper(70)
+  const chart = echarts.init(document.getElementById('chart-main'));
+  chart.setOption({
     tooltip: {
       trigger: 'axis',
-      axisPointer: { type: 'cross' },
       formatter: function(params) {
-        var dateStr = params[0].axisValue;
-        var validParams = params.filter(function(p) {
-          return p.value !== null && p.value !== undefined && !isNaN(p.value);
+        const dateStr = params[0].axisValue;
+        const list = params.map(p => {
+          let prefix = '$';
+          if (p.seriesName.indexOf('TSX') >= 0) prefix = 'C$';
+          else if (p.seriesName.indexOf('WSE') >= 0) prefix = 'zł';
+          return { name: p.seriesName, value: prefix + fmt2(p.value), color: p.color };
         });
-        if (!validParams.length) {
-          return '<div style="font-weight:600;">' + dateStr + '</div><div style="color:#999;font-size:12px;">无数据</div>';
-        }
-        var html = '<div style="font-weight:600;margin-bottom:6px;font-size:14px;">' + dateStr + '</div>';
-        validParams.forEach(function(p) {
-          html += '<div style="display:flex;align-items:center;margin:3px 0;">';
-          html += '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + p.color + ';margin-right:8px;flex-shrink:0;"></span>';
-          html += '<span style="flex:1;font-size:13px;">' + p.seriesName + '</span>';
-          html += '<span style="font-weight:600;margin-left:12px;font-size:13px;">' + getPrefix(p.seriesName) + fmt2(p.value) + '</span>';
-          html += '</div>';
-        });
-        return html;
+        return buildTooltip(dateStr, list);
       }
     },
-    legend: {
-      data: ['TSX 收盘价', 'WSE 收盘价', 'LBMA 银价', 'LME 铜价'],
-      top: 8,
-      textStyle: { fontSize: 12 }
-    },
-    grid: {
-      left: '14%',
-      right: '16%',
-      top: '18%',
-      bottom: '10%'
-    },
-    xAxis: {
-      type: 'category',
-      data: sortedDates,
-      axisLabel: { rotate: 45, fontSize: 10, interval: 6 }
-    },
+    legend: { data: ['TSX 股价', 'WSE 股价', '银价', '铜价'], top: 8 },
+    grid: { left: '14%', right: '16%', top: '15%', bottom: '10%' },
+    xAxis: { type: 'category', data: dates, axisLabel: { rotate: 45, fontSize: 10, interval: 6 } },
     yAxis: [
-      // 左轴1: TSX 股价 (C$)
       {
-        type: 'value', name: 'TSX 股价 (C$)', position: 'left', offset: 0,
+        type: 'value', name: 'TSX (C$)', position: 'left', offset: 0,
         min: axis.tsx.min, max: axis.tsx.max,
         axisLine: { lineStyle: { color: '#1565c0' } },
         axisLabel: { color: '#1565c0', formatter: function(v) { return fmtInt(v); } },
-        splitLine: { show: true, lineStyle: { type: 'dashed', color: '#eee' } },
-        nameTextStyle: { fontSize: 11 }
+        splitLine: { show: true, lineStyle: { type: 'dashed', color: '#eee' } }
       },
-      // 左轴2: WSE 股价 (zł) — offset 60
       {
-        type: 'value', name: 'WSE 股价 (zł)', position: 'left', offset: 60,
+        type: 'value', name: 'WSE (zł)', position: 'left', offset: 70,
         min: axis.wse.min, max: axis.wse.max,
         axisLine: { lineStyle: { color: '#2e7d32' } },
         axisLabel: { color: '#2e7d32', formatter: function(v) { return fmtInt(v); } },
-        splitLine: { show: false },
-        nameTextStyle: { fontSize: 11 }
+        splitLine: { show: false }
       },
-      // 右轴1: 银价 ($)
       {
         type: 'value', name: '银价 ($)', position: 'right', offset: 0,
         min: axis.silver.min, max: axis.silver.max,
         axisLine: { lineStyle: { color: '#78909c' } },
         axisLabel: { color: '#78909c', formatter: function(v) { return fmtInt(v); } },
-        splitLine: { show: false },
-        nameTextStyle: { fontSize: 11 }
+        splitLine: { show: false }
       },
-      // 右轴2: 铜价 ($) — offset 80
       {
-        type: 'value', name: '铜价 ($)', position: 'right', offset: 80,
+        type: 'value', name: '铜价 ($)', position: 'right', offset: 70,
         min: axis.copper.min, max: axis.copper.max,
         axisLine: { lineStyle: { color: '#e65100' } },
         axisLabel: { color: '#e65100', formatter: function(v) { return fmtInt(v); } },
-        splitLine: { show: false },
-        nameTextStyle: { fontSize: 11 }
+        splitLine: { show: false }
       }
     ],
     series: [
       {
-        name: 'TSX 收盘价', type: 'line',
-        data: sortedDates.map(function(d) { return tsxMap[d] ? tsxMap[d].Close : null; }),
+        name: 'TSX 股价', type: 'line', data: tsxClose,
         yAxisIndex: 0, smooth: false, symbol: 'none', connectNulls: true,
         lineStyle: { width: 2.5, color: '#1565c0', type: 'solid' },
         itemStyle: { color: '#1565c0' }
       },
       {
-        name: 'WSE 收盘价', type: 'line',
-        data: sortedDates.map(function(d) { return wseMap[d] ? wseMap[d].Close : null; }),
+        name: 'WSE 股价', type: 'line', data: wseClose,
         yAxisIndex: 1, smooth: false, symbol: 'none', connectNulls: true,
         lineStyle: { width: 2.5, color: '#2e7d32', type: 'solid' },
         itemStyle: { color: '#2e7d32' }
       },
       {
-        name: 'LBMA 银价', type: 'line',
-        data: sortedDates.map(function(d) {
-          if (tsxMap[d]) return tsxMap[d].Silver;
-          return null;
-        }),
+        name: '银价', type: 'line', data: silver,
         yAxisIndex: 2, smooth: false, symbol: 'none', connectNulls: true,
         lineStyle: { width: 2, color: '#78909c', type: 'dashed' },
         itemStyle: { color: '#78909c' }
       },
       {
-        name: 'LME 铜价', type: 'line',
-        data: sortedDates.map(function(d) {
-          if (tsxMap[d]) return tsxMap[d].Copper;
-          return null;
-        }),
+        name: '铜价', type: 'line', data: copper,
         yAxisIndex: 3, smooth: false, symbol: 'none', connectNulls: true,
         lineStyle: { width: 2, color: '#e65100', type: 'dashed' },
         itemStyle: { color: '#e65100' }
       }
     ]
   });
-
-  window.addEventListener('resize', function() {
-    chartMain.resize();
-  });
+  window._mainChart = chart;
+  window.addEventListener('resize', function() { chart.resize(); });
 }
 
 initDashboard();
