@@ -96,10 +96,13 @@ a{color:inherit;text-decoration:none}
 .ag-stat .v{font-size:19px;font-weight:600;color:#263238;font-variant-numeric:tabular-nums;line-height:1.25}
 .ag-stat .l{font-size:11.5px;color:#78909c;margin-top:3px;line-height:1.4}
 .ag-chart{height:264px;margin-top:6px}
-.ag-ev{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px 16px;
-  font-size:11.5px;color:#78909c;line-height:1.55;margin:2px 0 4px}
-.ag-ev i{font-style:normal;color:#e65100;font-weight:600;margin-right:5px}
-.ag-ev em{font-style:normal;color:#b0bec5;margin-right:5px}
+.ag-ev{margin:8px 0 4px;padding:2px 0 2px 15px;position:relative;
+  border-left:1px solid #e3e8ec;font-size:13px;color:#546e7a;line-height:1.45}
+.ag-ev div{padding:4px 0;display:flex;gap:9px;align-items:baseline}
+.ag-ev i{font-style:normal;color:#e65100;font-weight:600;font-size:13px;flex:none;min-width:16px}
+.ag-ev em{font-style:normal;color:#90a4ae;flex:none;font-variant-numeric:tabular-nums;
+  font-size:12.5px;min-width:44px}
+.ag-ev span{flex:1;min-width:0}
 .ag-3m{font-size:12.5px;color:#546e7a;line-height:1.65;padding-top:6px}
 .ag-3m b{color:#263238;font-weight:600}
 .ag-view{border-top:1px solid #eceff1;margin-top:12px;padding-top:12px}
@@ -924,12 +927,12 @@ function renderSilver(){
     window.addEventListener('resize', function(){ ch.resize(); });
   }
 
-  /* legend for the numbered pins */
+  /* legend for the numbered pins - single column, chronological top to bottom */
   var evBox = document.getElementById('ag-ev');
   if(evBox){
     evBox.innerHTML = evs.map(function(e, i){
       var n = AG_NUM[i] || ('(' + (i+1) + ')');
-      return '<div><i>'+n+'</i><em>'+md(e.date)+'</em>'+esc(e.label)+'</div>';
+      return '<div><i>'+n+'</i><em>'+md(e.date)+'</em><span>'+esc(e.label)+'</span></div>';
     }).join('');
   }
 
